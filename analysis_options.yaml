@@ -5,6 +5,7 @@ analyzer:
     - "**/*.g.dart"
     - "lib/l10n/generated/**"
     - "tool/cache/**"
+    - "screenshots/**"
   language:
     strict-casts: true
     strict-raw-types: true

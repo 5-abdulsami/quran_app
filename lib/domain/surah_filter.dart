@@ -1,7 +1,7 @@
-import '../../core/quran/references.dart';
-import '../../core/text/arabic_digits.dart';
-import '../../core/text/normalize.dart';
-import '../../domain/models/surah.dart';
+import '../core/quran/references.dart';
+import '../core/text/arabic_digits.dart';
+import '../core/text/normalize.dart';
+import 'models/surah.dart';
 
 enum RevelationFilter { all, makki, madani }
 
@@ -27,12 +27,9 @@ List<Surah> filterSurahs(
   bool matchesQuery(Surah s) {
     if (q.isEmpty) return true;
     if (number != null) return '${s.number}'.startsWith(q);
-    return normalizeForSearch(s.nameSimple).contains(normalized) ||
-        normalizeForSearch(s.nameTranslated).contains(normalized) ||
-        normalizeForSearch(s.nameArabic).contains(normalized) ||
-        (folded.isNotEmpty &&
-            (SurahNameIndex.foldName(s.nameSimple).contains(folded) ||
-                SurahNameIndex.foldName(s.nameArabic).contains(folded)));
+    final keys = _keysFor(s);
+    return keys.normalized.any((k) => k.contains(normalized)) ||
+        (folded.isNotEmpty && keys.folded.any((k) => k.contains(folded)));
   }
 
   return [
@@ -40,3 +37,21 @@ List<Surah> filterSurahs(
       if (matchesPlace(s) && matchesQuery(s)) s,
   ];
 }
+
+/// A surah's names, normalised once: folding them on every keystroke would
+/// cost more than the rest of a search put together.
+typedef _SurahKeys = ({List<String> normalized, List<String> folded});
+
+final Expando<_SurahKeys> _keyCache = Expando('surahKeys');
+
+_SurahKeys _keysFor(Surah s) => _keyCache[s] ??= (
+  normalized: [
+    normalizeForSearch(s.nameSimple),
+    normalizeForSearch(s.nameTranslated),
+    normalizeForSearch(s.nameArabic),
+  ],
+  folded: [
+    SurahNameIndex.foldName(s.nameSimple),
+    SurahNameIndex.foldName(s.nameArabic),
+  ],
+);

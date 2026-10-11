@@ -108,8 +108,44 @@ final RegExp _whitespace = RegExp(r'\s+');
 /// Canonical normalisation applied to anything indexed or searched: Unicode
 /// NFKC, lowercase, diacritic stripping, letter folding, punctuation to spaces
 /// and whitespace collapse.
-String normalizeForSearch(String input) {
-  final folded = foldArabicLetters(stripArabicDiacritics(unorm.nfkc(input)));
+String normalizeForSearch(String input) =>
+    _foldAfterNfkc(_nfkcCannotMatter(input) ? input : unorm.nfkc(input));
+
+/// [normalizeForSearch] without the fast path: always applies NFKC. Used by
+/// tests to prove the fast path never changes a result.
+String normalizeForSearchWithFullNfkc(String input) =>
+    _foldAfterNfkc(unorm.nfkc(input));
+
+/// True when applying NFKC first cannot change [normalizeForSearch]'s result,
+/// so the (pure-Dart, slow) NFKC pass can be skipped.
+///
+/// Holds for text made only of ASCII and the Arabic block U+0600–06FF, apart
+/// from the exceptions below:
+///   - ASCII is unchanged by NFKC.
+///   - Every combining mark in the Arabic block is stripped right after NFKC,
+///     so NFKC's reordering of marks cannot matter.
+///   - NFKC composes alef/waw/yeh with maddah or hamza (آ أ إ ؤ ئ); those fold
+///     to the same letter as the base with the mark stripped.
+///   - Exceptions, which take the full path: U+0675–0678 (compatibility
+///     decompositions), and hamza above U+0654 together with heh/heh goal/
+///     yeh barree, which compose into letters the fold does not map.
+bool _nfkcCannotMatter(String input) {
+  var hamzaAbove = false;
+  var composableBase = false;
+  for (final unit in input.codeUnits) {
+    if (unit < 0x80) continue;
+    if (unit < 0x0600 || unit > 0x06FF) return false;
+    if (unit >= 0x0675 && unit <= 0x0678) return false;
+    if (unit == 0x0654) hamzaAbove = true;
+    if (unit == 0x06D5 || unit == 0x06C1 || unit == 0x06D2) {
+      composableBase = true;
+    }
+  }
+  return !(hamzaAbove && composableBase);
+}
+
+String _foldAfterNfkc(String nfkc) {
+  final folded = foldArabicLetters(stripArabicDiacritics(nfkc));
   return folded
       .toLowerCase()
       .replaceAll(_invisibleControls, '')

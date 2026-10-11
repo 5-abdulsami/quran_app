@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../domain/surah_filter.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/app_shell.dart';
 import '../../ui/widgets/async_value_view.dart';
-import 'surah_filter.dart';
 import 'surah_list_tile.dart';
 
 /// All 114 surahs, filterable by name or number and by revelation place.

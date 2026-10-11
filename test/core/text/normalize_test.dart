@@ -14,6 +14,8 @@ import '../../helpers/test_databases.dart';
 String ch(List<int> codes) => String.fromCharCodes(codes);
 
 void main() {
+  nfkcFastPathTests();
+
   group('stripArabicDiacritics', () {
     test('removes harakat while preserving letters', () {
       // "الرَّحمَٰن" -> "الرحمن"
@@ -274,6 +276,65 @@ void main() {
       expect(latinStem('prayers'), 'prayer');
       expect(latinStem('witness'), 'witness');
       expect(latinStem('day'), 'day');
+    });
+  });
+}
+
+/// The NFKC fast path in normalizeForSearch must never change a result.
+void nfkcFastPathTests() {
+  group('NFKC fast path', () {
+    test('agrees with full NFKC on the cases it must hand to NFKC', () {
+      final cases = [
+        ch(const [0x06D5, 0x0654]), // ae + hamza above composes to U+06C0
+        ch(const [0x06C1, 0x0654]), // heh goal + hamza above -> U+06C2
+        ch(const [0x06D2, 0x0654]), // yeh barree + hamza above -> U+06D3
+        ch(const [0x0675]), // high hamza alef: compatibility decomposition
+        ch(const [0x0627, 0x0653]), // alef + maddah composes to U+0622
+        ch(const [0x064A, 0x0654]), // yeh + hamza above composes to U+0626
+        ch(const [0xFEFB]), // lam-alef presentation form
+        ch(const [0xFDF2]), // "Allah" ligature
+        'wu${ch(const [0x00A0])}du', // no-break space
+        'ﬁne', // Latin ligature
+        'Ｑｕｒａｎ', // full-width
+        'Allah’s',
+      ];
+      for (final input in cases) {
+        expect(
+          normalizeForSearch(input),
+          normalizeForSearchWithFullNfkc(input),
+          reason: input.runes.map((r) => r.toRadixString(16)).join(' '),
+        );
+      }
+    });
+
+    test('matches the stored search text for the whole corpus', () async {
+      // The bundled text_search columns were produced with full NFKC.
+      final db = await openBundledContentDb();
+      final rows = [
+        ...await db
+            .customSelect('SELECT text_uthmani t, text_search s FROM ayah')
+            .get(),
+        ...await db
+            .customSelect('SELECT text t, text_search s FROM translation')
+            .get(),
+      ];
+      await db.close();
+      expect(rows.length, 6236 * 3);
+      for (final r in rows) {
+        expect(normalizeForSearch(r.read<String>('t')), r.read<String>('s'));
+      }
+    });
+
+    test('agrees with full NFKC on a sample of verses', () async {
+      final db = await openBundledContentDb();
+      final rows = await db
+          .customSelect('SELECT text_uthmani t FROM ayah WHERE id % 97 = 0')
+          .get();
+      await db.close();
+      for (final r in rows) {
+        final text = r.read<String>('t');
+        expect(normalizeForSearch(text), normalizeForSearchWithFullNfkc(text));
+      }
     });
   });
 }

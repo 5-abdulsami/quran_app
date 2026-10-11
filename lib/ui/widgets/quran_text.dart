@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../core/text/arabic_digits.dart';
+import '../../core/text/highlight.dart';
 import '../theme/app_theme.dart';
 import '../theme/quran_typography.dart';
 
@@ -9,7 +10,8 @@ import '../theme/quran_typography.dart';
 /// Always right-to-left, always Amiri Quran with the Arabic locale, always
 /// start-aligned (ragged on the left, never justified: justification without
 /// kashida support pulls words apart), with leading generous enough that no
-/// mark is clipped. The text itself is rendered exactly as given.
+/// mark is clipped. The text itself is rendered exactly as given; search
+/// highlights only change the background of whole original words.
 class QuranText extends StatelessWidget {
   const QuranText(
     this.text, {
@@ -18,6 +20,8 @@ class QuranText extends StatelessWidget {
     this.selectable = false,
     this.textAlign = TextAlign.start,
     this.semanticsLabel,
+    this.highlights = const [],
+    this.maxLines,
     super.key,
   });
 
@@ -34,23 +38,44 @@ class QuranText extends StatelessWidget {
   final TextAlign textAlign;
   final String? semanticsLabel;
 
+  /// Ranges of [text] to highlight (search matches).
+  final List<TextSlice> highlights;
+
+  /// Truncates with an ellipsis, for search snippets.
+  final int? maxLines;
+
   /// Key of the inner text widget, for tests asserting style and direction.
   static const textKey = ValueKey('quran-text');
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.quranColors;
     final style = QuranTypography.style(
       fontSize: fontSize,
-      color: context.quranColors.quranText,
+      color: colors.quranText,
     );
     final span = TextSpan(
       children: [
-        TextSpan(text: text),
+        // The verse itself, as one span (split only for highlights).
+        TextSpan(
+          children: [
+            for (final (segment, highlighted) in splitHighlights(
+              text,
+              highlights,
+            ))
+              TextSpan(
+                text: segment,
+                style: highlighted
+                    ? TextStyle(backgroundColor: colors.highlight)
+                    : null,
+              ),
+          ],
+        ),
         if (ayahNumber case final number?)
           TextSpan(
             // A no-break space keeps the ornament on the verse's last line.
             text: '\u{00A0}${endOfAyahMarker(number)}',
-            style: TextStyle(color: context.quranColors.ornament),
+            style: TextStyle(color: colors.ornament),
           ),
       ],
     );
@@ -71,6 +96,8 @@ class QuranText extends StatelessWidget {
             textDirection: TextDirection.rtl,
             locale: QuranTypography.locale,
             semanticsLabel: semanticsLabel,
+            maxLines: maxLines,
+            overflow: maxLines == null ? null : TextOverflow.ellipsis,
           );
 
     return Directionality(
