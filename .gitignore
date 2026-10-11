@@ -49,3 +49,6 @@ app.*.map.json
 
 # Goldens produced by failing tests
 **/failures/
+
+# Local visual-check screenshots (not part of the app)
+/screenshots/
