@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../ui/widgets/attribution_text.dart';
+
 /// Previous / next navigation at the end of a reader (surah or juz).
 class ReaderFooter extends StatelessWidget {
   const ReaderFooter({
@@ -21,7 +23,6 @@ class ReaderFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
       child: Column(
@@ -30,12 +31,7 @@ class ReaderFooter extends StatelessWidget {
           for (final line in attribution ?? const <String>[])
             Padding(
               padding: const EdgeInsets.only(bottom: 4),
-              child: Text(
-                line,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
+              child: AttributionText(line),
             ),
           const SizedBox(height: 12),
           Row(

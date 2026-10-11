@@ -106,6 +106,18 @@ class QuranRepository {
     return id;
   }
 
+  /// The verse key of a mushaf-wide id (1..6236), or null outside the mushaf.
+  static String? verseKeyFor(int id) {
+    if (id < 1 || id > totalAyahCount) return null;
+    var remaining = id;
+    for (var s = 1; s <= surahCount; s++) {
+      final count = ayahCounts[s - 1];
+      if (remaining <= count) return '$s:$remaining';
+      remaining -= count;
+    }
+    return null;
+  }
+
   // ---------------------------------------------------------------------------
 
   Future<List<Ayah>> _ayahs(

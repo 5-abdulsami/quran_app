@@ -5,6 +5,8 @@
 // `overrideWithValue`, so every repository below is synchronous to obtain and
 // trivially replaceable in tests.
 
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +17,7 @@ import 'data/bookmark_repository.dart';
 import 'data/quran_repository.dart';
 import 'data/reading_position_repository.dart';
 import 'data/settings_repository.dart';
+import 'data/translation_download_service.dart';
 import 'domain/models/juz.dart';
 import 'domain/models/surah.dart';
 import 'domain/models/translation_edition.dart';
@@ -80,4 +83,25 @@ final surahNameIndexProvider = FutureProvider<SurahNameIndex>((ref) async {
 /// Verse keys the reader has bookmarked, kept live.
 final bookmarkedKeysProvider = StreamProvider<Set<String>>(
   (ref) => ref.watch(bookmarkRepositoryProvider).watchKeys(),
+);
+
+// --- Translation downloads ----------------------------------------------------
+
+/// Where validated downloaded translations are kept (outside the content
+/// database, so they survive content upgrades). Overridden after bootstrap.
+final translationStoreDirectoryProvider = Provider<Directory>(
+  (ref) => throw UnimplementedError(
+    'translationStoreDirectoryProvider not overridden',
+  ),
+);
+
+final translationDownloadServiceProvider = Provider<TranslationDownloadService>(
+  (ref) {
+    final service = TranslationDownloadService(
+      ref.watch(contentDatabaseProvider),
+      storeDirectory: ref.watch(translationStoreDirectoryProvider),
+    );
+    ref.onDispose(service.close);
+    return service;
+  },
 );

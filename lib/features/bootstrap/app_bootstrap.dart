@@ -32,6 +32,7 @@ class AppBootstrap extends StatefulWidget {
 
 class _AppBootstrapState extends State<AppBootstrap> {
   OpenedDatabases? _databases;
+  late Directory _translationStore;
   Object? _error;
 
   @override
@@ -51,6 +52,7 @@ class _AppBootstrapState extends State<AppBootstrap> {
     try {
       final support = await getApplicationSupportDirectory();
       final dataDir = p.join(support.path, 'quran');
+      _translationStore = Directory(p.join(dataDir, 'translations'));
       final databases = await DbBootstrap(
         loadAsset: (key) async =>
             (await rootBundle.load(key)).buffer.asUint8List(),
@@ -61,7 +63,7 @@ class _AppBootstrapState extends State<AppBootstrap> {
         // A fresh content file has no downloaded translations; re-import them.
         await TranslationDownloadService.restoreDownloaded(
           databases.content,
-          storeDirectory: Directory(p.join(dataDir, 'translations')),
+          storeDirectory: _translationStore,
         );
       }
       if (!mounted) {
@@ -90,6 +92,9 @@ class _AppBootstrapState extends State<AppBootstrap> {
           sharedPreferencesProvider.overrideWithValue(widget.prefs),
           contentDatabaseProvider.overrideWithValue(databases.content),
           userDatabaseProvider.overrideWithValue(databases.user),
+          translationStoreDirectoryProvider.overrideWithValue(
+            _translationStore,
+          ),
         ],
         child: const QuranApp(),
       );

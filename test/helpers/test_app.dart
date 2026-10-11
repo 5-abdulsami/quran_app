@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -38,6 +40,9 @@ class TestApp {
           sharedPreferencesProvider.overrideWithValue(preferences),
           contentDatabaseProvider.overrideWithValue(content),
           userDatabaseProvider.overrideWithValue(user),
+          translationStoreDirectoryProvider.overrideWithValue(
+            Directory.systemTemp.createTempSync('quran_translations_'),
+          ),
         ],
         child: QuranApp(initialLocation: location),
       ),
