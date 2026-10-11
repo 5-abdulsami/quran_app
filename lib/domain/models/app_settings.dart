@@ -3,6 +3,9 @@ import 'package:meta/meta.dart';
 /// The reader's appearance choice.
 enum AppThemeMode { system, light, dark, sepia }
 
+/// The bundled font used for Quranic text.
+enum QuranFont { scheherazadeNew, amiriQuran }
+
 /// The UI languages the app ships. `null` in [AppSettings.languageCode] means
 /// "follow the device".
 abstract final class AppLanguages {
@@ -14,6 +17,7 @@ abstract final class AppLanguages {
 class AppSettings {
   const AppSettings({
     this.themeMode = AppThemeMode.system,
+    this.quranFont = QuranFont.scheherazadeNew,
     this.languageCode,
     this.arabicFontSize = 28,
     this.translationFontSize = 16,
@@ -29,6 +33,9 @@ class AppSettings {
   static const double maxTranslationFontSize = 26;
 
   final AppThemeMode themeMode;
+
+  /// Font for Quranic text (Scheherazade New by default).
+  final QuranFont quranFont;
 
   /// One of [AppLanguages.supported], or null to follow the device.
   final String? languageCode;
@@ -53,6 +60,7 @@ class AppSettings {
 
   AppSettings copyWith({
     AppThemeMode? themeMode,
+    QuranFont? quranFont,
     String? Function()? languageCode,
     double? arabicFontSize,
     double? translationFontSize,
@@ -62,6 +70,7 @@ class AppSettings {
     List<String>? translationIds,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
+    quranFont: quranFont ?? this.quranFont,
     languageCode: languageCode != null ? languageCode() : this.languageCode,
     arabicFontSize: arabicFontSize ?? this.arabicFontSize,
     translationFontSize: translationFontSize ?? this.translationFontSize,

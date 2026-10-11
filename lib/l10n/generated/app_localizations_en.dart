@@ -496,7 +496,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fontCredit =>
-      'Amiri Quran by The Amiri Project Authors, licensed under the SIL Open Font License 1.1.';
+      'Scheherazade New by SIL Global and Amiri Quran by The Amiri Project Authors, both under the SIL Open Font License 1.1.';
+
+  @override
+  String get quranFont => 'Quran font';
 
   @override
   String get viewLicences => 'View licences';

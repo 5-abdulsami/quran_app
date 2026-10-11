@@ -4,11 +4,14 @@ import 'package:quran_app/core/quran/attribution.dart';
 import 'package:quran_app/features/reader/ayah_tile.dart';
 import 'package:quran_app/ui/app_shell.dart';
 import 'package:quran_app/ui/theme/app_theme.dart';
+import 'package:quran_app/ui/theme/quran_typography.dart';
 import 'package:quran_app/ui/widgets/quran_text.dart';
 
 import '../helpers/test_app.dart';
 
 void main() {
+  quranFontTests();
+
   testWidgets('choosing Dark switches the app theme', (tester) async {
     final app = await TestApp.pump(tester, location: '/settings');
     await tester.tap(find.text('Dark'));
@@ -69,6 +72,10 @@ void main() {
     );
     expect(
       find.textContaining('Fateh Muhammad Jalandhry, translated by'),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('Scheherazade New by SIL Global'),
       findsOneWidget,
     );
     expect(find.textContaining('SIL Open Font License'), findsOneWidget);
@@ -177,6 +184,47 @@ void main() {
 
     await pick('English'); // back from Arabic only: exactly what was picked
     expect(shown(), ['en.sahih']);
+    await app.dispose(tester);
+  });
+}
+
+void quranFontTests() {
+  TextStyle verseStyle(WidgetTester tester) =>
+      tester.widget<Text>(find.byKey(QuranText.textKey).first).style!;
+
+  TextStyle ornamentStyle(WidgetTester tester) {
+    final text = tester.widget<Text>(find.byKey(QuranText.textKey).first);
+    return (text.textSpan! as TextSpan).children!.last.style!;
+  }
+
+  testWidgets(
+    'Scheherazade New is the default; the ornament uses Amiri Quran',
+    (tester) async {
+      final app = await TestApp.pump(tester, location: '/surah/1');
+      expect(verseStyle(tester).fontFamily, QuranTypography.scheherazadeFamily);
+      expect(ornamentStyle(tester).fontFamily, QuranTypography.amiriFamily);
+      await app.dispose(tester);
+    },
+  );
+
+  testWidgets('choosing Amiri Quran in Settings changes the reader font', (
+    tester,
+  ) async {
+    final app = await TestApp.pump(tester, location: '/settings');
+    await tester.tap(find.text('Amiri Quran'));
+    await app.settle(tester);
+    // The live preview follows the choice.
+    expect(verseStyle(tester).fontFamily, QuranTypography.amiriFamily);
+    await app.dispose(tester);
+  });
+
+  testWidgets('the font choice is remembered', (tester) async {
+    final app = await TestApp.pump(
+      tester,
+      location: '/surah/2',
+      prefs: {'settings.quranFont': 'amiriQuran'},
+    );
+    expect(verseStyle(tester).fontFamily, QuranTypography.amiriFamily);
     await app.dispose(tester);
   });
 }

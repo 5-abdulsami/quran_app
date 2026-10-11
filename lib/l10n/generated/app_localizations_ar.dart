@@ -505,7 +505,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fontCredit =>
-      'خط Amiri Quran من The Amiri Project Authors، مرخّص برخصة SIL Open Font License 1.1.';
+      'خط Scheherazade New من SIL Global وخط Amiri Quran من The Amiri Project Authors، وكلاهما مرخّص برخصة SIL Open Font License 1.1.';
+
+  @override
+  String get quranFont => 'خط المصحف';
 
   @override
   String get viewLicences => 'عرض التراخيص';

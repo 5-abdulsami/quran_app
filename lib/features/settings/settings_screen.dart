@@ -73,6 +73,31 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => _pickLanguage(context, ref, settings.languageCode),
           ),
           _Section(l10n.reading),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(l10n.quranFont),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: [
+                    for (final (font, name) in const [
+                      (QuranFont.scheherazadeNew, 'Scheherazade New'),
+                      (QuranFont.amiriQuran, 'Amiri Quran'),
+                    ])
+                      ChoiceChip(
+                        label: Text(name),
+                        selected: settings.quranFont == font,
+                        onSelected: (_) => controller.setQuranFont(font),
+                      ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: TextSizeControls(),

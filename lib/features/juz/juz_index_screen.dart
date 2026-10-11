@@ -124,7 +124,7 @@ class _JuzTile extends StatelessWidget {
         textDirection: TextDirection.rtl,
         locale: QuranTypography.locale,
         style: TextStyle(
-          fontFamily: QuranTypography.fontFamily,
+          fontFamily: QuranTypography.familyOf(context),
           fontSize: 22,
           height: 1.6,
           color: context.quranColors.quranText,

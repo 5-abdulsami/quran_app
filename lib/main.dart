@@ -13,12 +13,17 @@ Future<void> main() async {
   runApp(AppBootstrap(prefs: prefs));
 }
 
-/// Adds the bundled font's OFL licence to Flutter's licence page.
+/// Adds the bundled fonts' OFL licences to Flutter's licence page.
 void registerLicenses() {
+  const fonts = {
+    'Scheherazade New (font)': 'assets/fonts/OFL-scheherazade-new.txt',
+    'Amiri Quran (font)': 'assets/fonts/OFL-amiri-quran.txt',
+  };
   LicenseRegistry.addLicense(() async* {
-    final text = await rootBundle.loadString(
-      'assets/fonts/OFL-amiri-quran.txt',
-    );
-    yield LicenseEntryWithLineBreaks(const ['Amiri Quran (font)'], text);
+    for (final MapEntry(key: name, value: asset) in fonts.entries) {
+      yield LicenseEntryWithLineBreaks([
+        name,
+      ], await rootBundle.loadString(asset));
+    }
   });
 }

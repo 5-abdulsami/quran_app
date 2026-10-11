@@ -16,6 +16,9 @@ class SettingsController extends Notifier<AppSettings> {
   Future<void> setThemeMode(AppThemeMode mode) =>
       _update(state.copyWith(themeMode: mode));
 
+  Future<void> setQuranFont(QuranFont font) =>
+      _update(state.copyWith(quranFont: font));
+
   Future<void> setLanguage(String? code) =>
       _update(state.copyWith(languageCode: () => code));
 

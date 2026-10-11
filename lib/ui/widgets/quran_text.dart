@@ -51,6 +51,7 @@ class QuranText extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.quranColors;
     final style = QuranTypography.style(
+      family: QuranTypography.familyOf(context),
       fontSize: fontSize,
       color: colors.quranText,
     );
@@ -75,7 +76,10 @@ class QuranText extends StatelessWidget {
           TextSpan(
             // A no-break space keeps the ornament on the verse's last line.
             text: '\u{00A0}${endOfAyahMarker(number)}',
-            style: TextStyle(color: colors.ornament),
+            style: TextStyle(
+              color: colors.ornament,
+              fontFamily: QuranTypography.ornamentFamily,
+            ),
           ),
       ],
     );

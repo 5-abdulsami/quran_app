@@ -48,7 +48,7 @@ class SurahListTile extends StatelessWidget {
           overflow: TextOverflow.fade,
           softWrap: false,
           style: TextStyle(
-            fontFamily: QuranTypography.fontFamily,
+            fontFamily: QuranTypography.familyOf(context),
             fontSize: 22,
             height: 1.6,
             color: context.quranColors.quranText,

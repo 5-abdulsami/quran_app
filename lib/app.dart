@@ -7,6 +7,7 @@ import 'features/settings/settings_controller.dart';
 import 'l10n/generated/app_localizations.dart';
 import 'router.dart';
 import 'ui/theme/app_theme.dart';
+import 'ui/theme/quran_typography.dart';
 
 /// The root widget: theme, locale and router, all driven by settings.
 class QuranApp extends ConsumerStatefulWidget {
@@ -50,6 +51,11 @@ class _QuranAppState extends ConsumerState<QuranApp> {
         GlobalCupertinoLocalizations.delegate,
       ],
       routerConfig: _router,
+      // Every QuranText below reads the chosen Quran font from this scope.
+      builder: (context, child) => QuranFontScope(
+        family: QuranTypography.familyFor(settings.quranFont),
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }

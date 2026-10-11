@@ -66,7 +66,7 @@ void main() {
       final text = tester.widget<Text>(
         find.descendant(of: tile, matching: find.byKey(QuranText.textKey)),
       );
-      expect(text.style?.fontFamily, QuranTypography.fontFamily);
+      expect(text.style?.fontFamily, QuranTypography.scheherazadeFamily);
       expect(text.style?.height, QuranTypography.lineHeight);
       expect(text.textDirection, TextDirection.rtl);
       expect(text.locale, const Locale('ar'));

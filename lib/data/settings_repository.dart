@@ -12,6 +12,7 @@ class SettingsRepository {
   final SharedPreferences _prefs;
 
   static const _theme = 'settings.theme';
+  static const _quranFont = 'settings.quranFont';
   static const _language = 'settings.language';
   static const _arabicSize = 'settings.arabicFontSize';
   static const _translationSize = 'settings.translationFontSize';
@@ -30,6 +31,10 @@ class SettingsRepository {
       themeMode: AppThemeMode.values.firstWhere(
         (m) => m.name == _prefs.getString(_theme),
         orElse: () => defaults.themeMode,
+      ),
+      quranFont: QuranFont.values.firstWhere(
+        (f) => f.name == _prefs.getString(_quranFont),
+        orElse: () => defaults.quranFont,
       ),
       languageCode: AppLanguages.supported.contains(language) ? language : null,
       arabicFontSize: (_prefs.getDouble(_arabicSize) ?? defaults.arabicFontSize)
@@ -51,6 +56,7 @@ class SettingsRepository {
 
   Future<void> save(AppSettings settings) async {
     await _prefs.setString(_theme, settings.themeMode.name);
+    await _prefs.setString(_quranFont, settings.quranFont.name);
     final language = settings.languageCode;
     if (language == null) {
       await _prefs.remove(_language);

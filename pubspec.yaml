@@ -57,9 +57,14 @@ flutter:
   assets:
     - assets/db/
     - assets/fonts/OFL-amiri-quran.txt
+    - assets/fonts/OFL-scheherazade-new.txt
 
   fonts:
-    # Used for every piece of Quranic text, explicitly. Never fetched at runtime.
+    # Quranic text: Scheherazade New by default, Amiri Quran as an option (and
+    # for the end-of-ayah ornament). Bundled; never fetched at runtime.
+    - family: ScheherazadeNew
+      fonts:
+        - asset: assets/fonts/ScheherazadeNew-Regular.ttf
     - family: AmiriQuran
       fonts:
         - asset: assets/fonts/AmiriQuran-Regular.ttf

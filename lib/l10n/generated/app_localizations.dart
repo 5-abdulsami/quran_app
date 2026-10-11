@@ -973,8 +973,14 @@ abstract class AppLocalizations {
   /// No description provided for @fontCredit.
   ///
   /// In en, this message translates to:
-  /// **'Amiri Quran by The Amiri Project Authors, licensed under the SIL Open Font License 1.1.'**
+  /// **'Scheherazade New by SIL Global and Amiri Quran by The Amiri Project Authors, both under the SIL Open Font License 1.1.'**
   String get fontCredit;
+
+  /// No description provided for @quranFont.
+  ///
+  /// In en, this message translates to:
+  /// **'Quran font'**
+  String get quranFont;
 
   /// No description provided for @viewLicences.
   ///
