@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Only used for optional translation downloads; the Quran is bundled. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="IslamIndex Quran"
         android:name="${applicationName}"

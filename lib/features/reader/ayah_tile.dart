@@ -90,7 +90,7 @@ class AyahTile extends StatelessWidget {
                     label: Text(ayah.verseKey),
                     onPressed: onOpenDetail,
                     tooltip: l10n.openDetail,
-                    visualDensity: VisualDensity.compact,
+                    materialTapTargetSize: MaterialTapTargetSize.padded,
                   ),
                   const SizedBox(width: 8),
                   Expanded(

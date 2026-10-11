@@ -66,17 +66,11 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.language),
             title: Text(l10n.language),
-            trailing: DropdownButton<String?>(
-              value: settings.languageCode,
-              underline: const SizedBox.shrink(),
-              items: [
-                DropdownMenuItem(child: Text(l10n.themeSystem)),
-                for (final MapEntry(key: code, value: name)
-                    in _languageNames.entries)
-                  DropdownMenuItem(value: code, child: Text(name)),
-              ],
-              onChanged: controller.setLanguage,
+            subtitle: Text(
+              _languageNames[settings.languageCode] ?? l10n.themeSystem,
             ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => _pickLanguage(context, ref, settings.languageCode),
           ),
           _Section(l10n.reading),
           const Padding(
@@ -134,6 +128,43 @@ class SettingsScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Choose the UI language; null follows the device.
+  Future<void> _pickLanguage(
+    BuildContext context,
+    WidgetRef ref,
+    String? current,
+  ) async {
+    final l10n = AppLocalizations.of(context);
+    final options = <(String?, String)>[
+      (null, l10n.themeSystem),
+      for (final MapEntry(key: code, value: name) in _languageNames.entries)
+        (code, name),
+    ];
+    final chosen = await showDialog<(String?,)>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: Text(l10n.language),
+        children: [
+          for (final (code, name) in options)
+            SimpleDialogOption(
+              onPressed: () => Navigator.of(context).pop((code,)),
+              child: Row(
+                children: [
+                  Expanded(child: Text(name)),
+                  if (code == current) const Icon(Icons.check),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+    if (chosen != null) {
+      await ref
+          .read(settingsControllerProvider.notifier)
+          .setLanguage(chosen.$1);
+    }
   }
 
   Future<void> _exportBookmarks(BuildContext context, WidgetRef ref) async {

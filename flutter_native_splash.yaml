@@ -1,0 +1,13 @@
+# Generates the native launch screens.
+# Run: dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#1F6650"
+  image: assets/icon/splash.png
+  color_dark: "#151412"
+  image_dark: assets/icon/splash.png
+  android_12:
+    color: "#1F6650"
+    image: assets/icon/splash.png
+    color_dark: "#151412"
+    image_dark: assets/icon/splash.png
+  fullscreen: false

@@ -45,7 +45,7 @@ class AboutScreen extends ConsumerWidget {
           _Card(
             title: l10n.arabicText,
             children: [
-              const SelectableText(attributionArabic),
+              const Text(attributionArabic),
               const SizedBox(height: 4),
               Text(
                 '${meta[MetaKeys.arabicEdition] ?? arabicEdition} · '
@@ -71,7 +71,6 @@ class AboutScreen extends ConsumerWidget {
                           attribution: edition.attribution,
                           translatedBy: l10n.translatedBy,
                         ),
-                        selectable: true,
                       ),
                     ],
                   ),
@@ -101,7 +100,7 @@ class AboutScreen extends ConsumerWidget {
               Text(appVersion),
               const SizedBox(height: 8),
               Text(l10n.dataVersion, style: theme.textTheme.titleSmall),
-              SelectableText(
+              Text(
                 [
                   meta[MetaKeys.dataVersion],
                   meta[MetaKeys.buildDate]?.split('T').first,
