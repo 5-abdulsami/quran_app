@@ -197,7 +197,8 @@ final class SurahTarget extends NavigationTarget {
   final int surah;
 
   @override
-  bool operator ==(Object other) => other is SurahTarget && other.surah == surah;
+  bool operator ==(Object other) =>
+      other is SurahTarget && other.surah == surah;
   @override
   int get hashCode => surah.hashCode;
   @override
@@ -222,7 +223,8 @@ final class VerseTarget extends NavigationTarget {
   @override
   int get hashCode => Object.hash(surah, ayah, ayahEnd);
   @override
-  String toString() => 'VerseTarget($surah:$ayah${ayahEnd == null ? '' : '-$ayahEnd'})';
+  String toString() =>
+      'VerseTarget($surah:$ayah${ayahEnd == null ? '' : '-$ayahEnd'})';
 }
 
 /// A juz, e.g. "juz 30", "para 30".

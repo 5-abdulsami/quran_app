@@ -56,7 +56,11 @@ class QuranColors extends ThemeExtension<QuranColors> {
     if (other == null) return this;
     return QuranColors(
       quranText: Color.lerp(quranText, other.quranText, t)!,
-      sourceBackground: Color.lerp(sourceBackground, other.sourceBackground, t)!,
+      sourceBackground: Color.lerp(
+        sourceBackground,
+        other.sourceBackground,
+        t,
+      )!,
       sourceBorder: Color.lerp(sourceBorder, other.sourceBorder, t)!,
       marker: Color.lerp(marker, other.marker, t)!,
       highlight: Color.lerp(highlight, other.highlight, t)!,
@@ -262,7 +266,9 @@ abstract final class AppTheme {
         backgroundColor: p.surface,
         surfaceTintColor: Colors.transparent,
       ),
-      snackBarTheme: const SnackBarThemeData(behavior: SnackBarBehavior.floating),
+      snackBarTheme: const SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+      ),
       listTileTheme: const ListTileThemeData(minVerticalPadding: 12),
     );
   }

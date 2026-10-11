@@ -161,7 +161,10 @@ SplitVerse splitLeadingBismillah(String text) {
 ///     must not repeat it.
 ///   - at-Tawbah (9): false. It has no basmalah at all.
 ///   - every other surah: true.
-bool shouldRenderHeaderBismillah(int surahNumber, {required bool bismillahPre}) {
+bool shouldRenderHeaderBismillah(
+  int surahNumber, {
+  required bool bismillahPre,
+}) {
   if (surahNumber == 1 || surahNumber == 9) return false;
   return bismillahPre;
 }

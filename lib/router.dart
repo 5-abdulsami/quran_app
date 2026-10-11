@@ -42,7 +42,10 @@ abstract final class AppRoutes {
   /// Where a parsed reference leads.
   static String forTarget(NavigationTarget target) => switch (target) {
     SurahTarget(:final surah) => AppRoutes.surah(surah),
-    VerseTarget(:final surah, :final ayah) => AppRoutes.surah(surah, ayah: ayah),
+    VerseTarget(:final surah, :final ayah) => AppRoutes.surah(
+      surah,
+      ayah: ayah,
+    ),
     JuzTarget(:final juz) => AppRoutes.juz(juz),
   };
 }
@@ -133,7 +136,8 @@ GoRouter buildRouter({String initialLocation = AppRoutes.home}) => GoRouter(
         }
         final ayahParam = state.uri.queryParameters['ayah'];
         final ayah = _int(ayahParam);
-        if (ayahParam != null && (ayah == null || !isValidVerseKey(surah, ayah))) {
+        if (ayahParam != null &&
+            (ayah == null || !isValidVerseKey(surah, ayah))) {
           return const NotFoundScreen();
         }
         return SurahReaderScreen(

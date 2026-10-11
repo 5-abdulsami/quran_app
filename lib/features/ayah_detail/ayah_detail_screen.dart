@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 // Phase 1 placeholder; implemented in a later phase.
 class AyahDetailScreen extends StatelessWidget {
   const AyahDetailScreen({required this.surah, required this.ayah, super.key});

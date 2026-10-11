@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 // Phase 1 placeholder; implemented in a later phase.
 class JuzReaderScreen extends StatelessWidget {
   const JuzReaderScreen({required this.juz, this.initialVerseKey, super.key});
