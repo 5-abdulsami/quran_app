@@ -342,11 +342,11 @@ class $ReadingPositionTableTable extends ReadingPositionTable
     'updatedAt',
   );
   @override
-  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<int> updatedAt = GeneratedColumn<int>(
     'updated_at',
     aliasedName,
     false,
-    type: DriftSqlType.dateTime,
+    type: DriftSqlType.int,
     requiredDuringInsert: true,
   );
   @override
@@ -417,7 +417,7 @@ class $ReadingPositionTableTable extends ReadingPositionTable
         data['${effectivePrefix}verse_key'],
       )!,
       updatedAt: attachedDatabase.typeMapping.read(
-        DriftSqlType.dateTime,
+        DriftSqlType.int,
         data['${effectivePrefix}updated_at'],
       )!,
     );
@@ -437,7 +437,11 @@ class ReadingPositionRow extends DataClass
   /// The surah or juz number, as text so other modes (e.g. page) fit later.
   final String ref;
   final String verseKey;
-  final DateTime updatedAt;
+
+  /// Milliseconds since the epoch. Millisecond precision matters: switching
+  /// between surah and juz mode saves two positions within the same second,
+  /// and the most recent one must win.
+  final int updatedAt;
   const ReadingPositionRow({
     required this.mode,
     required this.ref,
@@ -450,7 +454,7 @@ class ReadingPositionRow extends DataClass
     map['mode'] = Variable<String>(mode);
     map['ref'] = Variable<String>(ref);
     map['verse_key'] = Variable<String>(verseKey);
-    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['updated_at'] = Variable<int>(updatedAt);
     return map;
   }
 
@@ -472,7 +476,7 @@ class ReadingPositionRow extends DataClass
       mode: serializer.fromJson<String>(json['mode']),
       ref: serializer.fromJson<String>(json['ref']),
       verseKey: serializer.fromJson<String>(json['verseKey']),
-      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      updatedAt: serializer.fromJson<int>(json['updatedAt']),
     );
   }
   @override
@@ -482,7 +486,7 @@ class ReadingPositionRow extends DataClass
       'mode': serializer.toJson<String>(mode),
       'ref': serializer.toJson<String>(ref),
       'verseKey': serializer.toJson<String>(verseKey),
-      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'updatedAt': serializer.toJson<int>(updatedAt),
     };
   }
 
@@ -490,7 +494,7 @@ class ReadingPositionRow extends DataClass
     String? mode,
     String? ref,
     String? verseKey,
-    DateTime? updatedAt,
+    int? updatedAt,
   }) => ReadingPositionRow(
     mode: mode ?? this.mode,
     ref: ref ?? this.ref,
@@ -534,7 +538,7 @@ class ReadingPositionTableCompanion
   final Value<String> mode;
   final Value<String> ref;
   final Value<String> verseKey;
-  final Value<DateTime> updatedAt;
+  final Value<int> updatedAt;
   final Value<int> rowid;
   const ReadingPositionTableCompanion({
     this.mode = const Value.absent(),
@@ -547,7 +551,7 @@ class ReadingPositionTableCompanion
     required String mode,
     required String ref,
     required String verseKey,
-    required DateTime updatedAt,
+    required int updatedAt,
     this.rowid = const Value.absent(),
   }) : mode = Value(mode),
        ref = Value(ref),
@@ -557,7 +561,7 @@ class ReadingPositionTableCompanion
     Expression<String>? mode,
     Expression<String>? ref,
     Expression<String>? verseKey,
-    Expression<DateTime>? updatedAt,
+    Expression<int>? updatedAt,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -573,7 +577,7 @@ class ReadingPositionTableCompanion
     Value<String>? mode,
     Value<String>? ref,
     Value<String>? verseKey,
-    Value<DateTime>? updatedAt,
+    Value<int>? updatedAt,
     Value<int>? rowid,
   }) {
     return ReadingPositionTableCompanion(
@@ -598,7 +602,7 @@ class ReadingPositionTableCompanion
       map['verse_key'] = Variable<String>(verseKey.value);
     }
     if (updatedAt.present) {
-      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+      map['updated_at'] = Variable<int>(updatedAt.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -815,7 +819,7 @@ typedef $$ReadingPositionTableTableCreateCompanionBuilder =
       required String mode,
       required String ref,
       required String verseKey,
-      required DateTime updatedAt,
+      required int updatedAt,
       Value<int> rowid,
     });
 typedef $$ReadingPositionTableTableUpdateCompanionBuilder =
@@ -823,7 +827,7 @@ typedef $$ReadingPositionTableTableUpdateCompanionBuilder =
       Value<String> mode,
       Value<String> ref,
       Value<String> verseKey,
-      Value<DateTime> updatedAt,
+      Value<int> updatedAt,
       Value<int> rowid,
     });
 
@@ -851,7 +855,7 @@ class $$ReadingPositionTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+  ColumnFilters<int> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnFilters(column),
   );
@@ -881,7 +885,7 @@ class $$ReadingPositionTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+  ColumnOrderings<int> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
   );
@@ -905,7 +909,7 @@ class $$ReadingPositionTableTableAnnotationComposer
   GeneratedColumn<String> get verseKey =>
       $composableBuilder(column: $table.verseKey, builder: (column) => column);
 
-  GeneratedColumn<DateTime> get updatedAt =>
+  GeneratedColumn<int> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 }
 
@@ -955,7 +959,7 @@ class $$ReadingPositionTableTableTableManager
                 Value<String> mode = const Value.absent(),
                 Value<String> ref = const Value.absent(),
                 Value<String> verseKey = const Value.absent(),
-                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> updatedAt = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ReadingPositionTableCompanion(
                 mode: mode,
@@ -969,7 +973,7 @@ class $$ReadingPositionTableTableTableManager
                 required String mode,
                 required String ref,
                 required String verseKey,
-                required DateTime updatedAt,
+                required int updatedAt,
                 Value<int> rowid = const Value.absent(),
               }) => ReadingPositionTableCompanion.insert(
                 mode: mode,

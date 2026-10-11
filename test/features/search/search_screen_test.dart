@@ -6,7 +6,9 @@ import 'package:quran_app/features/search/search_result_tile.dart';
 import '../../helpers/test_app.dart';
 
 void main() {
-  testWidgets('searching "2:255" goes to the verse, highlighted', (tester) async {
+  testWidgets('searching "2:255" goes to the verse, highlighted', (
+    tester,
+  ) async {
     final app = await TestApp.pump(tester, location: '/search');
     await tester.enterText(find.byType(TextField), '2:255');
     await app.settle(tester);

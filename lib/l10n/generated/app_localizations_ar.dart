@@ -253,6 +253,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get quickAccess => 'وصول سريع';
 
   @override
+  String get ayatAlKursi => 'آية الكرسي';
+
+  @override
+  String get sort => 'ترتيب';
+
+  @override
   String get recentBookmarks => 'أحدث المحفوظات';
 
   @override

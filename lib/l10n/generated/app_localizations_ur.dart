@@ -250,6 +250,12 @@ class AppLocalizationsUr extends AppLocalizations {
   String get quickAccess => 'فوری رسائی';
 
   @override
+  String get ayatAlKursi => 'آیت الکرسی';
+
+  @override
+  String get sort => 'ترتیب';
+
+  @override
   String get recentBookmarks => 'حالیہ محفوظ شدہ';
 
   @override

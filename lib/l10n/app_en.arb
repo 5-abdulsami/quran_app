@@ -86,6 +86,8 @@
   "@ayahNumberRange": {"placeholders": {"max": {"type": "int"}}},
   "invalidReference": "That reference does not exist in the Quran.",
   "quickAccess": "Quick access",
+  "ayatAlKursi": "Ayat al-Kursi",
+  "sort": "Sort",
   "recentBookmarks": "Recent bookmarks",
   "readBySurah": "Read by surah",
   "readByJuz": "Read by juz",

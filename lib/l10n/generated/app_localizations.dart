@@ -532,6 +532,18 @@ abstract class AppLocalizations {
   /// **'Quick access'**
   String get quickAccess;
 
+  /// No description provided for @ayatAlKursi.
+  ///
+  /// In en, this message translates to:
+  /// **'Ayat al-Kursi'**
+  String get ayatAlKursi;
+
+  /// No description provided for @sort.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort'**
+  String get sort;
+
   /// No description provided for @recentBookmarks.
   ///
   /// In en, this message translates to:

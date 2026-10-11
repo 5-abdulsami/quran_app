@@ -18,8 +18,10 @@ class BookmarkRepository {
 
   /// All bookmarks, newest first.
   Stream<List<Bookmark>> watchAll() =>
-      (_db.select(_db.bookmarkTable)
-            ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]))
+      (_db.select(_db.bookmarkTable)..orderBy([
+            (t) => OrderingTerm.desc(t.createdAt),
+            (t) => OrderingTerm.desc(t.id),
+          ]))
           .watch()
           .map((rows) => rows.map(_toBookmark).toList());
 

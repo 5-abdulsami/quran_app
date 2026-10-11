@@ -77,6 +77,8 @@
   "ayahNumberRange": "رقم الآية (1–{max})",
   "invalidReference": "هذا المرجع غير موجود في القرآن.",
   "quickAccess": "وصول سريع",
+  "ayatAlKursi": "آية الكرسي",
+  "sort": "ترتيب",
   "recentBookmarks": "أحدث المحفوظات",
   "readBySurah": "القراءة حسب السورة",
   "readByJuz": "القراءة حسب الجزء",

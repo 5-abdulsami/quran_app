@@ -77,6 +77,8 @@
   "ayahNumberRange": "آیت نمبر (1–{max})",
   "invalidReference": "یہ حوالہ قرآن میں موجود نہیں۔",
   "quickAccess": "فوری رسائی",
+  "ayatAlKursi": "آیت الکرسی",
+  "sort": "ترتیب",
   "recentBookmarks": "حالیہ محفوظ شدہ",
   "readBySurah": "سورت کے مطابق پڑھیں",
   "readByJuz": "پارے کے مطابق پڑھیں",

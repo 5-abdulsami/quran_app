@@ -250,6 +250,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get quickAccess => 'Quick access';
 
   @override
+  String get ayatAlKursi => 'Ayat al-Kursi';
+
+  @override
+  String get sort => 'Sort';
+
+  @override
   String get recentBookmarks => 'Recent bookmarks';
 
   @override

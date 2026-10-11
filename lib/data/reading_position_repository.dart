@@ -19,7 +19,7 @@ class ReadingPositionRepository {
           mode: mode.name,
           ref: '$ref',
           verseKey: verseKey,
-          updatedAt: DateTime.now(),
+          updatedAt: DateTime.now().millisecondsSinceEpoch,
         ),
       );
 
@@ -58,7 +58,7 @@ class ReadingPositionRepository {
       mode: mode,
       ref: ref,
       verseKey: r.verseKey,
-      updatedAt: r.updatedAt,
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(r.updatedAt),
     );
   }
 }

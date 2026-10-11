@@ -34,7 +34,11 @@ class ReadingPositionTable extends Table {
   TextColumn get ref => text()();
 
   TextColumn get verseKey => text()();
-  DateTimeColumn get updatedAt => dateTime()();
+
+  /// Milliseconds since the epoch. Millisecond precision matters: switching
+  /// between surah and juz mode saves two positions within the same second,
+  /// and the most recent one must win.
+  IntColumn get updatedAt => integer()();
 
   @override
   Set<Column<Object>> get primaryKey => {mode, ref};
