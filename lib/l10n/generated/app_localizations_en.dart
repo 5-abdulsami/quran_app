@@ -27,6 +27,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get navBookmarks => 'Bookmarks';
 
   @override
+  String get navSaved => 'Saved';
+
+  @override
   String get settings => 'Settings';
 
   @override

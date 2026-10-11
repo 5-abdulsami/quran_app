@@ -27,6 +27,9 @@ class AppLocalizationsUr extends AppLocalizations {
   String get navBookmarks => 'محفوظ شدہ';
 
   @override
+  String get navSaved => 'محفوظ';
+
+  @override
   String get settings => 'ترتیبات';
 
   @override

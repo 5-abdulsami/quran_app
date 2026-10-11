@@ -240,6 +240,13 @@ abstract final class AppTheme {
         backgroundColor: p.surface,
         surfaceTintColor: Colors.transparent,
         indicatorColor: p.accentContainer,
+        // A label never spills past its tab.
+        labelTextStyle: WidgetStateProperty.resolveWith(
+          (states) => base.textTheme.labelMedium?.copyWith(
+            overflow: TextOverflow.ellipsis,
+            color: states.contains(WidgetState.selected) ? p.ink : p.inkMuted,
+          ),
+        ),
       ),
       chipTheme: base.chipTheme.copyWith(
         side: BorderSide(color: p.outline),

@@ -21,7 +21,7 @@ void main() {
   testWidgets('shows the five bottom-navigation tabs', (tester) async {
     await pumpApp(tester);
     expect(find.byType(NavigationBar), findsOneWidget);
-    for (final label in ['Home', 'Surahs', 'Juz', 'Search', 'Bookmarks']) {
+    for (final label in ['Home', 'Surahs', 'Juz', 'Search', 'Saved']) {
       expect(find.text(label), findsWidgets);
     }
   });

@@ -27,6 +27,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get navBookmarks => 'المحفوظات';
 
   @override
+  String get navSaved => 'المحفوظات';
+
+  @override
   String get settings => 'الإعدادات';
 
   @override

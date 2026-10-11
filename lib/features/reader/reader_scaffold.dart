@@ -7,11 +7,11 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/widgets/async_value_view.dart';
-import '../settings/settings_controller.dart';
 import 'reader_controls.dart';
 import 'reader_items.dart';
 import 'reader_providers.dart';
 import 'reader_view.dart';
+import 'translation_menu.dart';
 
 /// An extra item in a reader's overflow menu.
 class ReaderMenuAction {
@@ -74,23 +74,12 @@ class _ReaderScaffoldState extends ConsumerState<ReaderScaffold>
         : const AsyncData<ReadingPosition?>(null);
     final attribution =
         ref.watch(visibleAttributionsProvider).value ?? const [];
-    final showTranslation = ref.watch(
-      settingsControllerProvider.select((s) => s.showTranslation),
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
           ...?widget.extraActions?.call(_readerKey),
-          IconButton(
-            tooltip: showTranslation ? l10n.arabicOnly : l10n.showTranslation,
-            isSelected: showTranslation,
-            icon: const Icon(Icons.translate),
-            onPressed: () => ref
-                .read(settingsControllerProvider.notifier)
-                .setShowTranslation(show: !showTranslation),
-          ),
+          const TranslationMenuButton(),
           IconButton(
             tooltip: l10n.fontSizeArabic,
             icon: const Icon(Icons.format_size),

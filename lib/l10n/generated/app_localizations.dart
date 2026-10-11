@@ -136,6 +136,12 @@ abstract class AppLocalizations {
   /// **'Bookmarks'**
   String get navBookmarks;
 
+  /// No description provided for @navSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get navSaved;
+
   /// No description provided for @settings.
   ///
   /// In en, this message translates to:
