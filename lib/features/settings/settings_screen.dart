@@ -11,6 +11,7 @@ import '../../domain/models/app_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
+import '../../ui/theme/quran_typography.dart';
 import '../reader/reader_controls.dart';
 import 'settings_controller.dart';
 
@@ -84,14 +85,11 @@ class SettingsScreen extends ConsumerWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    for (final (font, name) in const [
-                      (QuranFont.scheherazadeNew, 'Scheherazade New'),
-                      (QuranFont.amiriQuran, 'Amiri Quran'),
-                    ])
+                    for (final spec in QuranFonts.all)
                       ChoiceChip(
-                        label: Text(name),
-                        selected: settings.quranFont == font,
-                        onSelected: (_) => controller.setQuranFont(font),
+                        label: Text(spec.label),
+                        selected: settings.quranFont == spec.font,
+                        onSelected: (_) => controller.setQuranFont(spec.font),
                       ),
                   ],
                 ),

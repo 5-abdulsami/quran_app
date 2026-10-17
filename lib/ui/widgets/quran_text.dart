@@ -51,7 +51,7 @@ class QuranText extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.quranColors;
     final style = QuranTypography.style(
-      family: QuranTypography.familyOf(context),
+      font: QuranTypography.fontOf(context),
       fontSize: fontSize,
       color: colors.quranText,
     );
@@ -104,13 +104,11 @@ class QuranText extends StatelessWidget {
             overflow: maxLines == null ? null : TextOverflow.ellipsis,
           );
 
+    // The Arabic locale travels on the text style (see QuranTypography.style),
+    // so no per-verse Localizations scope is needed: lists stay light.
     return Directionality(
       textDirection: TextDirection.rtl,
-      child: Localizations.override(
-        context: context,
-        locale: QuranTypography.locale,
-        child: SizedBox(width: double.infinity, child: child),
-      ),
+      child: SizedBox(width: double.infinity, child: child),
     );
   }
 }

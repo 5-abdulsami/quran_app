@@ -3,8 +3,17 @@ import 'package:meta/meta.dart';
 /// The reader's appearance choice.
 enum AppThemeMode { system, light, dark, sepia }
 
-/// The bundled font used for Quranic text.
-enum QuranFont { scheherazadeNew, amiriQuran }
+/// The bundled fonts for Quranic text. Each one covers every code point the
+/// Uthmani text uses (checked by test/core/quran_fonts_test.dart).
+enum QuranFont {
+  scheherazadeNew,
+  amiriQuran,
+  amiri,
+  notoNaskhArabic,
+  notoSansArabic,
+  lateef,
+  harmattan,
+}
 
 /// The UI languages the app ships. `null` in [AppSettings.languageCode] means
 /// "follow the device".

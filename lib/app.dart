@@ -53,7 +53,7 @@ class _QuranAppState extends ConsumerState<QuranApp> {
       routerConfig: _router,
       // Every QuranText below reads the chosen Quran font from this scope.
       builder: (context, child) => QuranFontScope(
-        family: QuranTypography.familyFor(settings.quranFont),
+        font: QuranFonts.of(settings.quranFont),
         child: child ?? const SizedBox.shrink(),
       ),
     );

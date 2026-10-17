@@ -15,10 +15,11 @@ import '../../data/translation_download_service.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../ui/theme/app_theme.dart';
+import 'loading_splash.dart';
 
 /// Opens the databases, then hands over to [QuranApp].
 ///
-/// While opening it shows a quiet splash; if opening fails it shows a recovery
+/// While opening it shows the animated splash; if opening fails it shows a recovery
 /// screen instead of crashing, with the option to restore the bundled Quran
 /// database (bookmarks live in a separate file and are never affected).
 class AppBootstrap extends StatefulWidget {
@@ -35,6 +36,14 @@ class _AppBootstrapState extends State<AppBootstrap> {
   late Directory _translationStore;
   Object? _error;
 
+  /// The splash stays mounted until its fade-out has finished.
+  bool _splashMounted = true;
+
+  /// Long enough for the splash animation to read as intentional, short
+  /// enough never to hold back a fast start.
+  static const _minimumSplash = Duration(milliseconds: 700);
+  static const _fadeOut = Duration(milliseconds: 450);
+
   @override
   void initState() {
     super.initState();
@@ -49,6 +58,7 @@ class _AppBootstrapState extends State<AppBootstrap> {
 
   Future<void> _open({bool forceContentReset = false}) async {
     setState(() => _error = null);
+    final minimum = Future<void>.delayed(_minimumSplash);
     try {
       final support = await getApplicationSupportDirectory();
       final dataDir = p.join(support.path, 'quran');
@@ -66,6 +76,7 @@ class _AppBootstrapState extends State<AppBootstrap> {
           storeDirectory: _translationStore,
         );
       }
+      await minimum;
       if (!mounted) {
         await databases.close();
         return;
@@ -86,20 +97,44 @@ class _AppBootstrapState extends State<AppBootstrap> {
   @override
   Widget build(BuildContext context) {
     final databases = _databases;
-    if (databases != null) {
-      return ProviderScope(
-        overrides: [
-          sharedPreferencesProvider.overrideWithValue(widget.prefs),
-          contentDatabaseProvider.overrideWithValue(databases.content),
-          userDatabaseProvider.overrideWithValue(databases.user),
-          translationStoreDirectoryProvider.overrideWithValue(
-            _translationStore,
-          ),
-        ],
-        child: const QuranApp(),
-      );
-    }
+    final ready = databases != null;
 
+    // The app is built underneath as soon as it can be, and the splash fades
+    // out on top of it: no blank frame, no abrupt cut.
+    return Stack(
+      textDirection: TextDirection.ltr,
+      children: [
+        if (databases != null)
+          ProviderScope(
+            overrides: [
+              sharedPreferencesProvider.overrideWithValue(widget.prefs),
+              contentDatabaseProvider.overrideWithValue(databases.content),
+              userDatabaseProvider.overrideWithValue(databases.user),
+              translationStoreDirectoryProvider.overrideWithValue(
+                _translationStore,
+              ),
+            ],
+            child: const QuranApp(),
+          ),
+        if (_splashMounted)
+          IgnorePointer(
+            ignoring: ready,
+            child: AnimatedOpacity(
+              opacity: ready ? 0 : 1,
+              duration: _fadeOut,
+              curve: Curves.easeOut,
+              onEnd: () {
+                if (ready) setState(() => _splashMounted = false);
+              },
+              child: _startupScreen(),
+            ),
+          ),
+      ],
+    );
+  }
+
+  /// The splash, or the recovery screen when opening failed.
+  Widget _startupScreen() {
     final settings = SettingsRepository(widget.prefs).load();
     final language = settings.languageCode;
     return MaterialApp(
@@ -116,38 +151,11 @@ class _AppBootstrapState extends State<AppBootstrap> {
         GlobalCupertinoLocalizations.delegate,
       ],
       home: _error == null
-          ? const _Splash()
+          ? const LoadingSplash()
           : _RecoveryScreen(
               onRetry: _open,
               onRestore: () => _open(forceContentReset: true),
             ),
-    );
-  }
-}
-
-class _Splash extends StatelessWidget {
-  const _Splash();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(Icons.menu_book, size: 56, color: theme.colorScheme.primary),
-            const SizedBox(height: 24),
-            const SizedBox.square(
-              dimension: 28,
-              child: CircularProgressIndicator(strokeWidth: 2.5),
-            ),
-            const SizedBox(height: 16),
-            Text(l10n.preparingQuran, style: theme.textTheme.bodyMedium),
-          ],
-        ),
-      ),
     );
   }
 }

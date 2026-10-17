@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:quran_app/domain/models/app_settings.dart';
 import 'package:quran_app/features/reader/ayah_tile.dart';
 import 'package:quran_app/features/reader/bismillah_header.dart';
 import 'package:quran_app/features/reader/surah_header.dart';
@@ -66,7 +67,10 @@ void main() {
       final text = tester.widget<Text>(
         find.descendant(of: tile, matching: find.byKey(QuranText.textKey)),
       );
-      expect(text.style?.fontFamily, QuranTypography.scheherazadeFamily);
+      expect(
+        text.style?.fontFamily,
+        QuranFonts.of(QuranFont.scheherazadeNew).family,
+      );
       expect(text.style?.height, QuranTypography.lineHeight);
       expect(text.textDirection, TextDirection.rtl);
       expect(text.locale, const Locale('ar'));

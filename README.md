@@ -11,6 +11,8 @@ this app never contacts its server or database.
   more translations.
 - Read by surah or by juz, go to any verse, search Arabic and translations,
   keep bookmarks, and resume reading where you stopped.
+- Seven bundled Quran fonts (Scheherazade New by default), chosen in
+  Settings.
 - Light, dark and sepia themes. The UI is in English, Urdu or Arabic, and
   the Urdu and Arabic UIs are right-to-left.
 
@@ -213,7 +215,7 @@ The content schema mirrors the web app's:
 - **Arabic fallback in the Latin UI font.** Arabic typed into the search
   field, and Urdu translations, use the device's system Arabic fonts (as
   every Android and iOS device ships them). Only Quranic text uses the
-  bundled Amiri Quran.
+  bundled Quran fonts.
 - **Out of scope for v1:** audio, tafsir, a page-image mushaf,
   word-by-word translation, widgets and sync. The schema and routing leave
   room for them.
@@ -222,5 +224,10 @@ The content schema mirrors the web app's:
 
 - Quranic text and translations: AlQuran.cloud terms
   (https://alquran.cloud/terms-and-conditions). Credits are shown in the app.
-- Amiri Quran font: SIL Open Font License 1.1
-  (`assets/fonts/OFL-amiri-quran.txt`), shown on the licence page.
+- Quran fonts, all SIL Open Font License 1.1 (`assets/fonts/OFL-*.txt`, shown
+  on the licence page): Scheherazade New (default), Lateef and Harmattan by SIL
+  Global; Amiri and Amiri Quran by The Amiri Project Authors; Noto Naskh
+  Arabic and Noto Sans Arabic by The Noto Project Authors.
+- Every Quran font must cover every code point of the Uthmani text
+  (`test/core/quran_fonts_test.dart`). The end-of-ayah ornament is always
+  drawn with Amiri Quran, which composes the verse number inside it.

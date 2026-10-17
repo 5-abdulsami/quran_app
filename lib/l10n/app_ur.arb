@@ -125,7 +125,7 @@
   "note": "نوٹ",
 
   "appearance": "ظاہری شکل",
-  "themeSystem": "سسٹم کے مطابق",
+  "themeSystem": "سسٹم",
   "themeLight": "روشن",
   "themeDark": "تاریک",
   "themeSepia": "سیپیا",
@@ -156,7 +156,7 @@
   "aboutSources": "تعارف و مآخذ",
   "arabicText": "عربی متن",
   "font": "فونٹ",
-  "fontCredit": "Scheherazade New از SIL Global اور Amiri Quran از The Amiri Project Authors، دونوں SIL Open Font License 1.1 کے تحت۔",
+  "fontCredit": "قرآنی خطوط: Scheherazade New، Lateef اور Harmattan از SIL Global؛ Amiri اور Amiri Quran از The Amiri Project Authors؛ Noto Naskh Arabic اور Noto Sans Arabic از The Noto Project Authors۔ سب SIL Open Font License 1.1 کے تحت۔",
   "quranFont": "قرآنی خط",
   "viewLicences": "لائسنس دیکھیں",
   "appVersion": "ایپ ورژن",

@@ -401,7 +401,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get appearance => 'المظهر';
 
   @override
-  String get themeSystem => 'حسب النظام';
+  String get themeSystem => 'النظام';
 
   @override
   String get themeLight => 'فاتح';
@@ -505,7 +505,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fontCredit =>
-      'خط Scheherazade New من SIL Global وخط Amiri Quran من The Amiri Project Authors، وكلاهما مرخّص برخصة SIL Open Font License 1.1.';
+      'خطوط المصحف: Scheherazade New وLateef وHarmattan من SIL Global؛ وAmiri وAmiri Quran من The Amiri Project Authors؛ وNoto Naskh Arabic وNoto Sans Arabic من The Noto Project Authors. وكلها مرخّصة برخصة SIL Open Font License 1.1.';
 
   @override
   String get quranFont => 'خط المصحف';

@@ -9,6 +9,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/app_shell.dart';
+import '../../ui/keyboard.dart';
 import '../bookmarks/bookmark_providers.dart';
 import '../bookmarks/bookmark_tile.dart';
 
@@ -28,6 +29,7 @@ class HomeScreen extends ConsumerWidget {
         actions: const [SettingsAction()],
       ),
       body: ListView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
           _ContinueReadingCard(surahs: surahs),
@@ -100,7 +102,7 @@ class _ContinueReadingCard extends ConsumerWidget {
         : surahs.elementAtOrNull(verse.surah - 1);
 
     final String subtitle;
-    final String? location;
+    final String location;
     if (position != null && verse != null && surah != null) {
       final where = '${surah.nameSimple} · ${position.verseKey}';
       subtitle = position.mode == ReadingMode.juz
@@ -110,8 +112,9 @@ class _ContinueReadingCard extends ConsumerWidget {
           ? AppRoutes.juz(position.ref, verseKey: position.verseKey)
           : AppRoutes.surah(verse.surah, ayah: verse.ayah);
     } else {
+      // Nothing read yet: the card starts at the beginning of the mushaf.
       subtitle = l10n.continueReadingEmpty;
-      location = null;
+      location = AppRoutes.surah(1);
     }
 
     return Card(
@@ -127,8 +130,8 @@ class _ContinueReadingCard extends ConsumerWidget {
           ),
         ),
         subtitle: Text(subtitle),
-        trailing: location == null ? null : const Icon(Icons.arrow_forward),
-        onTap: location == null ? null : () => context.push(location!),
+        trailing: const Icon(Icons.arrow_forward),
+        onTap: () => context.push(location),
       ),
     );
   }
@@ -170,6 +173,7 @@ class _GoToVerseFieldState extends ConsumerState<_GoToVerseField> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return TextField(
+      onTapOutside: dismissKeyboard,
       key: const ValueKey('go-to-verse'),
       controller: _controller,
       textInputAction: TextInputAction.go,

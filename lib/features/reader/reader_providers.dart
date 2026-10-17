@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/models/bookmark.dart';
@@ -5,6 +7,18 @@ import '../../domain/models/translation_edition.dart';
 import '../../providers.dart';
 import '../settings/settings_controller.dart';
 import 'reader_items.dart';
+
+/// Keeps a reader's content for a while after it closes, so going back to a
+/// surah or juz just read opens instantly instead of re-querying.
+extension _CacheFor on Ref {
+  void cacheFor(Duration duration) {
+    final link = keepAlive();
+    final timer = Timer(duration, link.close);
+    onDispose(timer.cancel);
+  }
+}
+
+const _readerCacheDuration = Duration(minutes: 3);
 
 /// The translations currently shown, re-read when the selection changes.
 final _visibleTranslationIdsProvider = Provider<List<String>>(
@@ -16,6 +30,7 @@ final _visibleTranslationIdsProvider = Provider<List<String>>(
 /// Everything the surah reader renders for surah `n`.
 final surahContentProvider = FutureProvider.autoDispose
     .family<ReaderContent, int>((ref, number) async {
+      ref.cacheFor(_readerCacheDuration);
       final ids = ref.watch(_visibleTranslationIdsProvider);
       final repo = ref.watch(quranRepositoryProvider);
       final surah = (await repo.surah(number))!;
@@ -28,6 +43,7 @@ final surahContentProvider = FutureProvider.autoDispose
 /// Everything the juz reader renders for juz `n`.
 final juzContentProvider = FutureProvider.autoDispose
     .family<ReaderContent, int>((ref, number) async {
+      ref.cacheFor(_readerCacheDuration);
       final ids = ref.watch(_visibleTranslationIdsProvider);
       final repo = ref.watch(quranRepositoryProvider);
       return buildJuzContent(

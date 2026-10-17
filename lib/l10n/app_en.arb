@@ -137,7 +137,7 @@
   "note": "Note",
 
   "appearance": "Appearance",
-  "themeSystem": "Match system",
+  "themeSystem": "System",
   "themeLight": "Light",
   "themeDark": "Dark",
   "themeSepia": "Sepia",
@@ -169,7 +169,7 @@
   "aboutSources": "About & Sources",
   "arabicText": "Arabic text",
   "font": "Font",
-  "fontCredit": "Scheherazade New by SIL Global and Amiri Quran by The Amiri Project Authors, both under the SIL Open Font License 1.1.",
+  "fontCredit": "Quran fonts: Scheherazade New, Lateef and Harmattan by SIL Global; Amiri and Amiri Quran by The Amiri Project Authors; Noto Naskh Arabic and Noto Sans Arabic by The Noto Project Authors. All under the SIL Open Font License 1.1.",
   "quranFont": "Quran font",
   "viewLicences": "View licences",
   "appVersion": "App version",

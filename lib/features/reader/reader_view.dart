@@ -74,7 +74,11 @@ class ReaderViewState extends ConsumerState<ReaderView> {
   void dispose() {
     _positions.itemPositions.removeListener(_onPositionsChanged);
     _highlightTimer?.cancel();
-    _debounce?.cancel();
+    // Leaving within the save delay must not lose the reader's place.
+    if (_debounce?.isActive ?? false) {
+      _debounce!.cancel();
+      if (_current case final current?) widget.onVisibleAyah(current);
+    }
     super.dispose();
   }
 

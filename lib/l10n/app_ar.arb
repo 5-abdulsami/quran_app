@@ -125,7 +125,7 @@
   "note": "ملاحظة",
 
   "appearance": "المظهر",
-  "themeSystem": "حسب النظام",
+  "themeSystem": "النظام",
   "themeLight": "فاتح",
   "themeDark": "داكن",
   "themeSepia": "بني فاتح",
@@ -156,7 +156,7 @@
   "aboutSources": "حول التطبيق والمصادر",
   "arabicText": "النص العربي",
   "font": "الخط",
-  "fontCredit": "خط Scheherazade New من SIL Global وخط Amiri Quran من The Amiri Project Authors، وكلاهما مرخّص برخصة SIL Open Font License 1.1.",
+  "fontCredit": "خطوط المصحف: Scheherazade New وLateef وHarmattan من SIL Global؛ وAmiri وAmiri Quran من The Amiri Project Authors؛ وNoto Naskh Arabic وNoto Sans Arabic من The Noto Project Authors. وكلها مرخّصة برخصة SIL Open Font License 1.1.",
   "quranFont": "خط المصحف",
   "viewLicences": "عرض التراخيص",
   "appVersion": "إصدار التطبيق",

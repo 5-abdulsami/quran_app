@@ -56,15 +56,35 @@ flutter:
 
   assets:
     - assets/db/
-    - assets/fonts/OFL-amiri-quran.txt
     - assets/fonts/OFL-scheherazade-new.txt
+    - assets/fonts/OFL-amiri-quran.txt
+    - assets/fonts/OFL-amiri.txt
+    - assets/fonts/OFL-noto-naskh-arabic.txt
+    - assets/fonts/OFL-noto-sans-arabic.txt
+    - assets/fonts/OFL-lateef.txt
+    - assets/fonts/OFL-harmattan.txt
 
   fonts:
-    # Quranic text: Scheherazade New by default, Amiri Quran as an option (and
-    # for the end-of-ayah ornament). Bundled; never fetched at runtime.
+    # Quran fonts (see lib/ui/theme/quran_typography.dart). All OFL, bundled,
+    # never fetched. Amiri Quran also draws every end-of-ayah ornament.
     - family: ScheherazadeNew
       fonts:
         - asset: assets/fonts/ScheherazadeNew-Regular.ttf
     - family: AmiriQuran
       fonts:
         - asset: assets/fonts/AmiriQuran-Regular.ttf
+    - family: Amiri
+      fonts:
+        - asset: assets/fonts/Amiri-Regular.ttf
+    - family: NotoNaskhArabic
+      fonts:
+        - asset: assets/fonts/NotoNaskhArabic-Variable.ttf
+    - family: NotoSansArabic
+      fonts:
+        - asset: assets/fonts/NotoSansArabic-Variable.ttf
+    - family: Lateef
+      fonts:
+        - asset: assets/fonts/Lateef-Regular.ttf
+    - family: Harmattan
+      fonts:
+        - asset: assets/fonts/Harmattan-Regular.ttf

@@ -217,6 +217,14 @@ abstract final class AppTheme {
     );
 
     return base.copyWith(
+      // Light, modern transitions: fade-forwards on Android, the native
+      // slide on iOS.
+      pageTransitionsTheme: const PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: FadeForwardsPageTransitionsBuilder(),
+          TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        },
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: p.background,
         foregroundColor: p.ink,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../data/reading_position_repository.dart';
 import '../../domain/models/bookmark.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
@@ -62,9 +63,19 @@ class _ReaderScaffoldState extends ConsumerState<ReaderScaffold>
     with KeepAwakeWhileReading {
   final _readerKey = GlobalKey<ReaderViewState>();
 
-  void _savePosition(AyahItem item) => ref
-      .read(readingPositionRepositoryProvider)
-      .save(widget.mode, widget.ref, item.ayah.verseKey);
+  /// Captured once, so the final save can run while the screen is closing.
+  late final ReadingPositionRepository _positions = ref.read(
+    readingPositionRepositoryProvider,
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _positions; // Resolve before any dispose-time save needs it.
+  }
+
+  void _savePosition(AyahItem item) =>
+      _positions.save(widget.mode, widget.ref, item.ayah.verseKey);
 
   @override
   Widget build(BuildContext context) {

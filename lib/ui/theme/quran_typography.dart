@@ -2,23 +2,103 @@ import 'package:flutter/material.dart';
 
 import '../../domain/models/app_settings.dart';
 
+/// One bundled Quran font: what the reader picks in Settings.
+@immutable
+class QuranFontSpec {
+  const QuranFontSpec({
+    required this.font,
+    required this.family,
+    required this.label,
+    required this.licenceAsset,
+    this.scale = 1,
+  });
+
+  final QuranFont font;
+
+  /// The family declared in pubspec.yaml.
+  final String family;
+
+  /// The font's own name, shown as-is in every UI language.
+  final String label;
+
+  /// Its OFL licence, shown on the licence page.
+  final String licenceAsset;
+
+  /// Brings fonts with a small design size up to the others, so a chosen
+  /// text size looks the same whichever font is selected.
+  final double scale;
+}
+
+/// Every bundled Quran font. All are under the SIL Open Font License, never
+/// fetched at runtime, and cover every code point of the Uthmani text.
+abstract final class QuranFonts {
+  static const all = [
+    QuranFontSpec(
+      font: QuranFont.scheherazadeNew,
+      family: 'ScheherazadeNew',
+      label: 'Scheherazade New',
+      licenceAsset: 'assets/fonts/OFL-scheherazade-new.txt',
+    ),
+    QuranFontSpec(
+      font: QuranFont.amiriQuran,
+      family: 'AmiriQuran',
+      label: 'Amiri Quran',
+      licenceAsset: 'assets/fonts/OFL-amiri-quran.txt',
+    ),
+    QuranFontSpec(
+      font: QuranFont.amiri,
+      family: 'Amiri',
+      label: 'Amiri',
+      licenceAsset: 'assets/fonts/OFL-amiri.txt',
+    ),
+    QuranFontSpec(
+      font: QuranFont.notoNaskhArabic,
+      family: 'NotoNaskhArabic',
+      label: 'Noto Naskh Arabic',
+      licenceAsset: 'assets/fonts/OFL-noto-naskh-arabic.txt',
+      scale: 0.92,
+    ),
+    QuranFontSpec(
+      font: QuranFont.notoSansArabic,
+      family: 'NotoSansArabic',
+      label: 'Noto Sans Arabic',
+      licenceAsset: 'assets/fonts/OFL-noto-sans-arabic.txt',
+      scale: 0.9,
+    ),
+    QuranFontSpec(
+      font: QuranFont.lateef,
+      family: 'Lateef',
+      label: 'Lateef',
+      licenceAsset: 'assets/fonts/OFL-lateef.txt',
+      scale: 1.25,
+    ),
+    QuranFontSpec(
+      font: QuranFont.harmattan,
+      family: 'Harmattan',
+      label: 'Harmattan',
+      licenceAsset: 'assets/fonts/OFL-harmattan.txt',
+      scale: 1.1,
+    ),
+  ];
+
+  static QuranFontSpec of(QuranFont font) =>
+      all.firstWhere((spec) => spec.font == font);
+
+  /// The default (the first entry): SIL's Scheherazade New, very legible with
+  /// full Quranic mark support.
+  static QuranFontSpec get standard => all.first;
+}
+
 /// Typography for Quranic text.
 ///
 /// Every piece of Quranic text in the app goes through [QuranTypography.style]
-/// with the family from [QuranTypography.familyOf], so the font, locale and
-/// line height can never drift between screens.
+/// with the font from [QuranTypography.fontOf], so the family, size, locale
+/// and line height can never drift between screens.
 abstract final class QuranTypography {
-  /// SIL's Scheherazade New: full coverage of the Quranic marks in the
-  /// Uthmani (Tanzil) text, very legible. The default.
-  static const String scheherazadeFamily = 'ScheherazadeNew';
-
-  /// Amiri Quran, the alternative.
-  static const String amiriFamily = 'AmiriQuran';
-
   /// The end-of-ayah ornament (U+06DD + digits) is always drawn with Amiri
-  /// Quran, which composes the number inside the ornament; Scheherazade New
-  /// leaves the digits beside an empty ornament.
-  static const String ornamentFamily = amiriFamily;
+  /// Quran, which composes the number inside the ornament; most other fonts
+  /// leave the digits beside an empty ornament.
+  static const String ornamentFamily = 'AmiriQuran';
 
   /// Arabic locale, so the shaper picks Arabic forms and features.
   static const Locale locale = Locale('ar');
@@ -30,25 +110,19 @@ abstract final class QuranTypography {
   /// anything tighter the marks of consecutive lines collide.
   static const double lineHeight = 2.5;
 
-  /// The bundled family for a [QuranFont] choice. Fonts are never fetched.
-  static String familyFor(QuranFont font) => switch (font) {
-    QuranFont.scheherazadeNew => scheherazadeFamily,
-    QuranFont.amiriQuran => amiriFamily,
-  };
+  /// The font chosen in Settings, provided by [QuranFontScope].
+  static QuranFontSpec fontOf(BuildContext context) =>
+      context.dependOnInheritedWidgetOfExactType<QuranFontScope>()?.font ??
+      QuranFonts.standard;
 
-  /// The family chosen in Settings, provided by [QuranFontScope].
-  static String familyOf(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<QuranFontScope>()?.family ??
-      scheherazadeFamily;
-
-  /// The style for Quranic text at [fontSize].
+  /// The style for Quranic text at [fontSize] in [font].
   static TextStyle style({
-    required String family,
+    required QuranFontSpec font,
     required double fontSize,
     required Color color,
   }) => TextStyle(
-    fontFamily: family,
-    fontSize: fontSize,
+    fontFamily: font.family,
+    fontSize: fontSize * font.scale,
     height: lineHeight,
     color: color,
     locale: locale,
@@ -57,15 +131,14 @@ abstract final class QuranTypography {
   );
 }
 
-/// Makes the reader's chosen Quran font available to every [QuranText].
+/// Makes the reader's chosen Quran font available to every Quran text widget.
 class QuranFontScope extends InheritedWidget {
-  const QuranFontScope({required this.family, required super.child, super.key});
+  const QuranFontScope({required this.font, required super.child, super.key});
 
-  final String family;
+  final QuranFontSpec font;
 
   @override
-  bool updateShouldNotify(QuranFontScope oldWidget) =>
-      oldWidget.family != family;
+  bool updateShouldNotify(QuranFontScope oldWidget) => oldWidget.font != font;
 }
 
 /// Typography for translations.

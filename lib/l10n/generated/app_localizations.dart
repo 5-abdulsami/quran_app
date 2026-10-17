@@ -799,7 +799,7 @@ abstract class AppLocalizations {
   /// No description provided for @themeSystem.
   ///
   /// In en, this message translates to:
-  /// **'Match system'**
+  /// **'System'**
   String get themeSystem;
 
   /// No description provided for @themeLight.
@@ -973,7 +973,7 @@ abstract class AppLocalizations {
   /// No description provided for @fontCredit.
   ///
   /// In en, this message translates to:
-  /// **'Scheherazade New by SIL Global and Amiri Quran by The Amiri Project Authors, both under the SIL Open Font License 1.1.'**
+  /// **'Quran fonts: Scheherazade New, Lateef and Harmattan by SIL Global; Amiri and Amiri Quran by The Amiri Project Authors; Noto Naskh Arabic and Noto Sans Arabic by The Noto Project Authors. All under the SIL Open Font License 1.1.'**
   String get fontCredit;
 
   /// No description provided for @quranFont.

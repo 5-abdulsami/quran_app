@@ -12,6 +12,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/app_shell.dart';
+import '../../ui/keyboard.dart';
 import '../../ui/widgets/async_value_view.dart';
 import '../reader/verse_actions.dart';
 import '../surahs/surah_list_tile.dart';
@@ -88,6 +89,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       appBar: AppBar(
         titleSpacing: 8,
         title: TextField(
+          onTapOutside: dismissKeyboard,
           controller: _query,
           autofocus: widget.initialQuery.isEmpty,
           textInputAction: TextInputAction.search,
@@ -177,6 +179,7 @@ class _Results extends ConsumerWidget {
         return false;
       },
       child: ListView(
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: [
           if (results.goTo case final target?)
             Padding(
@@ -273,6 +276,7 @@ class _EmptySearch extends ConsumerWidget {
     final recent = ref.watch(recentSearchesProvider);
 
     return ListView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
       padding: const EdgeInsets.all(16),
       children: [
         if (recent.isNotEmpty) ...[

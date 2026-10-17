@@ -54,7 +54,7 @@ class SurahHeader extends StatelessWidget {
                     textDirection: TextDirection.rtl,
                     locale: QuranTypography.locale,
                     style: TextStyle(
-                      fontFamily: QuranTypography.familyOf(context),
+                      fontFamily: QuranTypography.fontOf(context).family,
                       fontSize: arabicFontSize * 1.15,
                       // Room for the marks below the name (e.g. a kasra).
                       height: 2.3,

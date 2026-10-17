@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_app/core/quran/attribution.dart';
+import 'package:quran_app/domain/models/app_settings.dart';
 import 'package:quran_app/features/reader/ayah_tile.dart';
 import 'package:quran_app/ui/app_shell.dart';
 import 'package:quran_app/ui/theme/app_theme.dart';
@@ -75,7 +76,9 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.textContaining('Scheherazade New by SIL Global'),
+      find.textContaining(
+        'Scheherazade New, Lateef and Harmattan by SIL Global',
+      ),
       findsOneWidget,
     );
     expect(find.textContaining('SIL Open Font License'), findsOneWidget);
@@ -201,8 +204,14 @@ void quranFontTests() {
     'Scheherazade New is the default; the ornament uses Amiri Quran',
     (tester) async {
       final app = await TestApp.pump(tester, location: '/surah/1');
-      expect(verseStyle(tester).fontFamily, QuranTypography.scheherazadeFamily);
-      expect(ornamentStyle(tester).fontFamily, QuranTypography.amiriFamily);
+      expect(
+        verseStyle(tester).fontFamily,
+        QuranFonts.of(QuranFont.scheherazadeNew).family,
+      );
+      expect(
+        ornamentStyle(tester).fontFamily,
+        QuranFonts.of(QuranFont.amiriQuran).family,
+      );
       await app.dispose(tester);
     },
   );
@@ -214,7 +223,10 @@ void quranFontTests() {
     await tester.tap(find.text('Amiri Quran'));
     await app.settle(tester);
     // The live preview follows the choice.
-    expect(verseStyle(tester).fontFamily, QuranTypography.amiriFamily);
+    expect(
+      verseStyle(tester).fontFamily,
+      QuranFonts.of(QuranFont.amiriQuran).family,
+    );
     await app.dispose(tester);
   });
 
@@ -224,7 +236,10 @@ void quranFontTests() {
       location: '/surah/2',
       prefs: {'settings.quranFont': 'amiriQuran'},
     );
-    expect(verseStyle(tester).fontFamily, QuranTypography.amiriFamily);
+    expect(
+      verseStyle(tester).fontFamily,
+      QuranFonts.of(QuranFont.amiriQuran).family,
+    );
     await app.dispose(tester);
   });
 }

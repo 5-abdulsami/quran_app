@@ -35,7 +35,14 @@ class BookmarkTile extends StatelessWidget {
       child: InkWell(
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsetsDirectional.fromSTEB(16, 8, 4, 8),
+          // The edit button brings its own 48 dp of space on the end side;
+          // without it the Arabic needs the same margin as the start side.
+          padding: EdgeInsetsDirectional.fromSTEB(
+            16,
+            10,
+            onEditNote == null ? 16 : 4,
+            10,
+          ),
           child: Row(
             children: [
               Expanded(

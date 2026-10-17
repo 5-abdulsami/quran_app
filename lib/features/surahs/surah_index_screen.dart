@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/app_shell.dart';
+import '../../ui/keyboard.dart';
 import '../../ui/widgets/async_value_view.dart';
 import 'surah_list_tile.dart';
 
@@ -43,6 +44,7 @@ class _SurahIndexScreenState extends ConsumerState<SurahIndexScreen> {
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
             child: TextField(
+              onTapOutside: dismissKeyboard,
               controller: _query,
               onChanged: (_) => setState(() {}),
               textInputAction: TextInputAction.search,
@@ -90,6 +92,8 @@ class _SurahIndexScreenState extends ConsumerState<SurahIndexScreen> {
                   revelation: _revelation,
                 );
                 return ListView.builder(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
                   itemCount: visible.length,
                   itemBuilder: (context, index) => SurahListTile(
                     surah: visible[index],

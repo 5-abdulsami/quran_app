@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/app_shell.dart';
+import '../../ui/keyboard.dart';
 import '../../ui/widgets/async_value_view.dart';
 import 'bookmark_providers.dart';
 import 'bookmark_tile.dart';
@@ -143,6 +144,7 @@ class _NoteDialogState extends State<_NoteDialog> {
     return AlertDialog(
       title: Text(widget.initial == null ? l10n.addNote : l10n.editNote),
       content: TextField(
+        onTapOutside: dismissKeyboard,
         controller: _controller,
         autofocus: true,
         maxLines: 4,

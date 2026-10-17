@@ -6,6 +6,7 @@ import 'package:wakelock_plus/wakelock_plus.dart';
 import '../../core/quran/bismillah.dart';
 import '../../domain/models/app_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../../ui/keyboard.dart';
 import '../../ui/widgets/quran_text.dart';
 import '../settings/settings_controller.dart';
 
@@ -47,6 +48,7 @@ class _GoToAyahDialogState extends State<_GoToAyahDialog> {
     return AlertDialog(
       title: Text(l10n.goToAyah),
       content: TextField(
+        onTapOutside: dismissKeyboard,
         controller: _controller,
         autofocus: true,
         keyboardType: TextInputType.number,
