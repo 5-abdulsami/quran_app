@@ -7,6 +7,7 @@ import '../../core/quran/bismillah.dart';
 import '../../domain/models/app_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../ui/keyboard.dart';
+import '../../ui/theme/app_theme.dart';
 import '../../ui/widgets/quran_text.dart';
 import '../settings/settings_controller.dart';
 
@@ -102,20 +103,35 @@ class TextSizeControls extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(l10n.preview, style: theme.textTheme.labelLarge),
-        const SizedBox(height: 4),
-        QuranText(
-          basmalah,
-          fontSize: settings.arabicFontSize,
-          textAlign: TextAlign.center,
-        ),
-        Text(
-          l10n.fontSizeTranslation,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyLarge?.copyWith(
-            fontSize: settings.translationFontSize,
+        const SizedBox(height: 8),
+        // The preview sits in its own framed area, clear of the sliders.
+        Container(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+          decoration: BoxDecoration(
+            color: context.quranColors.sourceBackground,
+            border: Border.all(color: context.quranColors.sourceBorder),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              QuranText(
+                basmalah,
+                fontSize: settings.arabicFontSize,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                l10n.fontSizeTranslation,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyLarge?.copyWith(
+                  fontSize: settings.translationFontSize,
+                ),
+              ),
+            ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 16),
         _SizeSlider(
           label: l10n.fontSizeArabic,
           value: settings.arabicFontSize,

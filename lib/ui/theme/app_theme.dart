@@ -232,6 +232,8 @@ abstract final class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0.5,
         centerTitle: false,
+        // Keeps the last action (e.g. Settings) off the screen edge.
+        actionsPadding: const EdgeInsetsDirectional.only(end: 8),
       ),
       cardTheme: CardThemeData(
         color: p.surface,
