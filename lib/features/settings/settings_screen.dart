@@ -13,6 +13,7 @@ import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/theme/quran_typography.dart';
 import '../reader/reader_controls.dart';
+import 'quran_font_picker.dart';
 import 'settings_controller.dart';
 
 /// Appearance, language, reading preferences, translations and user data.
@@ -74,27 +75,12 @@ class SettingsScreen extends ConsumerWidget {
             onTap: () => _pickLanguage(context, ref, settings.languageCode),
           ),
           _Section(l10n.reading),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(l10n.quranFont),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: [
-                    for (final spec in QuranFonts.all)
-                      ChoiceChip(
-                        label: Text(spec.label),
-                        selected: settings.quranFont == spec.font,
-                        onSelected: (_) => controller.setQuranFont(spec.font),
-                      ),
-                  ],
-                ),
-              ],
-            ),
+          ListTile(
+            leading: const Icon(Icons.font_download_outlined),
+            title: Text(l10n.quranFont),
+            subtitle: Text(QuranFonts.of(settings.quranFont).label),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => showQuranFontPicker(context),
           ),
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),

@@ -220,9 +220,23 @@ void quranFontTests() {
     tester,
   ) async {
     final app = await TestApp.pump(tester, location: '/settings');
+    await tester.tap(find.text('Quran font'));
+    await app.settle(tester);
+
+    // Each option previews the basmalah in its own font (the sheet builds
+    // the options on screen; the rest appear as it scrolls).
+    final previews = tester
+        .widgetList<Text>(find.byKey(QuranText.textKey))
+        .map((t) => t.style!.fontFamily)
+        .toList();
+    expect(previews.length, greaterThan(3));
+    expect(QuranFonts.all.map((s) => s.family), containsAll(previews.skip(1)));
+    expect(previews.skip(1).toSet(), hasLength(previews.length - 1));
+
     await tester.tap(find.text('Amiri Quran'));
     await app.settle(tester);
-    // The live preview follows the choice.
+    // The sheet closes, the setting shows the choice, the preview follows it.
+    expect(find.text('Amiri Quran'), findsOneWidget);
     expect(
       verseStyle(tester).fontFamily,
       QuranFonts.of(QuranFont.amiriQuran).family,
