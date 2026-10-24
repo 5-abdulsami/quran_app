@@ -93,12 +93,6 @@ abstract final class Reciters {
       folder: 'translations/urdu_shamshad_ali_khan_46kbps',
       language: 'ur',
     ),
-    Reciter(
-      id: 'ur.farhathashmi',
-      name: 'Farhat Hashmi (word by word)',
-      folder: 'translations/urdu_farhat_hashmi',
-      language: 'ur',
-    ),
   ];
 
   static const defaultArabicId = 'alafasy';

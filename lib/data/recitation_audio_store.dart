@@ -134,6 +134,16 @@ class RecitationAudioStore {
     }
   }
 
+  /// Removes downloads of recordings the app no longer offers.
+  Future<void> removeUnknownReciters(Set<String> knownIds) async {
+    if (!await directory.exists()) return;
+    await for (final entity in directory.list()) {
+      if (entity is Directory && !knownIds.contains(p.basename(entity.path))) {
+        await entity.delete(recursive: true);
+      }
+    }
+  }
+
   /// Removes every downloaded recitation.
   Future<void> deleteAll() async {
     if (await directory.exists()) await directory.delete(recursive: true);

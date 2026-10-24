@@ -19,27 +19,26 @@ void main() {
       const AppSettings(
         recitationMode: RecitationMode.arabicThenUrdu,
         reciterId: 'husary',
-        urduReciterId: 'ur.farhathashmi',
+        urduReciterId: 'ur.shamshad',
       ),
     );
     final loaded = repo.load();
     expect(loaded.recitationMode, RecitationMode.arabicThenUrdu);
     expect(loaded.reciterId, 'husary');
-    expect(loaded.urduReciterId, 'ur.farhathashmi');
-    expect(loaded.activeReciters.map((r) => r.id), [
-      'husary',
-      'ur.farhathashmi',
-    ]);
+    expect(loaded.urduReciterId, 'ur.shamshad');
+    expect(loaded.activeReciters.map((r) => r.id), ['husary', 'ur.shamshad']);
 
     SharedPreferences.setMockInitialValues({
       'settings.recitationMode': 'nonsense',
       'settings.reciter': 'removed-reciter',
+      'settings.urduReciter': 'ur.farhathashmi', // no longer offered
     });
     final fallback = SettingsRepository(
       await SharedPreferences.getInstance(),
     ).load();
     expect(fallback.recitationMode, RecitationMode.arabic);
     expect(fallback.reciterId, Reciters.defaultArabicId);
+    expect(fallback.urduReciterId, Reciters.defaultUrduId);
   });
 
   testWidgets('every verse in the reader has a play button', (tester) async {

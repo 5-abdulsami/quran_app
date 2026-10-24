@@ -138,6 +138,17 @@ void main() {
     expect(await store.downloadedFiles(reciter), isEmpty);
   });
 
+  test('downloads of recordings no longer offered are removed', () async {
+    final store = storeWith((_) => http.Response.bytes(_mp3, 200));
+    await store.downloadSurah(reciter, _ikhlas);
+    final stale = Directory('${dir.path}/ur.removed')..createSync();
+    File('${stale.path}/112001.mp3').writeAsBytesSync(_mp3);
+
+    await store.removeUnknownReciters({reciter.id});
+    expect(stale.existsSync(), isFalse);
+    expect(await store.downloadedFiles(reciter), isNotEmpty);
+  });
+
   test('delete all removes every download', () async {
     final store = storeWith((_) => http.Response.bytes(_mp3, 200));
     await store.downloadSurah(reciter, _ikhlas);

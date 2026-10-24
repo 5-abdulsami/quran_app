@@ -10,8 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app.dart';
 import '../../core/db/db_bootstrap.dart';
+import '../../data/recitation_audio_store.dart';
 import '../../data/settings_repository.dart';
 import '../../data/translation_download_service.dart';
+import '../../domain/models/reciter.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../ui/theme/app_theme.dart';
@@ -65,6 +67,10 @@ class _AppBootstrapState extends State<AppBootstrap> {
       final dataDir = p.join(support.path, 'quran');
       _translationStore = Directory(p.join(dataDir, 'translations'));
       _audioStore = Directory(p.join(dataDir, 'audio'));
+      // Free the space of recordings no longer offered (in the background).
+      RecitationAudioStore(directory: _audioStore).removeUnknownReciters({
+        for (final r in [...Reciters.arabic, ...Reciters.urdu]) r.id,
+      }).ignore();
       final databases = await DbBootstrap(
         loadAsset: (key) async =>
             (await rootBundle.load(key)).buffer.asUint8List(),
