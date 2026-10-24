@@ -74,9 +74,6 @@ class _JuzTile extends StatelessWidget {
   String _surahName(int number) =>
       surahs.elementAtOrNull(number - 1)?.nameSimple ?? '$number';
 
-  String _endpoint(String verseKey) =>
-      '$verseKey ${_surahName(int.parse(verseKey.split(':').first))}';
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
@@ -98,7 +95,8 @@ class _JuzTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            '${_endpoint(juz.firstVerseKey)} – ${_endpoint(juz.lastVerseKey)}',
+            // The surah names are listed below, so only the verse range here.
+            '${juz.firstVerseKey} – ${juz.lastVerseKey}',
           ),
           Text(
             juz.surahNumbers.map(_surahName).join(', '),

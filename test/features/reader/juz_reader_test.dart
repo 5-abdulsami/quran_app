@@ -48,7 +48,7 @@ void main() {
     final app = await TestApp.pump(tester, location: '/juz');
     expect(find.text('Juz 1 · Alif Lam Mim'), findsOneWidget);
     expect(
-      find.textContaining('1:1 Al-Faatiha – 2:141 Al-Baqara'),
+      find.textContaining('1:1 – 2:141'),
       findsOneWidget,
     );
     await app.dispose(tester);
