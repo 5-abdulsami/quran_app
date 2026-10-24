@@ -5,20 +5,20 @@
 //   dart run flutter_launcher_icons
 //   dart run flutter_native_splash:create
 //
-// The mark itself is StarMarkPainter (lib/ui/widgets/star_mark.dart), the
+// The mark itself is MihrabMarkPainter (lib/ui/widgets/mihrab_mark.dart), the
 // same drawing the loading screen animates.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:quran_app/ui/widgets/star_mark.dart';
+import 'package:quran_app/ui/widgets/mihrab_mark.dart';
 
-const _green = StarMarkPainter.brandGreen;
-const _gold = StarMarkPainter.brandGold;
+const _green = MihrabMarkPainter.brandGreen;
+const _gold = MihrabMarkPainter.brandGold;
 
 Future<void> _render(
   WidgetTester tester,
   String file,
-  StarMarkPainter painter, {
+  MihrabMarkPainter painter, {
   double size = 1024,
 }) async {
   tester.view
@@ -47,22 +47,17 @@ void main() {
     (tester) => _render(
       tester,
       'icon.png',
-      const StarMarkPainter(
-        starColor: _gold,
-        innerColor: _green,
-        scale: 0.62,
-        background: _green,
-      ),
+      const MihrabMarkPainter(color: _gold, scale: 0.7, background: _green),
     ),
   );
 
-  // Adaptive-icon foreground: the star inside Android's safe zone.
+  // Adaptive-icon foreground: the mark inside Android's safe zone.
   testWidgets(
     'adaptive foreground',
     (tester) => _render(
       tester,
       'icon_foreground.png',
-      const StarMarkPainter(starColor: _gold, innerColor: _green, scale: 0.42),
+      const MihrabMarkPainter(color: _gold, scale: 0.5),
     ),
   );
 
@@ -72,7 +67,7 @@ void main() {
     (tester) => _render(
       tester,
       'splash.png',
-      const StarMarkPainter(starColor: _gold, innerColor: _green, scale: 0.5),
+      const MihrabMarkPainter(color: _gold, scale: 0.55),
     ),
   );
 }

@@ -1,11 +1,10 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import 'mihrab_mark.dart';
 
-/// A number inside an eight-pointed star: two overlapping squares, the
-/// geometric motif used to mark divisions in printed mushafs.
+/// A number framed by the app's mihrab arch, with a faint inner line as in
+/// the double-ruled frames of printed mushafs.
 class NumberMedallion extends StatelessWidget {
   const NumberMedallion(this.number, {this.size = 40, super.key});
 
@@ -18,13 +17,15 @@ class NumberMedallion extends StatelessWidget {
     return SizedBox.square(
       dimension: size,
       child: CustomPaint(
-        painter: _StarPainter(color),
-        child: Center(
+        painter: _ArchPainter(color),
+        child: Align(
+          // Optically centred in the arch's body, below the pointed crown.
+          alignment: const Alignment(0, 0.3),
           child: Text(
             '$number',
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
               fontWeight: FontWeight.w600,
-              fontSize: size * (number > 99 ? 0.28 : 0.32),
+              fontSize: size * (number > 99 ? 0.26 : 0.31),
             ),
             textScaler: TextScaler.noScaling,
           ),
@@ -34,31 +35,37 @@ class NumberMedallion extends StatelessWidget {
   }
 }
 
-class _StarPainter extends CustomPainter {
-  _StarPainter(this.color);
+class _ArchPainter extends CustomPainter {
+  _ArchPainter(this.color);
 
   final Color color;
 
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
+    final s = size.shortestSide;
+    final outer = Rect.fromCenter(
+      center: size.center(Offset.zero),
+      width: s * 0.72,
+      height: s * 0.94,
+    );
+    final stroke = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-    final center = size.center(Offset.zero);
-    final side = size.shortestSide * 0.68;
-    final square = Rect.fromCenter(center: center, width: side, height: side);
-
+      ..strokeWidth = 1.3;
     canvas
-      ..drawRect(square, paint)
-      ..save()
-      ..translate(center.dx, center.dy)
-      ..rotate(math.pi / 4)
-      ..translate(-center.dx, -center.dy)
-      ..drawRect(square, paint)
-      ..restore();
+      ..drawPath(
+        mihrabArch(outer),
+        Paint()..color = color.withValues(alpha: 0.08),
+      )
+      ..drawPath(mihrabArch(outer), stroke)
+      ..drawPath(
+        mihrabArch(outer.deflate(s * 0.07)),
+        stroke
+          ..strokeWidth = 0.6
+          ..color = color.withValues(alpha: 0.6),
+      );
   }
 
   @override
-  bool shouldRepaint(_StarPainter oldDelegate) => oldDelegate.color != color;
+  bool shouldRepaint(_ArchPainter oldDelegate) => oldDelegate.color != color;
 }

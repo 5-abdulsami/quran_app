@@ -4,12 +4,12 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../l10n/generated/app_localizations.dart';
-import '../../ui/widgets/star_mark.dart';
+import '../../ui/widgets/mihrab_mark.dart';
 
 /// The in-app loading screen.
 ///
-/// It continues the native launch screen (same background, same gold star) so
-/// start-up reads as one motion: the star breathes inside a slowly orbiting
+/// It continues the native launch screen (same background, same gold mark) so
+/// start-up reads as one motion: the mark breathes inside a slowly orbiting
 /// arc while the app name rises in. The "preparing" line appears only when
 /// loading is genuinely slow (the first launch, while the Quran is installed).
 /// With "reduce motion" on, everything is still.
@@ -17,7 +17,7 @@ class LoadingSplash extends StatefulWidget {
   const LoadingSplash({super.key});
 
   /// Background shared with the native splash (flutter_native_splash.yaml).
-  static const lightBackground = StarMarkPainter.brandGreen;
+  static const lightBackground = MihrabMarkPainter.brandGreen;
   static const darkBackground = Color(0xFF151412);
 
   @override
@@ -102,11 +102,10 @@ class _LoadingSplashState extends State<LoadingSplash>
                       Transform.scale(
                         // A slow breath: 1.0 → 1.04 → 1.0.
                         scale: 1 + 0.02 * (1 - math.cos(phase)),
-                        child: CustomPaint(
-                          size: const Size.square(120),
-                          painter: StarMarkPainter(
-                            starColor: StarMarkPainter.brandGold,
-                            innerColor: background,
+                        child: const CustomPaint(
+                          size: Size.square(120),
+                          painter: MihrabMarkPainter(
+                            color: MihrabMarkPainter.brandGold,
                             scale: 0.8,
                           ),
                         ),
@@ -157,7 +156,7 @@ class _LoadingSplashState extends State<LoadingSplash>
   }
 }
 
-/// A thin gold arc circling the star, fading towards its tail.
+/// A thin gold arc circling the mark, fading towards its tail.
 class _OrbitPainter extends CustomPainter {
   const _OrbitPainter({required this.angle});
 
@@ -176,7 +175,7 @@ class _OrbitPainter extends CustomPainter {
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 1.5
-        ..color = StarMarkPainter.brandGold.withValues(alpha: 0.18),
+        ..color = MihrabMarkPainter.brandGold.withValues(alpha: 0.18),
     );
 
     final paint = Paint()
@@ -187,8 +186,8 @@ class _OrbitPainter extends CustomPainter {
         startAngle: 0,
         endAngle: sweep,
         colors: [
-          StarMarkPainter.brandGold.withValues(alpha: 0),
-          StarMarkPainter.brandGold,
+          MihrabMarkPainter.brandGold.withValues(alpha: 0),
+          MihrabMarkPainter.brandGold,
         ],
         transform: GradientRotation(angle),
       ).createShader(arcRect);
