@@ -8,6 +8,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/widgets/async_value_view.dart';
+import '../audio/player_bar.dart';
 import 'reader_controls.dart';
 import 'reader_items.dart';
 import 'reader_providers.dart';
@@ -115,6 +116,10 @@ class _ReaderScaffoldState extends ConsumerState<ReaderScaffold>
           ),
         ],
       ),
+      // Inside the tab shell (the juz reader) the shell's bar is used.
+      bottomNavigationBar: RecitationPlayerBarScope.isProvided(context)
+          ? null
+          : const RecitationPlayerBar(safeBottom: true),
       body: AsyncValueView(
         value: widget.content,
         data: (content) => AsyncValueView(

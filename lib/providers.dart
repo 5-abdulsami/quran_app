@@ -16,6 +16,7 @@ import 'core/quran/references.dart';
 import 'data/bookmark_repository.dart';
 import 'data/quran_repository.dart';
 import 'data/reading_position_repository.dart';
+import 'data/recitation_audio_store.dart';
 import 'data/settings_repository.dart';
 import 'data/translation_download_service.dart';
 import 'domain/models/juz.dart';
@@ -105,3 +106,19 @@ final translationDownloadServiceProvider = Provider<TranslationDownloadService>(
     return service;
   },
 );
+
+// --- Recitation audio ---------------------------------------------------------
+
+/// Where downloaded recitations are kept. Overridden after bootstrap.
+final audioStoreDirectoryProvider = Provider<Directory>(
+  (ref) =>
+      throw UnimplementedError('audioStoreDirectoryProvider not overridden'),
+);
+
+final recitationAudioStoreProvider = Provider<RecitationAudioStore>((ref) {
+  final store = RecitationAudioStore(
+    directory: ref.watch(audioStoreDirectoryProvider),
+  );
+  ref.onDispose(store.close);
+  return store;
+});

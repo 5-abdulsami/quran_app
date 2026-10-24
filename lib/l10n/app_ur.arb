@@ -167,5 +167,27 @@
   "dbErrorTitle": "قرآن کا ڈیٹا بیس نہیں کھل سکا",
   "dbErrorBody": "آپ کی محفوظ شدہ آیات الگ محفوظ ہیں۔ دوبارہ کوشش کریں، یا ایپ سے قرآن کا ڈیٹا بیس بحال کریں۔",
   "restoreDatabase": "قرآن کا ڈیٹا بیس بحال کریں",
-  "pressBackAgainToExit": "باہر نکلنے کے لیے دوبارہ واپس دبائیں"
+  "pressBackAgainToExit": "باہر نکلنے کے لیے دوبارہ واپس دبائیں",
+
+  "recitation": "تلاوت",
+  "recitationSettingsHint": "قاری، اردو ترجمہ آڈیو، ڈاؤن لوڈ",
+  "playFromHere": "اس آیت سے سنیں",
+  "play": "چلائیں",
+  "pause": "روکیں",
+  "stopPlayback": "بند کریں",
+  "nextVerse": "اگلی آیت",
+  "previousVerse": "پچھلی آیت",
+  "listenTo": "سنیں",
+  "modeArabic": "عربی",
+  "modeUrdu": "اردو",
+  "modeArabicUrdu": "عربی + اردو",
+  "reciter": "قاری",
+  "urduTranslationAudio": "اردو ترجمہ (آڈیو)",
+  "offlineAudio": "آف لائن آڈیو",
+  "offlineAudioHint": "آڈیو انٹرنیٹ سے چلتی ہے۔ انٹرنیٹ کے بغیر سننے کے لیے سورتیں ڈاؤن لوڈ کریں۔",
+  "deleteAllDownloads": "تمام ڈاؤن لوڈ حذف کریں",
+  "audioPlayFailed": "تلاوت نہیں چل سکی۔ انٹرنیٹ چیک کریں، یا یہ سورت ڈاؤن لوڈ کریں۔",
+  "downloaded": "ڈاؤن لوڈ شدہ",
+  "recitationCredit": "آیت بہ آیت تلاوت اور اردو ترجمہ آڈیو EveryAyah.com سے چلائی جاتی ہیں۔",
+  "audioStorageUsed": "{size} استعمال ہو رہی ہے"
 }

@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../domain/models/app_settings.dart';
+import '../domain/models/reciter.dart';
 
 /// Reads and writes [AppSettings] in SharedPreferences.
 ///
@@ -20,6 +21,9 @@ class SettingsRepository {
   static const _showMarkers = 'settings.showMarkers';
   static const _keepAwake = 'settings.keepScreenAwake';
   static const _translations = 'settings.translationIds';
+  static const _recitationMode = 'settings.recitationMode';
+  static const _reciter = 'settings.reciter';
+  static const _urduReciter = 'settings.urduReciter';
   static const _recentSearches = 'search.recent';
 
   static const int maxRecentSearches = 10;
@@ -51,6 +55,17 @@ class SettingsRepository {
       keepScreenAwake: _prefs.getBool(_keepAwake) ?? defaults.keepScreenAwake,
       translationIds:
           _prefs.getStringList(_translations) ?? defaults.translationIds,
+      recitationMode: RecitationMode.values.firstWhere(
+        (m) => m.name == _prefs.getString(_recitationMode),
+        orElse: () => defaults.recitationMode,
+      ),
+      // Unknown ids (a reciter since removed) fall back to the default.
+      reciterId: Reciters.arabicById(
+        _prefs.getString(_reciter) ?? defaults.reciterId,
+      ).id,
+      urduReciterId: Reciters.urduById(
+        _prefs.getString(_urduReciter) ?? defaults.urduReciterId,
+      ).id,
     );
   }
 
@@ -69,6 +84,9 @@ class SettingsRepository {
     await _prefs.setBool(_showMarkers, settings.showMarkers);
     await _prefs.setBool(_keepAwake, settings.keepScreenAwake);
     await _prefs.setStringList(_translations, settings.translationIds);
+    await _prefs.setString(_recitationMode, settings.recitationMode.name);
+    await _prefs.setString(_reciter, settings.reciterId);
+    await _prefs.setString(_urduReciter, settings.urduReciterId);
   }
 
   /// Most recent first.

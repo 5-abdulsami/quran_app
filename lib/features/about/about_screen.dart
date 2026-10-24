@@ -4,6 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../core/db/content_db.dart';
 import '../../core/quran/attribution.dart';
+import '../../domain/models/reciter.dart';
 import '../../domain/models/translation_edition.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
@@ -91,6 +92,20 @@ class AboutScreen extends ConsumerWidget {
                   ),
                   child: Text(l10n.viewLicences),
                 ),
+              ),
+            ],
+          ),
+          _Card(
+            title: l10n.recitation,
+            children: [
+              Text(l10n.recitationCredit),
+              const SizedBox(height: 4),
+              Text(
+                [
+                  for (final r in [...Reciters.arabic, ...Reciters.urdu])
+                    r.name,
+                ].join(' · '),
+                style: muted,
               ),
             ],
           ),

@@ -8,6 +8,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../../domain/models/translation_edition.dart';
 import '../../providers.dart';
 import '../../router.dart';
+import '../audio/recitation_controller.dart';
 import '../settings/settings_controller.dart';
 import 'ayah_tile.dart';
 import 'reader_items.dart';
@@ -107,6 +108,32 @@ class ReaderViewState extends ConsumerState<ReaderView> {
     });
   }
 
+  /// Recites from list index [index] to the end of this screen's content.
+  void _playFrom(int index) =>
+      ref.read(recitationControllerProvider.notifier).playVerses([
+        for (final item in widget.content.items.skip(index))
+          if (item is AyahItem) (item.surah, item.ayah.ayahNumber),
+      ]);
+
+  /// Keeps the verse being recited on screen.
+  void _follow(String verseKey) {
+    final index = _indexFor(verseKey);
+    if (index == null || !_scroll.isAttached) return;
+    final target = widget.content.indexOf(verseKey);
+    final onScreen = _positions.itemPositions.value.any(
+      (p) =>
+          p.index == target &&
+          p.itemLeadingEdge >= 0 &&
+          p.itemTrailingEdge <= 1,
+    );
+    if (onScreen) return;
+    _scroll.scrollTo(
+      index: index,
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeInOut,
+    );
+  }
+
   void _onPositionsChanged() {
     final visible = _positions.itemPositions.value.toList()
       ..sort((a, b) => a.index.compareTo(b.index));
@@ -144,6 +171,17 @@ class ReaderViewState extends ConsumerState<ReaderView> {
     };
     final items = widget.content.items;
     final initial = widget.initialVerseKey;
+    final (recitingKey, recitingNow) = ref.watch(
+      recitationControllerProvider.select(
+        (s) => (s.current?.verseKey, s.playing),
+      ),
+    );
+    ref.listen(
+      recitationControllerProvider.select((s) => s.current?.verseKey),
+      (_, verseKey) {
+        if (verseKey != null) _follow(verseKey);
+      },
+    );
 
     return ScrollablePositionedList.builder(
       itemScrollController: _scroll,
@@ -176,10 +214,19 @@ class ReaderViewState extends ConsumerState<ReaderView> {
                 editionNames: editionNames,
                 highlighted: _highlighted == item.ayah.verseKey,
                 bookmarked: bookmarked.contains(item.ayah.verseKey),
+                recitation: recitingKey != item.ayah.verseKey
+                    ? AyahRecitation.idle
+                    : recitingNow
+                    ? AyahRecitation.playing
+                    : AyahRecitation.paused,
+                onPlay: recitingKey == item.ayah.verseKey
+                    ? ref.read(recitationControllerProvider.notifier).togglePlay
+                    : () => _playFrom(index),
                 onActions: () => showVerseActions(
                   context,
                   ayah: item.ayah,
                   surah: item.surah,
+                  onPlay: () => _playFrom(index),
                 ),
                 onOpenDetail: () => context.push(
                   AppRoutes.ayah(item.ayah.surahNumber, item.ayah.ayahNumber),

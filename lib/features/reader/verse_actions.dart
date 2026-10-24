@@ -11,8 +11,12 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/toast.dart';
+import '../audio/recitation_controller.dart';
 
-/// Opens the per-verse actions sheet: copy, share, bookmark, navigate.
+/// Opens the per-verse actions sheet: play, copy, share, bookmark, navigate.
+///
+/// [onPlay] starts recitation from this verse; by default it recites the rest
+/// of the surah.
 ///
 /// As on the web, copied and shared text ALWAYS ends with the reference, e.g.
 /// "Qur'an 2:255 (Surah Al-Baqara)".
@@ -22,6 +26,7 @@ Future<void> showVerseActions(
   required Surah surah,
   bool showOpenDetail = true,
   bool showReadInContext = false,
+  VoidCallback? onPlay,
 }) => showModalBottomSheet<void>(
   context: context,
   isScrollControlled: true,
@@ -30,6 +35,7 @@ Future<void> showVerseActions(
     surah: surah,
     showOpenDetail: showOpenDetail,
     showReadInContext: showReadInContext,
+    onPlay: onPlay,
   ),
 );
 
@@ -39,12 +45,14 @@ class _VerseActionsSheet extends ConsumerWidget {
     required this.surah,
     required this.showOpenDetail,
     required this.showReadInContext,
+    this.onPlay,
   });
 
   final Ayah ayah;
   final Surah surah;
   final bool showOpenDetail;
   final bool showReadInContext;
+  final VoidCallback? onPlay;
 
   String _payload({String? arabic, bool withTranslations = false}) =>
       versePayload(
@@ -85,6 +93,17 @@ class _VerseActionsSheet extends ConsumerWidget {
               ),
             ),
             const Divider(),
+            _Action(
+              icon: Icons.play_circle_outline,
+              label: l10n.playFromHere,
+              onTap: () {
+                Navigator.of(context).pop();
+                if (onPlay case final play?) return play();
+                ref
+                    .read(recitationControllerProvider.notifier)
+                    .playSurah(surah, fromAyah: ayah.ayahNumber);
+              },
+            ),
             _Action(
               icon: Icons.content_copy,
               label: l10n.copyArabic,

@@ -167,5 +167,27 @@
   "dbErrorTitle": "تعذّر فتح قاعدة بيانات القرآن",
   "dbErrorBody": "محفوظاتك مخزنة بشكل منفصل وهي آمنة. حاول مرة أخرى، أو استعد قاعدة بيانات القرآن من حزمة التطبيق.",
   "restoreDatabase": "استعادة قاعدة بيانات القرآن",
-  "pressBackAgainToExit": "اضغط رجوع مرة أخرى للخروج"
+  "pressBackAgainToExit": "اضغط رجوع مرة أخرى للخروج",
+
+  "recitation": "التلاوة",
+  "recitationSettingsHint": "القارئ، الترجمة الأردية الصوتية، التنزيلات",
+  "playFromHere": "استمع من هذه الآية",
+  "play": "تشغيل",
+  "pause": "إيقاف مؤقت",
+  "stopPlayback": "إيقاف",
+  "nextVerse": "الآية التالية",
+  "previousVerse": "الآية السابقة",
+  "listenTo": "الاستماع إلى",
+  "modeArabic": "العربية",
+  "modeUrdu": "الأردية",
+  "modeArabicUrdu": "العربية + الأردية",
+  "reciter": "القارئ",
+  "urduTranslationAudio": "الترجمة الأردية (صوت)",
+  "offlineAudio": "الصوت دون اتصال",
+  "offlineAudioHint": "يُبث الصوت عبر الإنترنت. نزّل السور للاستماع دون اتصال.",
+  "deleteAllDownloads": "حذف كل التنزيلات",
+  "audioPlayFailed": "تعذّر تشغيل التلاوة. تحقّق من الاتصال، أو نزّل هذه السورة.",
+  "downloaded": "تم التنزيل",
+  "recitationCredit": "تُبث التلاوات آيةً آية والترجمة الأردية الصوتية من EveryAyah.com.",
+  "audioStorageUsed": "المساحة المستخدمة: {size}"
 }

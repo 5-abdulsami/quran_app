@@ -183,5 +183,28 @@
   "pressBackAgainToExit": "Press back again to exit",
   "@pressBackAgainToExit": {
     "description": "Shown after the first back press on the home tab."
-  }
+  },
+
+  "recitation": "Recitation",
+  "recitationSettingsHint": "Reciter, Urdu translation audio, downloads",
+  "playFromHere": "Play from this verse",
+  "play": "Play",
+  "pause": "Pause",
+  "stopPlayback": "Stop",
+  "nextVerse": "Next verse",
+  "previousVerse": "Previous verse",
+  "listenTo": "Listen to",
+  "modeArabic": "Arabic",
+  "modeUrdu": "Urdu",
+  "modeArabicUrdu": "Arabic + Urdu",
+  "reciter": "Reciter",
+  "urduTranslationAudio": "Urdu translation audio",
+  "offlineAudio": "Offline audio",
+  "offlineAudioHint": "Audio streams over the internet. Download surahs to listen without a connection.",
+  "deleteAllDownloads": "Delete all downloads",
+  "audioPlayFailed": "Couldn't play the recitation. Check your connection, or download this surah.",
+  "downloaded": "Downloaded",
+  "recitationCredit": "Verse-by-verse recitations and Urdu translation audio are streamed from EveryAyah.com.",
+  "audioStorageUsed": "Using {size}",
+  "@audioStorageUsed": {"placeholders": {"size": {"type": "String"}}}
 }

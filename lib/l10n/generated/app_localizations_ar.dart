@@ -538,4 +538,73 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get pressBackAgainToExit => 'اضغط رجوع مرة أخرى للخروج';
+
+  @override
+  String get recitation => 'التلاوة';
+
+  @override
+  String get recitationSettingsHint =>
+      'القارئ، الترجمة الأردية الصوتية، التنزيلات';
+
+  @override
+  String get playFromHere => 'استمع من هذه الآية';
+
+  @override
+  String get play => 'تشغيل';
+
+  @override
+  String get pause => 'إيقاف مؤقت';
+
+  @override
+  String get stopPlayback => 'إيقاف';
+
+  @override
+  String get nextVerse => 'الآية التالية';
+
+  @override
+  String get previousVerse => 'الآية السابقة';
+
+  @override
+  String get listenTo => 'الاستماع إلى';
+
+  @override
+  String get modeArabic => 'العربية';
+
+  @override
+  String get modeUrdu => 'الأردية';
+
+  @override
+  String get modeArabicUrdu => 'العربية + الأردية';
+
+  @override
+  String get reciter => 'القارئ';
+
+  @override
+  String get urduTranslationAudio => 'الترجمة الأردية (صوت)';
+
+  @override
+  String get offlineAudio => 'الصوت دون اتصال';
+
+  @override
+  String get offlineAudioHint =>
+      'يُبث الصوت عبر الإنترنت. نزّل السور للاستماع دون اتصال.';
+
+  @override
+  String get deleteAllDownloads => 'حذف كل التنزيلات';
+
+  @override
+  String get audioPlayFailed =>
+      'تعذّر تشغيل التلاوة. تحقّق من الاتصال، أو نزّل هذه السورة.';
+
+  @override
+  String get downloaded => 'تم التنزيل';
+
+  @override
+  String get recitationCredit =>
+      'تُبث التلاوات آيةً آية والترجمة الأردية الصوتية من EveryAyah.com.';
+
+  @override
+  String audioStorageUsed(String size) {
+    return 'المساحة المستخدمة: $size';
+  }
 }

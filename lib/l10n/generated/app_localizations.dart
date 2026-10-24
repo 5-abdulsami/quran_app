@@ -1035,6 +1035,132 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Press back again to exit'**
   String get pressBackAgainToExit;
+
+  /// No description provided for @recitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Recitation'**
+  String get recitation;
+
+  /// No description provided for @recitationSettingsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reciter, Urdu translation audio, downloads'**
+  String get recitationSettingsHint;
+
+  /// No description provided for @playFromHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Play from this verse'**
+  String get playFromHere;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @stopPlayback.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop'**
+  String get stopPlayback;
+
+  /// No description provided for @nextVerse.
+  ///
+  /// In en, this message translates to:
+  /// **'Next verse'**
+  String get nextVerse;
+
+  /// No description provided for @previousVerse.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous verse'**
+  String get previousVerse;
+
+  /// No description provided for @listenTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Listen to'**
+  String get listenTo;
+
+  /// No description provided for @modeArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get modeArabic;
+
+  /// No description provided for @modeUrdu.
+  ///
+  /// In en, this message translates to:
+  /// **'Urdu'**
+  String get modeUrdu;
+
+  /// No description provided for @modeArabicUrdu.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic + Urdu'**
+  String get modeArabicUrdu;
+
+  /// No description provided for @reciter.
+  ///
+  /// In en, this message translates to:
+  /// **'Reciter'**
+  String get reciter;
+
+  /// No description provided for @urduTranslationAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Urdu translation audio'**
+  String get urduTranslationAudio;
+
+  /// No description provided for @offlineAudio.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline audio'**
+  String get offlineAudio;
+
+  /// No description provided for @offlineAudioHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Audio streams over the internet. Download surahs to listen without a connection.'**
+  String get offlineAudioHint;
+
+  /// No description provided for @deleteAllDownloads.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all downloads'**
+  String get deleteAllDownloads;
+
+  /// No description provided for @audioPlayFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t play the recitation. Check your connection, or download this surah.'**
+  String get audioPlayFailed;
+
+  /// No description provided for @downloaded.
+  ///
+  /// In en, this message translates to:
+  /// **'Downloaded'**
+  String get downloaded;
+
+  /// No description provided for @recitationCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Verse-by-verse recitations and Urdu translation audio are streamed from EveryAyah.com.'**
+  String get recitationCredit;
+
+  /// No description provided for @audioStorageUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Using {size}'**
+  String audioStorageUsed(String size);
 }
 
 class _AppLocalizationsDelegate

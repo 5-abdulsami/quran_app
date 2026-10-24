@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import 'core/quran/references.dart';
 import 'features/about/about_screen.dart';
+import 'features/audio/recitation_settings_screen.dart';
 import 'features/ayah_detail/ayah_detail_screen.dart';
 import 'features/bookmarks/bookmarks_screen.dart';
 import 'features/home/home_screen.dart';
@@ -25,6 +26,7 @@ abstract final class AppRoutes {
   static const bookmarks = '/bookmarks';
   static const settings = '/settings';
   static const translations = '/settings/translations';
+  static const recitation = '/settings/recitation';
   static const about = '/about';
 
   static String surah(int number, {int? ayah}) =>
@@ -172,6 +174,11 @@ GoRouter buildRouter({String initialLocation = AppRoutes.home}) => GoRouter(
           path: 'translations',
           parentNavigatorKey: _rootKey,
           builder: (context, state) => const TranslationsScreen(),
+        ),
+        GoRoute(
+          path: 'recitation',
+          parentNavigatorKey: _rootKey,
+          builder: (context, state) => const RecitationSettingsScreen(),
         ),
       ],
     ),

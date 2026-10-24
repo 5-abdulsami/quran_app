@@ -112,6 +112,13 @@ class SettingsScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => context.push(AppRoutes.translations),
           ),
+          ListTile(
+            leading: const Icon(Icons.headphones_outlined),
+            title: Text(l10n.recitation),
+            subtitle: Text(l10n.recitationSettingsHint),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.recitation),
+          ),
           _Section(l10n.yourData),
           ListTile(
             leading: const Icon(Icons.upload_outlined),

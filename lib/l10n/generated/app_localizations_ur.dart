@@ -530,4 +530,72 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get pressBackAgainToExit => 'باہر نکلنے کے لیے دوبارہ واپس دبائیں';
+
+  @override
+  String get recitation => 'تلاوت';
+
+  @override
+  String get recitationSettingsHint => 'قاری، اردو ترجمہ آڈیو، ڈاؤن لوڈ';
+
+  @override
+  String get playFromHere => 'اس آیت سے سنیں';
+
+  @override
+  String get play => 'چلائیں';
+
+  @override
+  String get pause => 'روکیں';
+
+  @override
+  String get stopPlayback => 'بند کریں';
+
+  @override
+  String get nextVerse => 'اگلی آیت';
+
+  @override
+  String get previousVerse => 'پچھلی آیت';
+
+  @override
+  String get listenTo => 'سنیں';
+
+  @override
+  String get modeArabic => 'عربی';
+
+  @override
+  String get modeUrdu => 'اردو';
+
+  @override
+  String get modeArabicUrdu => 'عربی + اردو';
+
+  @override
+  String get reciter => 'قاری';
+
+  @override
+  String get urduTranslationAudio => 'اردو ترجمہ (آڈیو)';
+
+  @override
+  String get offlineAudio => 'آف لائن آڈیو';
+
+  @override
+  String get offlineAudioHint =>
+      'آڈیو انٹرنیٹ سے چلتی ہے۔ انٹرنیٹ کے بغیر سننے کے لیے سورتیں ڈاؤن لوڈ کریں۔';
+
+  @override
+  String get deleteAllDownloads => 'تمام ڈاؤن لوڈ حذف کریں';
+
+  @override
+  String get audioPlayFailed =>
+      'تلاوت نہیں چل سکی۔ انٹرنیٹ چیک کریں، یا یہ سورت ڈاؤن لوڈ کریں۔';
+
+  @override
+  String get downloaded => 'ڈاؤن لوڈ شدہ';
+
+  @override
+  String get recitationCredit =>
+      'آیت بہ آیت تلاوت اور اردو ترجمہ آڈیو EveryAyah.com سے چلائی جاتی ہیں۔';
+
+  @override
+  String audioStorageUsed(String size) {
+    return '$size استعمال ہو رہی ہے';
+  }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/audio/player_bar.dart';
 import '../l10n/generated/app_localizations.dart';
+import '../router.dart';
 import 'keyboard.dart';
 import 'toast.dart';
 
@@ -54,46 +56,61 @@ class _AppShellState extends State<AppShell> {
 
   Widget _scaffold(AppLocalizations l10n) {
     return Scaffold(
-      body: shell,
-      // Five tabs share the width, so labels are short and their text scale is
-      // capped: a large system font must not push them off-screen.
-      bottomNavigationBar: MediaQuery.withClampedTextScaling(
-        maxScaleFactor: 1.15,
-        child: NavigationBar(
-          selectedIndex: shell.currentIndex,
-          // Re-tapping the current tab returns it to its first page. The
-          // keyboard closes so it never follows the user to another tab.
-          onDestinationSelected: (index) {
-            dismissKeyboard();
-            shell.goBranch(index, initialLocation: index == shell.currentIndex);
-          },
-          destinations: [
-            NavigationDestination(
-              icon: const Icon(Icons.home_outlined),
-              selectedIcon: const Icon(Icons.home),
-              label: l10n.navHome,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.menu_book_outlined),
-              selectedIcon: const Icon(Icons.menu_book),
-              label: l10n.navSurahs,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.auto_stories_outlined),
-              selectedIcon: const Icon(Icons.auto_stories),
-              label: l10n.navJuz,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.search),
-              label: l10n.navSearch,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.bookmark_outline),
-              selectedIcon: const Icon(Icons.bookmark),
-              label: l10n.navSaved,
-            ),
-          ],
-        ),
+      body: RecitationPlayerBarScope(child: shell),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          RecitationPlayerBar(onOpen: _openVerse),
+          _navigationBar(l10n),
+        ],
+      ),
+    );
+  }
+
+  void _openVerse(String verseKey) {
+    final [surah, ayah] = verseKey.split(':').map(int.parse).toList();
+    context.push(AppRoutes.surah(surah, ayah: ayah));
+  }
+
+  Widget _navigationBar(AppLocalizations l10n) {
+    // Five tabs share the width, so labels are short and their text scale is
+    // capped: a large system font must not push them off-screen.
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: 1.15,
+      child: NavigationBar(
+        selectedIndex: shell.currentIndex,
+        // Re-tapping the current tab returns it to its first page. The
+        // keyboard closes so it never follows the user to another tab.
+        onDestinationSelected: (index) {
+          dismissKeyboard();
+          shell.goBranch(index, initialLocation: index == shell.currentIndex);
+        },
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: l10n.navHome,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.menu_book_outlined),
+            selectedIcon: const Icon(Icons.menu_book),
+            label: l10n.navSurahs,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.auto_stories_outlined),
+            selectedIcon: const Icon(Icons.auto_stories),
+            label: l10n.navJuz,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.search),
+            label: l10n.navSearch,
+          ),
+          NavigationDestination(
+            icon: const Icon(Icons.bookmark_outline),
+            selectedIcon: const Icon(Icons.bookmark),
+            label: l10n.navSaved,
+          ),
+        ],
       ),
     );
   }

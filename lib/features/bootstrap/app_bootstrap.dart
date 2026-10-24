@@ -34,6 +34,7 @@ class AppBootstrap extends StatefulWidget {
 class _AppBootstrapState extends State<AppBootstrap> {
   OpenedDatabases? _databases;
   late Directory _translationStore;
+  late Directory _audioStore;
   Object? _error;
 
   /// The splash stays mounted until its fade-out has finished.
@@ -63,6 +64,7 @@ class _AppBootstrapState extends State<AppBootstrap> {
       final support = await getApplicationSupportDirectory();
       final dataDir = p.join(support.path, 'quran');
       _translationStore = Directory(p.join(dataDir, 'translations'));
+      _audioStore = Directory(p.join(dataDir, 'audio'));
       final databases = await DbBootstrap(
         loadAsset: (key) async =>
             (await rootBundle.load(key)).buffer.asUint8List(),
@@ -113,6 +115,7 @@ class _AppBootstrapState extends State<AppBootstrap> {
               translationStoreDirectoryProvider.overrideWithValue(
                 _translationStore,
               ),
+              audioStoreDirectoryProvider.overrideWithValue(_audioStore),
             ],
             child: const QuranApp(),
           ),

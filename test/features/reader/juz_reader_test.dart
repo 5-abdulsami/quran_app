@@ -47,10 +47,7 @@ void main() {
   testWidgets('juz index lists all 30 with names', (tester) async {
     final app = await TestApp.pump(tester, location: '/juz');
     expect(find.text('Juz 1 · Alif Lam Mim'), findsOneWidget);
-    expect(
-      find.textContaining('1:1 – 2:141'),
-      findsOneWidget,
-    );
+    expect(find.textContaining('1:1 – 2:141'), findsOneWidget);
     await app.dispose(tester);
   });
 

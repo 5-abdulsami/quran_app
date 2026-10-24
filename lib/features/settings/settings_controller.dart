@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/models/app_settings.dart';
+import '../../domain/models/reciter.dart';
 import '../../providers.dart';
 
 /// Holds the current [AppSettings] and persists every change.
@@ -48,6 +49,15 @@ class SettingsController extends Notifier<AppSettings> {
 
   Future<void> setKeepScreenAwake({required bool keepAwake}) =>
       _update(state.copyWith(keepScreenAwake: keepAwake));
+
+  Future<void> setRecitationMode(RecitationMode mode) =>
+      _update(state.copyWith(recitationMode: mode));
+
+  Future<void> setReciter(Reciter reciter) => _update(
+    reciter.language == 'ur'
+        ? state.copyWith(urduReciterId: reciter.id)
+        : state.copyWith(reciterId: reciter.id),
+  );
 
   /// Replaces the ordered list of selected translation editions.
   Future<void> setTranslationIds(List<String> ids) =>

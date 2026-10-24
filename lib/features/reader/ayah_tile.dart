@@ -8,6 +8,9 @@ import '../../ui/theme/app_theme.dart';
 import '../../ui/theme/quran_typography.dart';
 import '../../ui/widgets/quran_text.dart';
 
+/// Whether a verse is the one being recited.
+enum AyahRecitation { idle, playing, paused }
+
 /// One verse: the same widget in the surah reader, the juz reader and search.
 ///
 /// Layout choices that matter for Arabic (as in the web's ayah-row.tsx):
@@ -30,6 +33,8 @@ class AyahTile extends StatelessWidget {
     this.editionNames = const {},
     this.highlighted = false,
     this.bookmarked = false,
+    this.onPlay,
+    this.recitation = AyahRecitation.idle,
     super.key,
   });
 
@@ -57,6 +62,11 @@ class AyahTile extends StatelessWidget {
   final bool highlighted;
   final bool bookmarked;
 
+  /// Starts (or, for the verse being recited, pauses and resumes) recitation.
+  /// No play button when null.
+  final VoidCallback? onPlay;
+  final AyahRecitation recitation;
+
   /// Stable key for a verse's tile, used by tests and scrolling.
   static Key keyFor(String verseKey) => ValueKey('ayah-$verseKey');
 
@@ -79,7 +89,9 @@ class AyahTile extends StatelessWidget {
         onLongPress: onActions,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 400),
-          color: highlighted ? colors.highlight : Colors.transparent,
+          color: highlighted || recitation != AyahRecitation.idle
+              ? colors.highlight
+              : Colors.transparent,
           padding: const EdgeInsets.fromLTRB(16, 4, 4, 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -117,6 +129,18 @@ class AyahTile extends StatelessWidget {
                       size: 20,
                       color: theme.colorScheme.primary,
                       semanticLabel: l10n.bookmarkVerse,
+                    ),
+                  if (onPlay case final onPlay?)
+                    IconButton(
+                      icon: Icon(
+                        recitation == AyahRecitation.playing
+                            ? Icons.pause_circle_outline
+                            : Icons.play_circle_outline,
+                      ),
+                      tooltip: recitation == AyahRecitation.playing
+                          ? l10n.pause
+                          : l10n.playFromHere,
+                      onPressed: onPlay,
                     ),
                   IconButton(
                     icon: const Icon(Icons.more_horiz),

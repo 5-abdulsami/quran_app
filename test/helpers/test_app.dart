@@ -43,6 +43,9 @@ class TestApp {
           translationStoreDirectoryProvider.overrideWithValue(
             Directory.systemTemp.createTempSync('quran_translations_'),
           ),
+          audioStoreDirectoryProvider.overrideWithValue(
+            Directory.systemTemp.createTempSync('quran_audio_'),
+          ),
         ],
         child: QuranApp(initialLocation: location),
       ),

@@ -82,6 +82,12 @@ void main() {
       findsOneWidget,
     );
     expect(find.textContaining('SIL Open Font License'), findsOneWidget);
+    await tester.scrollUntilVisible(
+      find.textContaining('EveryAyah.com'),
+      200,
+      scrollable: find.byType(Scrollable).first,
+    );
+    expect(find.textContaining('Mishary Rashid Alafasy'), findsOneWidget);
     await app.dispose(tester);
   });
 

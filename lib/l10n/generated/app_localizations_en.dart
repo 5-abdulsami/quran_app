@@ -529,4 +529,73 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pressBackAgainToExit => 'Press back again to exit';
+
+  @override
+  String get recitation => 'Recitation';
+
+  @override
+  String get recitationSettingsHint =>
+      'Reciter, Urdu translation audio, downloads';
+
+  @override
+  String get playFromHere => 'Play from this verse';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get stopPlayback => 'Stop';
+
+  @override
+  String get nextVerse => 'Next verse';
+
+  @override
+  String get previousVerse => 'Previous verse';
+
+  @override
+  String get listenTo => 'Listen to';
+
+  @override
+  String get modeArabic => 'Arabic';
+
+  @override
+  String get modeUrdu => 'Urdu';
+
+  @override
+  String get modeArabicUrdu => 'Arabic + Urdu';
+
+  @override
+  String get reciter => 'Reciter';
+
+  @override
+  String get urduTranslationAudio => 'Urdu translation audio';
+
+  @override
+  String get offlineAudio => 'Offline audio';
+
+  @override
+  String get offlineAudioHint =>
+      'Audio streams over the internet. Download surahs to listen without a connection.';
+
+  @override
+  String get deleteAllDownloads => 'Delete all downloads';
+
+  @override
+  String get audioPlayFailed =>
+      'Couldn\'t play the recitation. Check your connection, or download this surah.';
+
+  @override
+  String get downloaded => 'Downloaded';
+
+  @override
+  String get recitationCredit =>
+      'Verse-by-verse recitations and Urdu translation audio are streamed from EveryAyah.com.';
+
+  @override
+  String audioStorageUsed(String size) {
+    return 'Using $size';
+  }
 }
