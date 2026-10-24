@@ -179,5 +179,9 @@
   "preparingQuran": "Preparing the Quran for offline reading…",
   "dbErrorTitle": "The Quran database could not be opened",
   "dbErrorBody": "Your bookmarks are stored separately and are safe. Try again, or restore the Quran database from the app package.",
-  "restoreDatabase": "Restore the Quran database"
+  "restoreDatabase": "Restore the Quran database",
+  "pressBackAgainToExit": "Press back again to exit",
+  "@pressBackAgainToExit": {
+    "description": "Shown after the first back press on the home tab."
+  }
 }

@@ -12,6 +12,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/theme/quran_typography.dart';
+import '../../ui/toast.dart';
 import '../reader/reader_controls.dart';
 import 'quran_font_picker.dart';
 import 'settings_controller.dart';
@@ -203,11 +204,9 @@ class SettingsScreen extends ConsumerWidget {
       final count = await ref
           .read(bookmarkRepositoryProvider)
           .importJson(await picked.xFile.readAsString());
-      messenger.showSnackBar(
-        SnackBar(content: Text(l10n.importedBookmarks(count))),
-      );
+      messenger.showToast(l10n.importedBookmarks(count));
     } on FormatException {
-      messenger.showSnackBar(SnackBar(content: Text(l10n.importFailed)));
+      messenger.showToast(l10n.importFailed);
     }
   }
 
@@ -233,7 +232,7 @@ class SettingsScreen extends ConsumerWidget {
     );
     if (confirmed != true) return;
     await ref.read(readingPositionRepositoryProvider).clear();
-    messenger.showSnackBar(SnackBar(content: Text(l10n.progressReset)));
+    messenger.showToast(l10n.progressReset);
   }
 }
 

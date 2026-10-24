@@ -5,6 +5,7 @@ import '../../data/translation_download_service.dart';
 import '../../domain/models/translation_edition.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
+import '../../ui/toast.dart';
 import '../../ui/widgets/async_value_view.dart';
 import 'settings_controller.dart';
 import 'translations_controller.dart';
@@ -124,9 +125,9 @@ class _InstalledList extends ConsumerWidget {
               if (checked ?? false) {
                 setSelected([...current, edition]);
               } else if (current.length == 1) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l10n.atLeastOneTranslation)),
-                );
+                ScaffoldMessenger.of(
+                  context,
+                ).showToast(l10n.atLeastOneTranslation);
               } else {
                 setSelected(current.where((e) => e.id != edition.id).toList());
               }

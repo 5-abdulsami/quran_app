@@ -535,4 +535,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get restoreDatabase => 'استعادة قاعدة بيانات القرآن';
+
+  @override
+  String get pressBackAgainToExit => 'اضغط رجوع مرة أخرى للخروج';
 }

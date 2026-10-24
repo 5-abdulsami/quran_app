@@ -10,6 +10,7 @@ import '../../domain/models/surah.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
+import '../../ui/toast.dart';
 
 /// Opens the per-verse actions sheet: copy, share, bookmark, navigate.
 ///
@@ -69,7 +70,7 @@ class _VerseActionsSheet extends ConsumerWidget {
     Future<void> copy(String text) async {
       Navigator.of(context).pop();
       await Clipboard.setData(ClipboardData(text: text));
-      messenger.showSnackBar(SnackBar(content: Text(l10n.copied)));
+      messenger.showToast(l10n.copied);
     }
 
     return SafeArea(
@@ -147,12 +148,8 @@ class _VerseActionsSheet extends ConsumerWidget {
                 final nowBookmarked = await ref
                     .read(bookmarkRepositoryProvider)
                     .toggle(ayah.verseKey);
-                messenger.showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      nowBookmarked ? l10n.bookmarkAdded : l10n.bookmarkRemoved,
-                    ),
-                  ),
+                messenger.showToast(
+                  nowBookmarked ? l10n.bookmarkAdded : l10n.bookmarkRemoved,
                 );
               },
             ),

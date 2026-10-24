@@ -527,4 +527,7 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get restoreDatabase => 'قرآن کا ڈیٹا بیس بحال کریں';
+
+  @override
+  String get pressBackAgainToExit => 'باہر نکلنے کے لیے دوبارہ واپس دبائیں';
 }

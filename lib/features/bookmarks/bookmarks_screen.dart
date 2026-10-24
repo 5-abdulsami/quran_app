@@ -8,6 +8,7 @@ import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/app_shell.dart';
 import '../../ui/keyboard.dart';
+import '../../ui/toast.dart';
 import '../../ui/widgets/async_value_view.dart';
 import 'bookmark_providers.dart';
 import 'bookmark_tile.dart';
@@ -93,13 +94,11 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen> {
                   final repo = ref.read(bookmarkRepositoryProvider);
                   final messenger = ScaffoldMessenger.of(context);
                   await repo.remove(bookmark.verseKey);
-                  messenger.showSnackBar(
-                    SnackBar(
-                      content: Text(l10n.bookmarkRemoved),
-                      action: SnackBarAction(
-                        label: l10n.undo,
-                        onPressed: () => repo.add(bookmark),
-                      ),
+                  messenger.showToast(
+                    l10n.bookmarkRemoved,
+                    action: SnackBarAction(
+                      label: l10n.undo,
+                      onPressed: () => repo.add(bookmark),
                     ),
                   );
                 },

@@ -76,6 +76,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       ref.read(recentSearchesProvider.notifier).add(_query.text);
 
   void _open(String location) {
+    // Unfocus first, or the field regains focus (and the keyboard reopens)
+    // when the pushed page is popped.
+    dismissKeyboard();
     _remember();
     context.push(location);
   }
@@ -91,7 +94,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         title: TextField(
           onTapOutside: dismissKeyboard,
           controller: _query,
-          autofocus: widget.initialQuery.isEmpty,
           textInputAction: TextInputAction.search,
           onChanged: _onChanged,
           onSubmitted: _searchNow,
@@ -134,6 +136,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Future<void> _showFilters(BuildContext context, SearchFilters current) async {
+    dismissKeyboard();
     final chosen = await showModalBottomSheet<SearchFilters>(
       context: context,
       isScrollControlled: true,
@@ -216,12 +219,15 @@ class _Results extends ConsumerWidget {
                 onTap: () => onOpen(
                   AppRoutes.surah(ayah.surahNumber, ayah: ayah.ayahNumber),
                 ),
-                onLongPress: () => showVerseActions(
-                  context,
-                  ayah: ayah,
-                  surah: surahs[ayah.surahNumber - 1],
-                  showReadInContext: true,
-                ),
+                onLongPress: () {
+                  dismissKeyboard();
+                  showVerseActions(
+                    context,
+                    ayah: ayah,
+                    surah: surahs[ayah.surahNumber - 1],
+                    showReadInContext: true,
+                  );
+                },
               ),
               const Divider(indent: 16, endIndent: 16),
             ],

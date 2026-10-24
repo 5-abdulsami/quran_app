@@ -1029,6 +1029,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Restore the Quran database'**
   String get restoreDatabase;
+
+  /// Shown after the first back press on the home tab.
+  ///
+  /// In en, this message translates to:
+  /// **'Press back again to exit'**
+  String get pressBackAgainToExit;
 }
 
 class _AppLocalizationsDelegate
