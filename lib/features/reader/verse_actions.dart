@@ -11,6 +11,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/toast.dart';
+import '../../ui/widgets/translate_icon.dart';
 import '../audio/recitation_controller.dart';
 
 /// Opens the per-verse actions sheet: play, copy, share, bookmark, navigate.
@@ -112,6 +113,7 @@ class _VerseActionsSheet extends ConsumerWidget {
             if (hasTranslation) ...[
               _Action(
                 icon: Icons.translate,
+                leading: const TranslateIcon(),
                 label: l10n.copyTranslation,
                 onTap: () => copy(_payload(withTranslations: true)),
               ),
@@ -203,13 +205,24 @@ class _VerseActionsSheet extends ConsumerWidget {
 }
 
 class _Action extends StatelessWidget {
-  const _Action({required this.icon, required this.label, required this.onTap});
+  const _Action({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.leading,
+  });
 
   final IconData icon;
+
+  /// Replaces [icon] when the icon is a custom widget.
+  final Widget? leading;
   final String label;
   final VoidCallback onTap;
 
   @override
-  Widget build(BuildContext context) =>
-      ListTile(leading: Icon(icon), title: Text(label), onTap: onTap);
+  Widget build(BuildContext context) => ListTile(
+    leading: leading ?? Icon(icon),
+    title: Text(label),
+    onTap: onTap,
+  );
 }

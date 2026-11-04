@@ -13,6 +13,7 @@ import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/theme/quran_typography.dart';
 import '../../ui/toast.dart';
+import '../../ui/widgets/translate_icon.dart';
 import '../reader/reader_controls.dart';
 import 'quran_font_picker.dart';
 import 'settings_controller.dart';
@@ -103,7 +104,7 @@ class SettingsScreen extends ConsumerWidget {
             child: TextSizeControls(),
           ),
           SwitchListTile(
-            secondary: const Icon(Icons.translate),
+            secondary: const TranslateIcon(),
             title: Text(l10n.showTranslation),
             value: settings.showTranslation,
             onChanged: (show) => controller.setShowTranslation(show: show),

@@ -5,6 +5,7 @@ import '../../domain/models/translation_edition.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../ui/language_names.dart';
+import '../../ui/widgets/translate_icon.dart';
 import '../settings/settings_controller.dart';
 
 /// The readers' translation picker: "Arabic only", or any combination of the
@@ -25,8 +26,7 @@ class TranslationMenuButton extends ConsumerWidget {
 
     return PopupMenuButton<String>(
       tooltip: l10n.selectTranslation,
-      icon: Icon(
-        Icons.translate,
+      icon: TranslateIcon(
         color: shown.isEmpty ? null : Theme.of(context).colorScheme.primary,
       ),
       onSelected: (id) => _select(ref, id),
