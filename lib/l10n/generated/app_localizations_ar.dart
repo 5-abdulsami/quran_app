@@ -9,7 +9,7 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get appTitle => 'فهرس الإسلام: القرآن';
+  String get appTitle => 'القرآن بالأردية';
 
   @override
   String get navHome => 'الرئيسية';

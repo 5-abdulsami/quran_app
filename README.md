@@ -1,4 +1,4 @@
-# IslamIndex Quran
+# Quran Urdu
 
 An offline-first Quran reader for Android and iOS, built with Flutter. It is a
 standalone port of the Quran reader in the IslamIndex web app

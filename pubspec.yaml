@@ -1,5 +1,5 @@
 name: quran_app
-description: "IslamIndex Quran: an offline-first Quran reader."
+description: "Quran Urdu: an offline-first Quran reader with Urdu translation and audio."
 publish_to: 'none'
 
 version: 1.0.0+1

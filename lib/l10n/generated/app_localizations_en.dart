@@ -9,7 +9,7 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'IslamIndex Quran';
+  String get appTitle => 'Quran Urdu';
 
   @override
   String get navHome => 'Home';
