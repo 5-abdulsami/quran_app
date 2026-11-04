@@ -55,8 +55,11 @@ class QuranSearchController extends Notifier<SearchState> {
   @override
   SearchState build() => const SearchState();
 
-  List<String> get _searchedTranslations =>
-      ref.read(settingsControllerProvider).translationIds;
+  /// Every installed translation is searched, not only the ones shown, so an
+  /// English word finds verses while the reader shows Urdu (and vice versa).
+  Future<List<String>> _searchedTranslations() async => [
+    for (final e in await ref.read(editionsProvider.future)) e.id,
+  ];
 
   List<String> get _shownTranslations =>
       ref.read(settingsControllerProvider).visibleTranslationIds;
@@ -79,7 +82,7 @@ class QuranSearchController extends Notifier<SearchState> {
       final results = await repo.search(
         trimmed,
         filters: state.filters,
-        translationIds: _searchedTranslations,
+        translationIds: await _searchedTranslations(),
         names: await ref.read(surahNameIndexProvider.future),
       );
       final firstPage = await repo.page(

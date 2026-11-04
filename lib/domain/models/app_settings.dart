@@ -35,7 +35,7 @@ class AppSettings {
     this.showTranslation = true,
     this.showMarkers = true,
     this.keepScreenAwake = false,
-    this.translationIds = const ['en.sahih'],
+    this.translationIds = const ['ur.jalandhry'],
     this.recitationMode = RecitationMode.arabic,
     this.reciterId = Reciters.defaultArabicId,
     this.urduReciterId = Reciters.defaultUrduId,

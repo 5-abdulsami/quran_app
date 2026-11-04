@@ -163,7 +163,7 @@ void main() {
     await app.dispose(tester);
   });
 
-  testWidgets('the reader menu adds and removes Urdu', (tester) async {
+  testWidgets('the reader menu adds and removes English', (tester) async {
     final app = await TestApp.pump(tester, location: '/juz/30');
     List<String> shown() => tester
         .widget<AyahTile>(find.byType(AyahTile).first)
@@ -171,7 +171,17 @@ void main() {
         .translations
         .map((t) => t.editionId)
         .toList();
-    expect(shown(), ['en.sahih']);
+    // Urdu is the default translation.
+    expect(shown(), ['ur.jalandhry']);
+    expect(
+      tester
+          .widget<AyahTile>(find.byType(AyahTile).first)
+          .ayah
+          .translations
+          .single
+          .isRtl,
+      isTrue,
+    );
 
     Future<void> pick(String label) async {
       await tester.tap(find.byTooltip('Choose a translation'));
@@ -180,19 +190,17 @@ void main() {
       await app.settle(tester);
     }
 
-    await pick('اردو'); // add Urdu
-    expect(shown(), ['en.sahih', 'ur.jalandhry']);
-    final urdu = tester.widget<AyahTile>(find.byType(AyahTile).first).ayah;
-    expect(urdu.translations.last.isRtl, isTrue);
+    await pick('English'); // add English
+    expect(shown(), ['ur.jalandhry', 'en.sahih']);
 
-    await pick('English'); // remove English, Urdu only
-    expect(shown(), ['ur.jalandhry']);
+    await pick('اردو'); // remove Urdu, English only
+    expect(shown(), ['en.sahih']);
 
-    await pick('اردو'); // removing the last one means Arabic only
+    await pick('English'); // removing the last one means Arabic only
     expect(shown(), isEmpty);
 
-    await pick('English'); // back from Arabic only: exactly what was picked
-    expect(shown(), ['en.sahih']);
+    await pick('اردو'); // back from Arabic only: exactly what was picked
+    expect(shown(), ['ur.jalandhry']);
     await app.dispose(tester);
   });
 }
