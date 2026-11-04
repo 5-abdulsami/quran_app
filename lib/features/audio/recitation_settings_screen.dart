@@ -76,8 +76,11 @@ class RecitationSettingsScreen extends ConsumerWidget {
           ],
           if (settings.recitationMode.includesUrdu) ...[
             section(l10n.urduTranslationAudio),
-            for (final r in Reciters.urdu)
-              reciterTile(r, settings.urduReciterId),
+            if (Reciters.urdu.length == 1)
+              ListTile(title: Text(Reciters.urdu.single.name))
+            else
+              for (final r in Reciters.urdu)
+                reciterTile(r, settings.urduReciterId),
           ],
           section(l10n.offlineAudio),
           Padding(

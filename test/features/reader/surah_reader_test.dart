@@ -100,7 +100,12 @@ void main() {
   });
 
   testWidgets('a juz marker shows only where the juz changes', (tester) async {
-    final app = await TestApp.pump(tester, location: '/surah/2?ayah=141');
+    // Tall enough for 2:141 and 2:142 at the default text sizes.
+    final app = await TestApp.pump(
+      tester,
+      location: '/surah/2?ayah=141',
+      size: const Size(420, 1600),
+    );
     AyahTile tile(String key) =>
         tester.widget<AyahTile>(find.byKey(AyahTile.keyFor(key)));
     expect(tile('2:141').showJuz, isFalse);

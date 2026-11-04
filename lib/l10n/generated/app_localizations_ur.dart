@@ -374,7 +374,7 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get bookmarksEmpty =>
-      'ابھی کوئی آیت محفوظ نہیں۔ کسی آیت کو دیر تک دبا کر محفوظ کریں۔';
+      'ابھی کوئی آیت محفوظ نہیں۔ کسی بھی آیت پر ⋯ دبا کر اسے محفوظ کریں۔';
 
   @override
   String get sortNewest => 'تازہ ترین پہلے';

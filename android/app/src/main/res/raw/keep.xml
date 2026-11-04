@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Resources looked up by name at runtime, which release resource shrinking
+     cannot see: the recitation notification icon is passed to
+     just_audio_background as "drawable/ic_stat_recitation" (lib/main.dart).
+     Without this, release builds crash when playback starts. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_stat_recitation" />

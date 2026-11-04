@@ -145,4 +145,9 @@ class QuranFontScope extends InheritedWidget {
 abstract final class TranslationTypography {
   /// Generous leading, as on the web (`leading-[1.8]`).
   static const double lineHeight = 1.7;
+
+  /// Arabic-script translations (Urdu, Persian...) read smaller than Latin
+  /// text at the same size, and need more room for their marks.
+  static const double rtlScale = 1.15;
+  static const double rtlLineHeight = 2;
 }

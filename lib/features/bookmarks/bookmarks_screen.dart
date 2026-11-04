@@ -70,7 +70,7 @@ class _BookmarksScreenState extends ConsumerState<BookmarksScreen> {
         onRetry: () => ref.invalidate(bookmarkedVersesProvider),
         data: (all) {
           if (all.isEmpty || surahs.isEmpty) {
-            return ErrorMessage(message: l10n.bookmarksEmpty);
+            return const _EmptyBookmarks();
           }
           final sorted = _sort == BookmarkSort.newest
               ? all
@@ -160,6 +160,38 @@ class _NoteDialogState extends State<_NoteDialog> {
           child: Text(l10n.save),
         ),
       ],
+    );
+  }
+}
+
+class _EmptyBookmarks extends StatelessWidget {
+  const _EmptyBookmarks();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.bookmark_border,
+              size: 64,
+              color: theme.colorScheme.primary.withValues(alpha: 0.5),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              AppLocalizations.of(context).bookmarksEmpty,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyLarge?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

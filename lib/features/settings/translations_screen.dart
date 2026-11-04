@@ -5,6 +5,7 @@ import '../../data/translation_download_service.dart';
 import '../../domain/models/translation_edition.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
+import '../../ui/language_names.dart';
 import '../../ui/toast.dart';
 import '../../ui/widgets/async_value_view.dart';
 import 'settings_controller.dart';
@@ -113,7 +114,7 @@ class _InstalledList extends ConsumerWidget {
             title: Text(edition.name),
             subtitle: Text(
               [
-                edition.language,
+                languageEnglishName(edition.language),
                 edition.translator,
                 if (edition.bundled) l10n.bundled,
               ].join(' · '),
@@ -185,16 +186,10 @@ class _AvailableList extends ConsumerWidget {
         ),
       ),
       data: (editions) {
-        final notInstalled =
-            [
-              for (final e in editions)
-                if (!installedIds.contains(e.id)) e,
-            ]..sort(
-              (a, b) => (
-                a.language,
-                a.englishName,
-              ).toString().compareTo((b.language, b.englishName).toString()),
-            );
+        final notInstalled = [
+          for (final e in editions)
+            if (!installedIds.contains(e.id)) e,
+        ]..sort(_byPreferredLanguage);
         return SliverList.builder(
           itemCount: notInstalled.length,
           itemBuilder: (context, index) => _AvailableTile(
@@ -225,7 +220,7 @@ class _AvailableTile extends ConsumerWidget {
         switch (status) {
           Downloading() => l10n.downloading,
           DownloadFailed() => l10n.downloadFailed,
-          null => '${edition.language} · ${edition.name}',
+          null => '${languageEnglishName(edition.language)} · ${edition.name}',
         },
         style: status is DownloadFailed
             ? TextStyle(color: theme.colorScheme.error)
@@ -245,4 +240,20 @@ class _AvailableTile extends ConsumerWidget {
       },
     );
   }
+}
+
+/// Urdu, English and Arabic first, then by language name, then edition name.
+int _byPreferredLanguage(AvailableEdition a, AvailableEdition b) {
+  int rank(AvailableEdition e) {
+    final i = preferredTranslationLanguages.indexOf(e.language);
+    return i == -1 ? preferredTranslationLanguages.length : i;
+  }
+
+  final byRank = rank(a).compareTo(rank(b));
+  if (byRank != 0) return byRank;
+  final byLanguage = languageEnglishName(
+    a.language,
+  ).compareTo(languageEnglishName(b.language));
+  if (byLanguage != 0) return byLanguage;
+  return a.englishName.compareTo(b.englishName);
 }

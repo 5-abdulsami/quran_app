@@ -757,7 +757,7 @@ abstract class AppLocalizations {
   /// No description provided for @bookmarksEmpty.
   ///
   /// In en, this message translates to:
-  /// **'No bookmarks yet. Long-press a verse to bookmark it.'**
+  /// **'No bookmarks yet. Tap ⋯ on any verse to bookmark it.'**
   String get bookmarksEmpty;
 
   /// No description provided for @sortNewest.

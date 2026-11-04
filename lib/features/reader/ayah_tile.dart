@@ -208,9 +208,13 @@ class _TranslationText extends StatelessWidget {
             translation.text,
             locale: Locale(translation.language),
             style: theme.textTheme.bodyLarge?.copyWith(
-              fontSize: fontSize,
-              height: TranslationTypography.lineHeight,
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.86),
+              fontSize: translation.isRtl
+                  ? fontSize * TranslationTypography.rtlScale
+                  : fontSize,
+              height: translation.isRtl
+                  ? TranslationTypography.rtlLineHeight
+                  : TranslationTypography.lineHeight,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.92),
             ),
           ),
         ],

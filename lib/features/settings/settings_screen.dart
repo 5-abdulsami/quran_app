@@ -75,6 +75,21 @@ class SettingsScreen extends ConsumerWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () => _pickLanguage(context, ref, settings.languageCode),
           ),
+          // Used more often than the size controls, so near the top.
+          ListTile(
+            leading: const Icon(Icons.library_books_outlined),
+            title: Text(l10n.translations),
+            subtitle: Text(l10n.manageTranslations),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.translations),
+          ),
+          ListTile(
+            leading: const Icon(Icons.headphones_outlined),
+            title: Text(l10n.recitation),
+            subtitle: Text(l10n.recitationSettingsHint),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => context.push(AppRoutes.recitation),
+          ),
           _Section(l10n.reading),
           ListTile(
             leading: const Icon(Icons.font_download_outlined),
@@ -104,20 +119,6 @@ class SettingsScreen extends ConsumerWidget {
             title: Text(l10n.keepScreenAwake),
             value: settings.keepScreenAwake,
             onChanged: (keep) => controller.setKeepScreenAwake(keepAwake: keep),
-          ),
-          ListTile(
-            leading: const Icon(Icons.library_books_outlined),
-            title: Text(l10n.translations),
-            subtitle: Text(l10n.manageTranslations),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push(AppRoutes.translations),
-          ),
-          ListTile(
-            leading: const Icon(Icons.headphones_outlined),
-            title: Text(l10n.recitation),
-            subtitle: Text(l10n.recitationSettingsHint),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push(AppRoutes.recitation),
           ),
           _Section(l10n.yourData),
           ListTile(

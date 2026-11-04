@@ -374,7 +374,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookmarksEmpty =>
-      'No bookmarks yet. Long-press a verse to bookmark it.';
+      'No bookmarks yet. Tap ⋯ on any verse to bookmark it.';
 
   @override
   String get sortNewest => 'Newest first';

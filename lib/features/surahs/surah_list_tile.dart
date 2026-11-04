@@ -30,14 +30,25 @@ class SurahListTile extends StatelessWidget {
           fontWeight: FontWeight.w600,
         ),
       ),
-      subtitle: Text(
-        [
-          surah.nameTranslated,
-          l10n.revelationShort(surah.revelationPlace),
-          l10n.versesCount(surah.ayahCount),
-        ].join(' · '),
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
+      // Two fixed lines, so no phrase is broken and every row is even.
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            surah.nameTranslated,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            '${l10n.revelationShort(surah.revelationPlace)} · '
+            '${l10n.versesCount(surah.ayahCount)}',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
       ),
       trailing: ConstrainedBox(
         constraints: const BoxConstraints(maxWidth: 140),

@@ -380,7 +380,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loadMore => 'عرض المزيد';
 
   @override
-  String get bookmarksEmpty => 'لا محفوظات بعد. اضغط مطولاً على آية لحفظها.';
+  String get bookmarksEmpty => 'لا محفوظات بعد. اضغط ⋯ على أي آية لحفظها.';
 
   @override
   String get sortNewest => 'الأحدث أولاً';
