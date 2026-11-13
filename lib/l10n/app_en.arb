@@ -233,5 +233,12 @@
   "hijriDate": "{day} {month} {year} AH",
   "@hijriDate": {"placeholders": {"day": {"type": "String"}, "month": {"type": "String"}, "year": {"type": "String"}}},
   "hadithCredit": "Hadith text and English translations from sunnah.com; Urdu translations from HadeethEnc.com, used unmodified. Only Sahih al-Bukhari and Sahih Muslim are quoted, and each hadith links to its sunnah.com page with its full chain of narrators.",
-  "backToStart": "Back to start"
+  "backToStart": "Back to start",
+
+  "mushafView": "Mushaf view",
+  "translationView": "Translation view",
+  "mushaf": "Mushaf",
+  "goToPage": "Go to page",
+  "pageNumberRange": "Page number (1–{max})",
+  "@pageNumberRange": {"placeholders": {"max": {"type": "int"}}}
 }

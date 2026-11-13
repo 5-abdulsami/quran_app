@@ -24,6 +24,10 @@ const int juzCount = 30;
 /// Total number of ayat in the mushaf, by the counting this mushaf uses.
 const int totalAyahCount = 6236;
 
+/// Pages of the Madani mushaf the ayah `page` numbers follow (checked by
+/// tool/build_quran_db.dart).
+const int mushafPageCount = 604;
+
 /// Ayah counts per surah, used to reject impossible references like 2:300.
 ///
 /// (`AYAH_COUNTS` in the TypeScript original.)

@@ -17,7 +17,7 @@ class Bookmark {
 }
 
 /// Which way the reader is moving through the mushaf.
-enum ReadingMode { surah, juz }
+enum ReadingMode { surah, juz, page }
 
 /// Where the reader stopped in one surah or juz.
 @immutable
@@ -31,7 +31,7 @@ class ReadingPosition {
 
   final ReadingMode mode;
 
-  /// Surah or juz number.
+  /// Surah, juz or mushaf page number.
   final int ref;
   final String verseKey;
   final DateTime updatedAt;

@@ -398,9 +398,12 @@ class _DailyCardFrame extends ConsumerWidget {
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsetsDirectional.only(end: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: body,
+              // The Arabic and translation can be selected and copied.
+              child: SelectionArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: body,
+                ),
               ),
             ),
             const SizedBox(height: 4),

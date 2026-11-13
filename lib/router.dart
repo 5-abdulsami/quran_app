@@ -9,6 +9,7 @@ import 'features/bookmarks/bookmarks_screen.dart';
 import 'features/home/home_screen.dart';
 import 'features/juz/juz_index_screen.dart';
 import 'features/juz/juz_reader_screen.dart';
+import 'features/mushaf/mushaf_screen.dart';
 import 'features/search/search_screen.dart';
 import 'features/settings/settings_screen.dart';
 import 'features/settings/translations_screen.dart';
@@ -37,6 +38,11 @@ abstract final class AppRoutes {
       : '/juz/$number?verse=${Uri.encodeQueryComponent(verseKey)}';
 
   static String ayah(int surah, int ayah) => '/ayah/$surah/$ayah';
+
+  /// The mushaf page view, at [page] (and briefly marking [verseKey]).
+  static String mushaf({int page = 1, String? verseKey}) => verseKey == null
+      ? '/mushaf?page=$page'
+      : '/mushaf?page=$page&verse=${Uri.encodeQueryComponent(verseKey)}';
 
   static String searchFor(String query) =>
       '/search?q=${Uri.encodeQueryComponent(query)}';
@@ -146,6 +152,24 @@ GoRouter buildRouter({String initialLocation = AppRoutes.home}) => GoRouter(
           key: ValueKey('surah-$surah-$ayah'),
           surah: surah,
           initialAyah: ayah,
+        );
+      },
+    ),
+    GoRoute(
+      path: '/mushaf',
+      parentNavigatorKey: _rootKey,
+      builder: (context, state) {
+        final pageParam = state.uri.queryParameters['page'];
+        final page = pageParam == null ? 1 : _int(pageParam);
+        if (page == null || page < 1 || page > mushafPageCount) {
+          return const NotFoundScreen();
+        }
+        final verse = state.uri.queryParameters['verse'];
+        final valid = verse != null && parseVerseKey(verse) != null;
+        return MushafScreen(
+          key: ValueKey('mushaf-$page-$verse'),
+          initialPage: page,
+          initialVerseKey: valid ? verse : null,
         );
       },
     ),

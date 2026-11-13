@@ -53,6 +53,12 @@ class SurahReaderScreen extends ConsumerWidget {
           ),
       ],
       menuActions: [
+        // The mushaf, at the page of the verse on screen.
+        ReaderMenuAction(l10n.mushafView, (item) {
+          context.pushReplacement(
+            AppRoutes.mushaf(page: item?.ayah.page ?? current?.pageStart ?? 1),
+          );
+        }),
         // Switch to the juz reader at the verse currently on screen.
         ReaderMenuAction(l10n.readByJuz, (item) {
           if (item == null) return;

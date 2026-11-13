@@ -697,4 +697,21 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get backToStart => 'العودة إلى البداية';
+
+  @override
+  String get mushafView => 'عرض المصحف';
+
+  @override
+  String get translationView => 'عرض الترجمة';
+
+  @override
+  String get mushaf => 'المصحف';
+
+  @override
+  String get goToPage => 'الانتقال إلى صفحة';
+
+  @override
+  String pageNumberRange(int max) {
+    return 'رقم الصفحة (1–$max)';
+  }
 }

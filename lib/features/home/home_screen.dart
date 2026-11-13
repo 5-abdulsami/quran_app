@@ -105,16 +105,24 @@ class _ContinueReadingCard extends ConsumerWidget {
         ? null
         : surahs.elementAtOrNull(verse.surah - 1);
 
-    final String subtitle;
-    final String location;
+    String subtitle;
+    String location;
     if (position != null && verse != null && surah != null) {
       final where = '${surah.nameSimple} · ${position.verseKey}';
-      subtitle = position.mode == ReadingMode.juz
-          ? '${l10n.juzNumber(position.ref)} · $where'
-          : where;
-      location = position.mode == ReadingMode.juz
-          ? AppRoutes.juz(position.ref, verseKey: position.verseKey)
-          : AppRoutes.surah(verse.surah, ayah: verse.ayah);
+      (subtitle, location) = switch (position.mode) {
+        ReadingMode.surah => (
+          where,
+          AppRoutes.surah(verse.surah, ayah: verse.ayah),
+        ),
+        ReadingMode.juz => (
+          '${l10n.juzNumber(position.ref)} · $where',
+          AppRoutes.juz(position.ref, verseKey: position.verseKey),
+        ),
+        ReadingMode.page => (
+          '${l10n.mushaf} · ${l10n.pageNumber(position.ref)} · $where',
+          AppRoutes.mushaf(page: position.ref, verseKey: position.verseKey),
+        ),
+      };
     } else {
       // Nothing read yet: the card starts at the beginning of the mushaf.
       subtitle = l10n.continueReadingEmpty;
@@ -218,6 +226,7 @@ class _Shortcuts extends StatelessWidget {
       ('${l10n.ayatAlKursi} · 2:255', AppRoutes.surah(2, ayah: 255)),
       ('2:285–286', AppRoutes.surah(2, ayah: 285)),
       (l10n.juzNumber(30), AppRoutes.juz(30)),
+      (l10n.mushaf, AppRoutes.mushaf()),
     ];
 
     return Wrap(

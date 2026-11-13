@@ -12,21 +12,42 @@ import '../../ui/widgets/quran_text.dart';
 import '../settings/settings_controller.dart';
 
 /// Asks for an ayah number in 1..[max]; null when cancelled.
-Future<int?> showGoToAyahDialog(BuildContext context, {required int max}) =>
-    showDialog<int>(
-      context: context,
-      builder: (_) => _GoToAyahDialog(max: max),
-    );
+Future<int?> showGoToAyahDialog(BuildContext context, {required int max}) {
+  final l10n = AppLocalizations.of(context);
+  return showGoToNumberDialog(
+    context,
+    title: l10n.goToAyah,
+    label: l10n.ayahNumberRange(max),
+    max: max,
+  );
+}
 
-class _GoToAyahDialog extends StatefulWidget {
-  const _GoToAyahDialog({required this.max});
+/// Asks for a number in 1..[max]; null when cancelled.
+Future<int?> showGoToNumberDialog(
+  BuildContext context, {
+  required String title,
+  required String label,
+  required int max,
+}) => showDialog<int>(
+  context: context,
+  builder: (_) => _GoToNumberDialog(title: title, label: label, max: max),
+);
+
+class _GoToNumberDialog extends StatefulWidget {
+  const _GoToNumberDialog({
+    required this.title,
+    required this.label,
+    required this.max,
+  });
+  final String title;
+  final String label;
   final int max;
 
   @override
-  State<_GoToAyahDialog> createState() => _GoToAyahDialogState();
+  State<_GoToNumberDialog> createState() => _GoToNumberDialogState();
 }
 
-class _GoToAyahDialogState extends State<_GoToAyahDialog> {
+class _GoToNumberDialogState extends State<_GoToNumberDialog> {
   final _controller = TextEditingController();
   int? get _value {
     final value = int.tryParse(_controller.text);
@@ -47,16 +68,14 @@ class _GoToAyahDialogState extends State<_GoToAyahDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     return AlertDialog(
-      title: Text(l10n.goToAyah),
+      title: Text(widget.title),
       content: TextField(
         onTapOutside: dismissKeyboard,
         controller: _controller,
         autofocus: true,
         keyboardType: TextInputType.number,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(
-          labelText: l10n.ayahNumberRange(widget.max),
-        ),
+        decoration: InputDecoration(labelText: widget.label),
         onChanged: (_) => setState(() {}),
         onSubmitted: (_) => _submit(),
       ),

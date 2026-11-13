@@ -1299,6 +1299,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to start'**
   String get backToStart;
+
+  /// No description provided for @mushafView.
+  ///
+  /// In en, this message translates to:
+  /// **'Mushaf view'**
+  String get mushafView;
+
+  /// No description provided for @translationView.
+  ///
+  /// In en, this message translates to:
+  /// **'Translation view'**
+  String get translationView;
+
+  /// No description provided for @mushaf.
+  ///
+  /// In en, this message translates to:
+  /// **'Mushaf'**
+  String get mushaf;
+
+  /// No description provided for @goToPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Go to page'**
+  String get goToPage;
+
+  /// No description provided for @pageNumberRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Page number (1–{max})'**
+  String pageNumberRange(int max);
 }
 
 class _AppLocalizationsDelegate

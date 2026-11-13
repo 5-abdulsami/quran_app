@@ -688,4 +688,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backToStart => 'Back to start';
+
+  @override
+  String get mushafView => 'Mushaf view';
+
+  @override
+  String get translationView => 'Translation view';
+
+  @override
+  String get mushaf => 'Mushaf';
+
+  @override
+  String get goToPage => 'Go to page';
+
+  @override
+  String pageNumberRange(int max) {
+    return 'Page number (1–$max)';
+  }
 }

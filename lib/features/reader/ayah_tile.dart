@@ -43,7 +43,8 @@ class AyahTile extends StatelessWidget {
   final double arabicFontSize;
   final double translationFontSize;
 
-  /// Opens the verse-actions sheet (long-press or the ⋯ button).
+  /// Opens the verse-actions sheet (the ⋯ button). Long-press is left to
+  /// text selection.
   final VoidCallback onActions;
 
   /// Tapping the verse-key chip.
@@ -85,8 +86,8 @@ class AyahTile extends StatelessWidget {
     return Semantics(
       container: true,
       label: l10n.verseSemantics(surah.nameSimple, ayah.ayahNumber),
-      child: InkWell(
-        onLongPress: onActions,
+      child: Material(
+        type: MaterialType.transparency,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 400),
           color: highlighted || recitation != AyahRecitation.idle

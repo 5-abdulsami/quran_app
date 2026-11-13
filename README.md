@@ -11,6 +11,9 @@ this app never contacts its server or database.
   more translations.
 - Read by surah or by juz, go to any verse, search Arabic and translations,
   keep bookmarks, and resume reading where you stopped.
+- A mushaf page view: the 604 Madani pages in one vertical scroll, Arabic
+  only on paper, each verse tappable for its translation and actions.
+- Quran text, translations and hadith are selectable and copyable.
 - Ayah / Hadith of the Day on the home screen: a curated, offline list of
   self-contained ayat and short sahih hadith from Bukhari and Muslim, with
   their own lists for Ramadan, the first days of Dhu al-Hijjah and Fridays.
@@ -150,6 +153,7 @@ go_router provides deep-linkable routes:
 | `/surah/:n` (`?ayah=N`) | Surah reader |
 | `/juz` | Juz index |
 | `/juz/:n` (`?verse=2:150`) | Juz reader |
+| `/mushaf` (`?page=N&verse=2:255`) | Mushaf page view |
 | `/ayah/:surah/:ayah` | Ayah detail |
 | `/search?q=` | Search |
 | `/bookmarks` | Bookmarks |
@@ -182,6 +186,18 @@ original's explanatory comments, so the two can be kept in sync.
 | `test/core/quran/bismillah_test.dart` | `tests/unit/bismillah.test.ts` |
 | `test/core/quran/references_test.dart` | `tests/unit/references.test.ts` (Quran cases) |
 | `test/core/text/normalize_test.dart` | `tests/unit/text.test.ts` (ported functions) |
+
+## Mushaf view
+
+`features/mushaf/` lays the verses out by their `page` number (1–604, the
+Madani mushaf the database follows), one paper card per page in a lazy
+vertical list. It is opened from a reader's menu (at the page on screen),
+from Home's Quick access, or by Continue reading, which saves mushaf pages as
+`ReadingMode.page`. Line breaks follow the screen, not the printed page: each
+page holds exactly the printed page's verses.
+
+An IndoPak (Pakistani 15-line style) script is not included: the IndoPak
+text and fonts available today are not licensed for bundling in an app.
 
 ## Ayah / Hadith of the Day
 

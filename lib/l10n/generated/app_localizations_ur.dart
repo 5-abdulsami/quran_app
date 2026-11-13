@@ -688,4 +688,21 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get backToStart => 'شروع پر جائیں';
+
+  @override
+  String get mushafView => 'مصحف کی صورت میں';
+
+  @override
+  String get translationView => 'ترجمہ کے ساتھ';
+
+  @override
+  String get mushaf => 'مصحف';
+
+  @override
+  String get goToPage => 'صفحے پر جائیں';
+
+  @override
+  String pageNumberRange(int max) {
+    return 'صفحہ نمبر (1–$max)';
+  }
 }

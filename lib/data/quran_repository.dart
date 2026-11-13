@@ -66,6 +66,14 @@ class QuranRepository {
     List<String> translationIds = const [],
   }) => _ayahs((t) => t.juz.equals(juz), translationIds: translationIds);
 
+  /// The ayat of one mushaf page (1..[mushafPageCount]), in mushaf order.
+  Future<List<Ayah>> pageAyahs(
+    int page, {
+    List<String> translationIds = const [],
+  }) => page < 1 || page > mushafPageCount
+      ? Future.value(const [])
+      : _ayahs((t) => t.page.equals(page), translationIds: translationIds);
+
   /// Specific ayat by mushaf-wide id, returned in the order requested.
   Future<List<Ayah>> ayahsByIds(
     List<int> ids, {

@@ -127,13 +127,16 @@ class _ReaderScaffoldState extends ConsumerState<ReaderScaffold>
           : const RecitationPlayerBar(safeBottom: true),
       body: AsyncValueView(
         value: widget.content,
-        data: (content) => ReaderView(
-          key: _readerKey,
-          content: content,
-          initialVerseKey: widget.initialVerseKey,
-          highlightInitial: widget.initialVerseKey != null,
-          onVisibleAyah: _savePosition,
-          footer: widget.footerBuilder?.call(attribution),
+        // Arabic and translations can be selected and copied anywhere.
+        data: (content) => SelectionArea(
+          child: ReaderView(
+            key: _readerKey,
+            content: content,
+            initialVerseKey: widget.initialVerseKey,
+            highlightInitial: widget.initialVerseKey != null,
+            onVisibleAyah: _savePosition,
+            footer: widget.footerBuilder?.call(attribution),
+          ),
         ),
       ),
     );
