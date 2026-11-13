@@ -7,6 +7,7 @@ import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../ui/language_names.dart';
 import '../../ui/toast.dart';
+import '../../ui/widgets/app_loader.dart';
 import '../../ui/widgets/async_value_view.dart';
 import 'settings_controller.dart';
 import 'translations_controller.dart';
@@ -176,7 +177,7 @@ class _AvailableList extends ConsumerWidget {
       loading: () => const SliverToBoxAdapter(
         child: Padding(
           padding: EdgeInsets.all(24),
-          child: Center(child: CircularProgressIndicator()),
+          child: Center(child: AppLoader()),
         ),
       ),
       error: (_, _) => SliverToBoxAdapter(
@@ -227,9 +228,9 @@ class _AvailableTile extends ConsumerWidget {
             : null,
       ),
       trailing: switch (status) {
-        Downloading(:final progress) => SizedBox.square(
-          dimension: 28,
-          child: CircularProgressIndicator(value: progress, strokeWidth: 3),
+        Downloading(:final progress) => Padding(
+          padding: const EdgeInsets.all(12),
+          child: AppLoader.small(value: progress),
         ),
         _ => IconButton(
           tooltip: l10n.download,

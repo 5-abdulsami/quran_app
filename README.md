@@ -11,6 +11,9 @@ this app never contacts its server or database.
   more translations.
 - Read by surah or by juz, go to any verse, search Arabic and translations,
   keep bookmarks, and resume reading where you stopped.
+- Ayah / Hadith of the Day on the home screen: a curated, offline list of
+  self-contained ayat and short sahih hadith from Bukhari and Muslim, with
+  their own lists for Ramadan, the first days of Dhu al-Hijjah and Fridays.
 - Seven bundled Quran fonts (Scheherazade New by default), chosen in
   Settings.
 - Light, dark and sepia themes. The UI is in English, Urdu or Arabic, and
@@ -45,6 +48,13 @@ dart run build_runner build --force-jit --delete-conflicting-outputs
 # Regenerate localisations from lib/l10n/*.arb
 flutter gen-l10n
 
+# Rebuild the Ayah / Hadith of the Day from tool/daily/curation.json and
+# sunnah.com's HadithTable dump (not committed; ~100 MB)
+dart run tool/build_daily_content.dart path/to/HadithTable.sql
+# Refresh the Urdu hadith translations from HadeethEnc.com first (cached in
+# tool/cache/, so re-runs are offline)
+dart run tool/fetch_hadeethenc.dart ur
+
 # Fail if any source file contains an invisible / bidi-control character
 dart run tool/check_invisible_chars.dart
 
@@ -67,8 +77,15 @@ database, so the shipped asset can never be modified by a test.
 ## Release builds
 
 ```sh
-flutter build apk --release
-flutter build ipa               # macOS only
+# Google Play: an app bundle, so each phone downloads only its own CPU's
+# native code. Obfuscation shrinks the compiled Dart; keep build/symbols
+# (not shipped) to decode crash reports with `flutter symbolize`.
+flutter build appbundle --release --obfuscate --split-debug-info=build/symbols
+
+# A directly shared APK: one per CPU type instead of one fat APK.
+flutter build apk --release --split-per-abi --obfuscate --split-debug-info=build/symbols
+
+flutter build ipa --obfuscate --split-debug-info=build/symbols   # macOS only
 ```
 
 Android release signing reads `android/key.properties` (never committed):
@@ -108,6 +125,10 @@ lib/
   l10n/                 ARB files (en, ur, ar) and generated localisations
 tool/
   build_quran_db.dart   builds and validates assets/db/quran.db
+  build_daily_content.dart  builds assets/daily/daily_content.json
+  fetch_hadeethenc.dart  fetches matching hadith translations (Urdu)
+  daily/curation.json   the hand-picked daily ayat and hadith (references only)
+  daily/translations/   generated translation files, bundled by the build
   check_invisible_chars.dart
   icon/                 icon and splash artwork generator
 ```
@@ -161,6 +182,40 @@ original's explanatory comments, so the two can be kept in sync.
 | `test/core/quran/bismillah_test.dart` | `tests/unit/bismillah.test.ts` |
 | `test/core/quran/references_test.dart` | `tests/unit/references.test.ts` (Quran cases) |
 | `test/core/text/normalize_test.dart` | `tests/unit/text.test.ts` (ported functions) |
+
+## Ayah / Hadith of the Day
+
+`features/daily/` shows one entry a day on Home, alternating an ayah and a
+hadith (or only one kind, chosen in Settings). The choice is deterministic:
+everyone sees the same entry on the same day, with no state stored.
+
+- **Curation.** `tool/daily/curation.json` lists references only: whole ayat
+  that stand on their own, and short hadith from Sahih al-Bukhari and Sahih
+  Muslim. Order matters (day N shows entry N).
+- **Text is never typed in.** Ayat are rendered from `quran.db`, in the
+  reader's chosen translations. Hadith text is copied by the build from
+  sunnah.com's dump: the English with HTML removed, and the Arabic matn (the
+  span sunnah.com marks `[matn]`) with markup removed. The full chain is on
+  sunnah.com, which every hadith links to.
+- **Build checks.** Every hadith must be in the dump, graded Sahih, have a
+  marked matn, and have English under 450 characters without translator's
+  cross-references; ayat must exist and be at most five verses. Duplicates
+  fail. Nothing is written unless everything passes.
+- **Occasions.** `domain/daily/daily_selector.dart` gives Ramadan, Dhu
+  al-Hijjah 1–13 and Fridays their own lists, in that priority. Each is an
+  `OccasionRule`, so adding one does not touch the selector.
+- **Hijri date.** `core/calendar/hijri_date.dart` is the tabular calendar.
+  It matches announced dates in recent years but can differ from local moon
+  sighting, so Settings offers a ±2 day adjustment, which also moves the
+  occasions.
+- **Translations.** English is sunnah.com's. Urdu comes from HadeethEnc.com
+  (`dart run tool/fetch_hadeethenc.dart ur`, then rebuild), used unmodified
+  and credited as its terms require. A HadeethEnc entry is taken only if its
+  reference cites the same Bukhari / Muslim number AND its Arabic matn has
+  exactly the same words as ours, so the Urdu never translates a different
+  narration from the Arabic above it. Hadith without an exact match stay in
+  English. A hadith reads in the reader's Quran translation language first
+  (as the daily ayah does), then the UI language, then English.
 
 ## Accuracy safeguards
 
@@ -228,6 +283,11 @@ The content schema mirrors the web app's:
   on the licence page): Scheherazade New (default), Lateef and Harmattan by SIL
   Global; Amiri and Amiri Quran by The Amiri Project Authors; Noto Naskh
   Arabic and Noto Sans Arabic by The Noto Project Authors.
+- Noto Sans Arabic and Noto Naskh Arabic are shipped pinned to their regular
+  weight and subset to the Arabic script (`tool/fonts/optimize_fonts.py`,
+  from the upstream variable fonts in `tool/fonts/source/`), which cuts them
+  by over 80%. All OpenType shaping features are kept. Only fonts whose
+  licence reserves no font name are modified.
 - Every Quran font must cover every code point of the Uthmani text
   (`test/core/quran_fonts_test.dart`). The end-of-ayah ornament is always
   drawn with Amiri Quran, which composes the verse number inside it.

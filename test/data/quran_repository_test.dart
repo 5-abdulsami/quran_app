@@ -160,4 +160,26 @@ void main() {
       expect(basmalah.runes.length, 38);
     });
   });
+
+  group('passage', () {
+    test('returns consecutive ayat of one surah with translations', () async {
+      final ayahs = await repo.passage(
+        94,
+        5,
+        6,
+        translationIds: const ['en.sahih'],
+      );
+      expect(ayahs.map((a) => a.verseKey), ['94:5', '94:6']);
+      expect(
+        ayahs.first.translations.single.text,
+        'For indeed, with hardship [will be] ease.',
+      );
+    });
+
+    test('impossible ranges are empty, never clamped', () async {
+      expect(await repo.passage(94, 6, 5), isEmpty);
+      expect(await repo.passage(94, 8, 9), isEmpty);
+      expect(await repo.passage(115, 1, 1), isEmpty);
+    });
+  });
 }

@@ -12,8 +12,10 @@ import '../../ui/app_shell.dart';
 import '../../ui/keyboard.dart';
 import '../bookmarks/bookmark_providers.dart';
 import '../bookmarks/bookmark_tile.dart';
+import '../daily/daily_reminder_card.dart';
 
-/// Continue reading, go to any verse, shortcuts and recent bookmarks.
+/// Continue reading, the Ayah / Hadith of the Day, go to any verse, shortcuts
+/// and recent bookmarks.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -33,6 +35,8 @@ class HomeScreen extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
         children: [
           _ContinueReadingCard(surahs: surahs),
+          const SizedBox(height: 16),
+          const DailyReminderCard(),
           const SizedBox(height: 16),
           const _GoToVerseField(),
           const SizedBox(height: 24),

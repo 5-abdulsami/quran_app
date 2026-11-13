@@ -6,6 +6,7 @@ import '../../domain/models/surah.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../providers.dart';
 import '../../ui/toast.dart';
+import '../../ui/widgets/app_loader.dart';
 import '../../ui/widgets/number_medallion.dart';
 import '../settings/settings_controller.dart';
 import 'audio_downloads.dart';
@@ -152,13 +153,7 @@ class _SurahDownloadTile extends ConsumerWidget {
       trailing = IconButton(
         tooltip: l10n.cancel,
         onPressed: () => downloads.cancel(surah.number),
-        icon: SizedBox.square(
-          dimension: 24,
-          child: CircularProgressIndicator(
-            value: progress == 0 ? null : progress,
-            strokeWidth: 3,
-          ),
-        ),
+        icon: AppLoader.small(value: progress == 0 ? null : progress),
       );
     } else if (downloaded) {
       trailing = IconButton(

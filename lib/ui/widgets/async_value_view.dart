@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import 'app_loader.dart';
 
 /// Renders an [AsyncValue]: a spinner while loading, a quiet error with a
 /// retry, or [data]. Keeps showing the previous data while refreshing.
@@ -20,7 +21,7 @@ class AsyncValueView<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) => value.when(
     data: data,
-    loading: () => const Center(child: CircularProgressIndicator()),
+    loading: () => const Center(child: AppLoader()),
     error: (error, _) => ErrorMessage(onRetry: onRetry),
   );
 }

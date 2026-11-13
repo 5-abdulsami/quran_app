@@ -171,6 +171,25 @@ String formatQuranCitation(int surah, int ayah, [String? surahName]) =>
     ? "Qur'an $surah:$ayah (Surah $surahName)"
     : "Qur'an $surah:$ayah";
 
+// Mobile extension: passages of consecutive verses (the daily ayah).
+
+/// "94:5", or "94:5–6" (with an en dash) for a passage.
+String verseRangeLabel(int surah, int fromAyah, int toAyah) =>
+    fromAyah == toAyah ? '$surah:$fromAyah' : '$surah:$fromAyah–$toAyah';
+
+/// [formatQuranCitation] for a passage: "Qur'an 94:5–6 (Surah Ash-Sharh)".
+String formatQuranPassageCitation(
+  int surah,
+  int fromAyah,
+  int toAyah, [
+  String? surahName,
+]) {
+  final label = verseRangeLabel(surah, fromAyah, toAyah);
+  return surahName != null
+      ? "Qur'an $label (Surah $surahName)"
+      : "Qur'an $label";
+}
+
 final RegExp _verseKeyPattern = RegExp(r'^(\d{1,3}):(\d{1,3})$');
 
 /// Parses a "surah:ayah" key back into numbers, validating existence.

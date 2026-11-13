@@ -1,5 +1,6 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../domain/daily/daily_content.dart';
 import '../domain/models/app_settings.dart';
 import '../domain/models/reciter.dart';
 
@@ -24,6 +25,10 @@ class SettingsRepository {
   static const _recitationMode = 'settings.recitationMode';
   static const _reciter = 'settings.reciter';
   static const _urduReciter = 'settings.urduReciter';
+  static const _showDailyCard = 'settings.daily.show';
+  static const _dailyContentMode = 'settings.daily.content';
+  static const _showHadithArabic = 'settings.daily.hadithArabic';
+  static const _hijriAdjustment = 'settings.hijriAdjustment';
   static const _recentSearches = 'search.recent';
 
   static const int maxRecentSearches = 10;
@@ -66,27 +71,82 @@ class SettingsRepository {
       urduReciterId: Reciters.urduById(
         _prefs.getString(_urduReciter) ?? defaults.urduReciterId,
       ).id,
+      showDailyCard: _prefs.getBool(_showDailyCard) ?? defaults.showDailyCard,
+      dailyContentMode: DailyContentMode.values.firstWhere(
+        (m) => m.name == _prefs.getString(_dailyContentMode),
+        orElse: () => defaults.dailyContentMode,
+      ),
+      showHadithArabic:
+          _prefs.getBool(_showHadithArabic) ?? defaults.showHadithArabic,
+      hijriAdjustment:
+          (_prefs.getInt(_hijriAdjustment) ?? defaults.hijriAdjustment).clamp(
+            -AppSettings.maxHijriAdjustment,
+            AppSettings.maxHijriAdjustment,
+          ),
     );
   }
 
-  Future<void> save(AppSettings settings) async {
-    await _prefs.setString(_theme, settings.themeMode.name);
-    await _prefs.setString(_quranFont, settings.quranFont.name);
-    final language = settings.languageCode;
-    if (language == null) {
-      await _prefs.remove(_language);
-    } else {
-      await _prefs.setString(_language, language);
+  /// Persists [settings]. With [previous], only the values that differ are
+  /// written: a slider drag then costs one write per step, not one per
+  /// setting.
+  Future<void> save(AppSettings settings, {AppSettings? previous}) async {
+    bool changed<T>(T Function(AppSettings s) value) =>
+        previous == null || value(previous) != value(settings);
+
+    if (changed((s) => s.themeMode)) {
+      await _prefs.setString(_theme, settings.themeMode.name);
     }
-    await _prefs.setDouble(_arabicSize, settings.arabicFontSize);
-    await _prefs.setDouble(_translationSize, settings.translationFontSize);
-    await _prefs.setBool(_showTranslation, settings.showTranslation);
-    await _prefs.setBool(_showMarkers, settings.showMarkers);
-    await _prefs.setBool(_keepAwake, settings.keepScreenAwake);
-    await _prefs.setStringList(_translations, settings.translationIds);
-    await _prefs.setString(_recitationMode, settings.recitationMode.name);
-    await _prefs.setString(_reciter, settings.reciterId);
-    await _prefs.setString(_urduReciter, settings.urduReciterId);
+    if (changed((s) => s.quranFont)) {
+      await _prefs.setString(_quranFont, settings.quranFont.name);
+    }
+    if (changed((s) => s.languageCode)) {
+      final language = settings.languageCode;
+      if (language == null) {
+        await _prefs.remove(_language);
+      } else {
+        await _prefs.setString(_language, language);
+      }
+    }
+    if (changed((s) => s.arabicFontSize)) {
+      await _prefs.setDouble(_arabicSize, settings.arabicFontSize);
+    }
+    if (changed((s) => s.translationFontSize)) {
+      await _prefs.setDouble(_translationSize, settings.translationFontSize);
+    }
+    if (changed((s) => s.showTranslation)) {
+      await _prefs.setBool(_showTranslation, settings.showTranslation);
+    }
+    if (changed((s) => s.showMarkers)) {
+      await _prefs.setBool(_showMarkers, settings.showMarkers);
+    }
+    if (changed((s) => s.keepScreenAwake)) {
+      await _prefs.setBool(_keepAwake, settings.keepScreenAwake);
+    }
+    // Lists compare by identity; copyWith keeps the same list when unchanged.
+    if (changed((s) => s.translationIds)) {
+      await _prefs.setStringList(_translations, settings.translationIds);
+    }
+    if (changed((s) => s.recitationMode)) {
+      await _prefs.setString(_recitationMode, settings.recitationMode.name);
+    }
+    if (changed((s) => s.reciterId)) {
+      await _prefs.setString(_reciter, settings.reciterId);
+    }
+    if (changed((s) => s.urduReciterId)) {
+      await _prefs.setString(_urduReciter, settings.urduReciterId);
+    }
+    if (changed((s) => s.showDailyCard)) {
+      await _prefs.setBool(_showDailyCard, settings.showDailyCard);
+    }
+    if (changed((s) => s.dailyContentMode)) {
+      await _prefs.setString(_dailyContentMode, settings.dailyContentMode.name);
+    }
+    if (changed((s) => s.showHadithArabic)) {
+      await _prefs.setBool(_showHadithArabic, settings.showHadithArabic);
+    }
+    if (changed((s) => s.hijriAdjustment)) {
+      await _prefs.setInt(_hijriAdjustment, settings.hijriAdjustment);
+    }
   }
 
   /// Most recent first.

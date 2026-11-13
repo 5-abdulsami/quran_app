@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 
+import '../daily/daily_content.dart';
 import 'reciter.dart';
 
 /// The reader's appearance choice.
@@ -39,7 +40,14 @@ class AppSettings {
     this.recitationMode = RecitationMode.arabic,
     this.reciterId = Reciters.defaultArabicId,
     this.urduReciterId = Reciters.defaultUrduId,
+    this.showDailyCard = true,
+    this.dailyContentMode = DailyContentMode.both,
+    this.showHadithArabic = false,
+    this.hijriAdjustment = 0,
   });
+
+  /// How far the Hijri date may be moved to match local moon sighting.
+  static const int maxHijriAdjustment = 2;
 
   static const double minArabicFontSize = 20;
   static const double maxArabicFontSize = 44;
@@ -76,6 +84,18 @@ class AppSettings {
   final String reciterId;
   final String urduReciterId;
 
+  /// The Ayah / Hadith of the Day card on the home screen.
+  final bool showDailyCard;
+  final DailyContentMode dailyContentMode;
+
+  /// The hadith's Arabic matn above its translation. Off by default: most
+  /// readers read the translation, and the card stays short.
+  final bool showHadithArabic;
+
+  /// Days added to the calculated Hijri date, -[maxHijriAdjustment] to
+  /// +[maxHijriAdjustment], so it matches the local moon sighting.
+  final int hijriAdjustment;
+
   Reciter get reciter => Reciters.arabicById(reciterId);
   Reciter get urduReciter => Reciters.urduById(urduReciterId);
 
@@ -102,6 +122,10 @@ class AppSettings {
     RecitationMode? recitationMode,
     String? reciterId,
     String? urduReciterId,
+    bool? showDailyCard,
+    DailyContentMode? dailyContentMode,
+    bool? showHadithArabic,
+    int? hijriAdjustment,
   }) => AppSettings(
     themeMode: themeMode ?? this.themeMode,
     quranFont: quranFont ?? this.quranFont,
@@ -115,5 +139,9 @@ class AppSettings {
     recitationMode: recitationMode ?? this.recitationMode,
     reciterId: reciterId ?? this.reciterId,
     urduReciterId: urduReciterId ?? this.urduReciterId,
+    showDailyCard: showDailyCard ?? this.showDailyCard,
+    dailyContentMode: dailyContentMode ?? this.dailyContentMode,
+    showHadithArabic: showHadithArabic ?? this.showHadithArabic,
+    hijriAdjustment: hijriAdjustment ?? this.hijriAdjustment,
   );
 }

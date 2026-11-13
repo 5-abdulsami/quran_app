@@ -14,6 +14,7 @@ import '../../router.dart';
 import '../../ui/theme/quran_typography.dart';
 import '../../ui/toast.dart';
 import '../../ui/widgets/translate_icon.dart';
+import '../daily/daily_card_settings.dart';
 import '../reader/reader_controls.dart';
 import 'quran_font_picker.dart';
 import 'settings_controller.dart';
@@ -121,6 +122,8 @@ class SettingsScreen extends ConsumerWidget {
             value: settings.keepScreenAwake,
             onChanged: (keep) => controller.setKeepScreenAwake(keepAwake: keep),
           ),
+          _Section(l10n.dailyCardSettings),
+          const DailyCardSettings(),
           _Section(l10n.yourData),
           ListTile(
             leading: const Icon(Icons.upload_outlined),

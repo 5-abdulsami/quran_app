@@ -52,3 +52,7 @@ app.*.map.json
 
 # Local visual-check screenshots (not part of the app)
 /screenshots/
+
+# sunnah.com's hadith dump (~100 MB), input to tool/build_daily_content.dart.
+# Its output, assets/daily/daily_content.json, is committed.
+/HadithTable.sql

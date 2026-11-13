@@ -42,10 +42,10 @@ class _AppBootstrapState extends State<AppBootstrap> {
   /// The splash stays mounted until its fade-out has finished.
   bool _splashMounted = true;
 
-  /// Long enough for the splash animation to read as intentional, short
-  /// enough never to hold back a fast start.
-  static const _minimumSplash = Duration(milliseconds: 700);
-  static const _fadeOut = Duration(milliseconds: 450);
+  /// Just long enough for the splash to read as a deliberate transition
+  /// rather than a flicker; a fast start is never held back further.
+  static const _minimumSplash = Duration(milliseconds: 350);
+  static const _fadeOut = Duration(milliseconds: 300);
 
   @override
   void initState() {

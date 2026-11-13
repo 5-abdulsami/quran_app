@@ -598,4 +598,94 @@ class AppLocalizationsUr extends AppLocalizations {
   String audioStorageUsed(String size) {
     return '$size استعمال ہو رہی ہے';
   }
+
+  @override
+  String get ayahOfTheDay => 'آج کی آیت';
+
+  @override
+  String get hadithOfTheDay => 'آج کی حدیث';
+
+  @override
+  String get hadith => 'حدیث';
+
+  @override
+  String get sahihBukhari => 'صحیح بخاری';
+
+  @override
+  String get sahihMuslim => 'صحیح مسلم';
+
+  @override
+  String get sahihGrade => 'صحیح';
+
+  @override
+  String get verifySource => 'حوالہ دیکھیں';
+
+  @override
+  String get hideArabic => 'عربی چھپائیں';
+
+  @override
+  String get openLinkFailed => 'لنک نہیں کھل سکا۔';
+
+  @override
+  String get dailyCardSettings => 'آج کی آیت اور حدیث';
+
+  @override
+  String get dailyCardShow => 'ہوم اسکرین پر دکھائیں';
+
+  @override
+  String get dailyContentBoth => 'دونوں';
+
+  @override
+  String get dailyContentHint =>
+      'ہر روز باری باری ایک آیت اور بخاری و مسلم سے ایک صحیح حدیث۔';
+
+  @override
+  String get hadithArabicSetting => 'حدیث کا عربی متن';
+
+  @override
+  String get hijriAdjustment => 'ہجری تاریخ میں ردوبدل';
+
+  @override
+  String get hijriAdjustmentHint => 'اپنی مقامی رؤیتِ ہلال کے مطابق کریں';
+
+  @override
+  String get hijriAdjustmentNone => 'کوئی ردوبدل نہیں';
+
+  @override
+  String get decrease => 'کم کریں';
+
+  @override
+  String get increase => 'بڑھائیں';
+
+  @override
+  String hijriMonth(String month) {
+    String _temp0 = intl.Intl.selectLogic(month, {
+      '1': 'محرم',
+      '2': 'صفر',
+      '3': 'ربیع الاول',
+      '4': 'ربیع الثانی',
+      '5': 'جمادی الاول',
+      '6': 'جمادی الثانی',
+      '7': 'رجب',
+      '8': 'شعبان',
+      '9': 'رمضان',
+      '10': 'شوال',
+      '11': 'ذوالقعدہ',
+      '12': 'ذوالحجہ',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hijriDate(String day, String month, String year) {
+    return '$day $month $year ہجری';
+  }
+
+  @override
+  String get hadithCredit =>
+      'احادیث کا متن اور انگریزی ترجمہ sunnah.com سے، اور اردو ترجمہ HadeethEnc.com سے بغیر کسی تبدیلی کے لیا گیا ہے۔ صرف صحیح بخاری اور صحیح مسلم کی احادیث شامل ہیں؛ ہر حدیث sunnah.com پر اپنے صفحے سے منسلک ہے، جہاں مکمل سند موجود ہے۔';
+
+  @override
+  String get backToStart => 'شروع پر جائیں';
 }

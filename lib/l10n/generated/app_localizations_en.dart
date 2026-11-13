@@ -598,4 +598,94 @@ class AppLocalizationsEn extends AppLocalizations {
   String audioStorageUsed(String size) {
     return 'Using $size';
   }
+
+  @override
+  String get ayahOfTheDay => 'Ayah of the Day';
+
+  @override
+  String get hadithOfTheDay => 'Hadith of the Day';
+
+  @override
+  String get hadith => 'Hadith';
+
+  @override
+  String get sahihBukhari => 'Sahih al-Bukhari';
+
+  @override
+  String get sahihMuslim => 'Sahih Muslim';
+
+  @override
+  String get sahihGrade => 'Sahih';
+
+  @override
+  String get verifySource => 'Verify source';
+
+  @override
+  String get hideArabic => 'Hide Arabic';
+
+  @override
+  String get openLinkFailed => 'Couldn\'t open the link.';
+
+  @override
+  String get dailyCardSettings => 'Ayah & Hadith of the Day';
+
+  @override
+  String get dailyCardShow => 'Show on the home screen';
+
+  @override
+  String get dailyContentBoth => 'Both';
+
+  @override
+  String get dailyContentHint =>
+      'Alternates daily between an ayah and a sahih hadith from Bukhari and Muslim.';
+
+  @override
+  String get hadithArabicSetting => 'Arabic text of the hadith';
+
+  @override
+  String get hijriAdjustment => 'Hijri date adjustment';
+
+  @override
+  String get hijriAdjustmentHint => 'Match your local moon sighting';
+
+  @override
+  String get hijriAdjustmentNone => 'No adjustment';
+
+  @override
+  String get decrease => 'Decrease';
+
+  @override
+  String get increase => 'Increase';
+
+  @override
+  String hijriMonth(String month) {
+    String _temp0 = intl.Intl.selectLogic(month, {
+      '1': 'Muharram',
+      '2': 'Safar',
+      '3': 'Rabi al-Awwal',
+      '4': 'Rabi al-Thani',
+      '5': 'Jumada al-Ula',
+      '6': 'Jumada al-Akhirah',
+      '7': 'Rajab',
+      '8': 'Sha\'ban',
+      '9': 'Ramadan',
+      '10': 'Shawwal',
+      '11': 'Dhu al-Qa\'dah',
+      '12': 'Dhu al-Hijjah',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hijriDate(String day, String month, String year) {
+    return '$day $month $year AH';
+  }
+
+  @override
+  String get hadithCredit =>
+      'Hadith text and English translations from sunnah.com; Urdu translations from HadeethEnc.com, used unmodified. Only Sahih al-Bukhari and Sahih Muslim are quoted, and each hadith links to its sunnah.com page with its full chain of narrators.';
+
+  @override
+  String get backToStart => 'Back to start';
 }

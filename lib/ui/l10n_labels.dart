@@ -1,4 +1,6 @@
+import '../core/calendar/hijri_date.dart';
 import '../domain/models/ayah.dart';
+import '../domain/models/hadith.dart';
 import '../domain/models/surah.dart';
 import '../l10n/generated/app_localizations.dart';
 
@@ -15,4 +17,14 @@ extension DomainLabels on AppLocalizations {
   /// "Recommended prostration" / "Obligatory prostration".
   String sajdah(SajdahType type) =>
       type == SajdahType.obligatory ? sajdahObligatory : sajdahRecommended;
+
+  /// "Sahih al-Bukhari" / "صحیح بخاری" / "صحيح البخاري".
+  String hadithCollection(HadithCollection collection) => switch (collection) {
+    HadithCollection.bukhari => sahihBukhari,
+    HadithCollection.muslim => sahihMuslim,
+  };
+
+  /// "3 Jumada al-Akhirah 1448 AH".
+  String hijri(HijriDate date) =>
+      hijriDate('${date.day}', hijriMonth('${date.month}'), '${date.year}');
 }

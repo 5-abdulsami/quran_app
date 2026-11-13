@@ -607,4 +607,94 @@ class AppLocalizationsAr extends AppLocalizations {
   String audioStorageUsed(String size) {
     return 'المساحة المستخدمة: $size';
   }
+
+  @override
+  String get ayahOfTheDay => 'آية اليوم';
+
+  @override
+  String get hadithOfTheDay => 'حديث اليوم';
+
+  @override
+  String get hadith => 'حديث';
+
+  @override
+  String get sahihBukhari => 'صحيح البخاري';
+
+  @override
+  String get sahihMuslim => 'صحيح مسلم';
+
+  @override
+  String get sahihGrade => 'صحيح';
+
+  @override
+  String get verifySource => 'تحقق من المصدر';
+
+  @override
+  String get hideArabic => 'إخفاء العربية';
+
+  @override
+  String get openLinkFailed => 'تعذّر فتح الرابط.';
+
+  @override
+  String get dailyCardSettings => 'آية اليوم وحديث اليوم';
+
+  @override
+  String get dailyCardShow => 'العرض في الشاشة الرئيسية';
+
+  @override
+  String get dailyContentBoth => 'كلاهما';
+
+  @override
+  String get dailyContentHint =>
+      'آية وحديث صحيح من البخاري ومسلم بالتناوب كل يوم.';
+
+  @override
+  String get hadithArabicSetting => 'النص العربي للحديث';
+
+  @override
+  String get hijriAdjustment => 'تعديل التاريخ الهجري';
+
+  @override
+  String get hijriAdjustmentHint => 'ليطابق رؤية الهلال في بلدك';
+
+  @override
+  String get hijriAdjustmentNone => 'بدون تعديل';
+
+  @override
+  String get decrease => 'إنقاص';
+
+  @override
+  String get increase => 'زيادة';
+
+  @override
+  String hijriMonth(String month) {
+    String _temp0 = intl.Intl.selectLogic(month, {
+      '1': 'محرم',
+      '2': 'صفر',
+      '3': 'ربيع الأول',
+      '4': 'ربيع الآخر',
+      '5': 'جمادى الأولى',
+      '6': 'جمادى الآخرة',
+      '7': 'رجب',
+      '8': 'شعبان',
+      '9': 'رمضان',
+      '10': 'شوال',
+      '11': 'ذو القعدة',
+      '12': 'ذو الحجة',
+      'other': '',
+    });
+    return '$_temp0';
+  }
+
+  @override
+  String hijriDate(String day, String month, String year) {
+    return '$day $month $year هـ';
+  }
+
+  @override
+  String get hadithCredit =>
+      'نصوص الأحاديث وترجماتها الإنجليزية من sunnah.com، والترجمات الأردية من HadeethEnc.com دون تعديل. لا يُنقل إلا من صحيح البخاري وصحيح مسلم، ويرتبط كل حديث بصفحته على sunnah.com مع سنده كاملًا.';
+
+  @override
+  String get backToStart => 'العودة إلى البداية';
 }

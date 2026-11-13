@@ -33,15 +33,19 @@ class _QuranAppState extends ConsumerState<QuranApp> {
 
   @override
   Widget build(BuildContext context) {
-    final settings = ref.watch(settingsControllerProvider);
-    final language = settings.languageCode;
+    // Only what the root uses: other settings must not rebuild the app.
+    final (themeMode, language, quranFont) = ref.watch(
+      settingsControllerProvider.select(
+        (s) => (s.themeMode, s.languageCode, s.quranFont),
+      ),
+    );
 
     return MaterialApp.router(
       onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightFor(settings.themeMode),
+      theme: AppTheme.lightFor(themeMode),
       darkTheme: AppTheme.dark(),
-      themeMode: AppTheme.themeModeFor(settings.themeMode),
+      themeMode: AppTheme.themeModeFor(themeMode),
       locale: language == null ? null : Locale(language),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: const [
@@ -53,7 +57,7 @@ class _QuranAppState extends ConsumerState<QuranApp> {
       routerConfig: _router,
       // Every QuranText below reads the chosen Quran font from this scope.
       builder: (context, child) => QuranFontScope(
-        font: QuranFonts.of(settings.quranFont),
+        font: QuranFonts.of(quranFont),
         child: child ?? const SizedBox.shrink(),
       ),
     );

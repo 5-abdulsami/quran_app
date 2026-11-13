@@ -4,6 +4,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../l10n/generated/app_localizations.dart';
+import '../../ui/widgets/app_loader.dart';
 import '../../ui/widgets/mihrab_mark.dart';
 
 /// The in-app loading screen.
@@ -95,9 +96,20 @@ class _LoadingSplashState extends State<LoadingSplash>
                   return Stack(
                     alignment: Alignment.center,
                     children: [
-                      CustomPaint(
-                        size: const Size.square(168),
-                        painter: _OrbitPainter(angle: phase),
+                      Padding(
+                        padding: const EdgeInsets.all(4.5),
+                        child: CustomPaint(
+                          size: const Size.square(159),
+                          painter: OrbitArcPainter(
+                            color: MihrabMarkPainter.brandGold,
+                            angle: phase,
+                            sweep: math.pi * 0.6,
+                            strokeWidth: 3,
+                            fadingTail: true,
+                            trackWidth: 1.5,
+                            trackOpacity: 0.18,
+                          ),
+                        ),
                       ),
                       Transform.scale(
                         // A slow breath: 1.0 → 1.04 → 1.0.
@@ -154,46 +166,4 @@ class _LoadingSplashState extends State<LoadingSplash>
       ),
     );
   }
-}
-
-/// A thin gold arc circling the mark, fading towards its tail.
-class _OrbitPainter extends CustomPainter {
-  const _OrbitPainter({required this.angle});
-
-  final double angle;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final arcRect = rect.deflate(6);
-    const sweep = math.pi * 0.6;
-
-    // The faint full ring the arc travels along.
-    canvas.drawCircle(
-      rect.center,
-      arcRect.width / 2,
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5
-        ..color = MihrabMarkPainter.brandGold.withValues(alpha: 0.18),
-    );
-
-    final paint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round
-      ..shader = SweepGradient(
-        startAngle: 0,
-        endAngle: sweep,
-        colors: [
-          MihrabMarkPainter.brandGold.withValues(alpha: 0),
-          MihrabMarkPainter.brandGold,
-        ],
-        transform: GradientRotation(angle),
-      ).createShader(arcRect);
-    canvas.drawArc(arcRect, angle, sweep, false, paint);
-  }
-
-  @override
-  bool shouldRepaint(_OrbitPainter oldDelegate) => oldDelegate.angle != angle;
 }

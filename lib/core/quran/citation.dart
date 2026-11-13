@@ -15,8 +15,26 @@ String versePayload({
   required String surahName,
   String? arabic,
   List<String> translations = const [],
+}) => passagePayload(
+  surah: surah,
+  fromAyah: ayah,
+  toAyah: ayah,
+  surahName: surahName,
+  arabic: arabic,
+  translations: translations,
+);
+
+/// [versePayload] for consecutive verses, ending with e.g.
+/// "Qur'an 94:5–6 (Surah Ash-Sharh)".
+String passagePayload({
+  required int surah,
+  required int fromAyah,
+  required int toAyah,
+  required String surahName,
+  String? arabic,
+  List<String> translations = const [],
 }) => [
   ?arabic,
   ...translations,
-  formatQuranCitation(surah, ayah, surahName),
+  formatQuranPassageCitation(surah, fromAyah, toAyah, surahName),
 ].join('\n\n');

@@ -1161,6 +1161,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Using {size}'**
   String audioStorageUsed(String size);
+
+  /// No description provided for @ayahOfTheDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Ayah of the Day'**
+  String get ayahOfTheDay;
+
+  /// No description provided for @hadithOfTheDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Hadith of the Day'**
+  String get hadithOfTheDay;
+
+  /// No description provided for @hadith.
+  ///
+  /// In en, this message translates to:
+  /// **'Hadith'**
+  String get hadith;
+
+  /// No description provided for @sahihBukhari.
+  ///
+  /// In en, this message translates to:
+  /// **'Sahih al-Bukhari'**
+  String get sahihBukhari;
+
+  /// No description provided for @sahihMuslim.
+  ///
+  /// In en, this message translates to:
+  /// **'Sahih Muslim'**
+  String get sahihMuslim;
+
+  /// Hadith grade: authentic.
+  ///
+  /// In en, this message translates to:
+  /// **'Sahih'**
+  String get sahihGrade;
+
+  /// No description provided for @verifySource.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify source'**
+  String get verifySource;
+
+  /// No description provided for @hideArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide Arabic'**
+  String get hideArabic;
+
+  /// No description provided for @openLinkFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Couldn\'t open the link.'**
+  String get openLinkFailed;
+
+  /// No description provided for @dailyCardSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Ayah & Hadith of the Day'**
+  String get dailyCardSettings;
+
+  /// No description provided for @dailyCardShow.
+  ///
+  /// In en, this message translates to:
+  /// **'Show on the home screen'**
+  String get dailyCardShow;
+
+  /// No description provided for @dailyContentBoth.
+  ///
+  /// In en, this message translates to:
+  /// **'Both'**
+  String get dailyContentBoth;
+
+  /// No description provided for @dailyContentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternates daily between an ayah and a sahih hadith from Bukhari and Muslim.'**
+  String get dailyContentHint;
+
+  /// No description provided for @hadithArabicSetting.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic text of the hadith'**
+  String get hadithArabicSetting;
+
+  /// No description provided for @hijriAdjustment.
+  ///
+  /// In en, this message translates to:
+  /// **'Hijri date adjustment'**
+  String get hijriAdjustment;
+
+  /// No description provided for @hijriAdjustmentHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Match your local moon sighting'**
+  String get hijriAdjustmentHint;
+
+  /// No description provided for @hijriAdjustmentNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No adjustment'**
+  String get hijriAdjustmentNone;
+
+  /// No description provided for @decrease.
+  ///
+  /// In en, this message translates to:
+  /// **'Decrease'**
+  String get decrease;
+
+  /// No description provided for @increase.
+  ///
+  /// In en, this message translates to:
+  /// **'Increase'**
+  String get increase;
+
+  /// No description provided for @hijriMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'{month, select, 1{Muharram} 2{Safar} 3{Rabi al-Awwal} 4{Rabi al-Thani} 5{Jumada al-Ula} 6{Jumada al-Akhirah} 7{Rajab} 8{Sha\'ban} 9{Ramadan} 10{Shawwal} 11{Dhu al-Qa\'dah} 12{Dhu al-Hijjah} other{}}'**
+  String hijriMonth(String month);
+
+  /// No description provided for @hijriDate.
+  ///
+  /// In en, this message translates to:
+  /// **'{day} {month} {year} AH'**
+  String hijriDate(String day, String month, String year);
+
+  /// No description provided for @hadithCredit.
+  ///
+  /// In en, this message translates to:
+  /// **'Hadith text and English translations from sunnah.com; Urdu translations from HadeethEnc.com, used unmodified. Only Sahih al-Bukhari and Sahih Muslim are quoted, and each hadith links to its sunnah.com page with its full chain of narrators.'**
+  String get hadithCredit;
+
+  /// No description provided for @backToStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to start'**
+  String get backToStart;
 }
 
 class _AppLocalizationsDelegate

@@ -110,6 +110,17 @@ class AboutScreen extends ConsumerWidget {
             ],
           ),
           _Card(
+            title: l10n.hadith,
+            children: [
+              Text(l10n.hadithCredit),
+              const SizedBox(height: 4),
+              Text(
+                '${l10n.sahihBukhari} · ${l10n.sahihMuslim} · sunnah.com · HadeethEnc.com',
+                style: muted,
+              ),
+            ],
+          ),
+          _Card(
             title: l10n.appVersion,
             children: [
               Text(appVersion),

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../domain/models/bookmark.dart';
 import '../../domain/models/translation_edition.dart';
 import '../../providers.dart';
 import '../settings/settings_controller.dart';
@@ -51,13 +50,6 @@ final juzContentProvider = FutureProvider.autoDispose
         await repo.juzAyahs(number, translationIds: ids),
       );
     });
-
-/// The saved position for one surah or juz (read once when a reader opens).
-final savedPositionProvider = FutureProvider.autoDispose
-    .family<ReadingPosition?, (ReadingMode, int)>(
-      (ref, key) =>
-          ref.watch(readingPositionRepositoryProvider).position(key.$1, key.$2),
-    );
 
 /// Licence-required credits for the translations on screen.
 final visibleAttributionsProvider = FutureProvider.autoDispose<List<String>>((

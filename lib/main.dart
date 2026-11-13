@@ -10,9 +10,12 @@ import 'ui/theme/quran_typography.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   registerLicenses();
-  await _initBackgroundAudio();
-
-  final prefs = await SharedPreferences.getInstance();
+  // Independent, so started together: the first frame waits for the slower,
+  // not for both in turn.
+  final (_, prefs) = await (
+    _initBackgroundAudio(),
+    SharedPreferences.getInstance(),
+  ).wait;
   runApp(AppBootstrap(prefs: prefs));
 }
 

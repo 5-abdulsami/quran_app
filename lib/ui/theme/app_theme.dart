@@ -178,9 +178,15 @@ const _sepia = _Palette(
 
 /// Builds the app's [ThemeData] for each [AppThemeMode].
 abstract final class AppTheme {
-  static ThemeData light() => _build(_light);
-  static ThemeData dark() => _build(_dark);
-  static ThemeData sepia() => _build(_sepia);
+  // Built once: a ThemeData is costly to build, and a new instance on every
+  // rebuild would make every widget that reads the theme rebuild too.
+  static final ThemeData _lightTheme = _build(_light);
+  static final ThemeData _darkTheme = _build(_dark);
+  static final ThemeData _sepiaTheme = _build(_sepia);
+
+  static ThemeData light() => _lightTheme;
+  static ThemeData dark() => _darkTheme;
+  static ThemeData sepia() => _sepiaTheme;
 
   static ThemeData _build(_Palette p) {
     final scheme = ColorScheme(

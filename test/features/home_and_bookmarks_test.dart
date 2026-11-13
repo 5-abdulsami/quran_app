@@ -28,11 +28,67 @@ void main() {
     await app.dispose(tester);
   });
 
+  testWidgets('opening the surah any other way starts at its beginning', (
+    tester,
+  ) async {
+    final app = await TestApp.pump(tester, location: '/surah/18?ayah=50');
+    await tester.pump(const Duration(seconds: 1));
+    await app.settle(tester);
+
+    // As from the surah list, search or a shortcut: no verse in the link.
+    GoRouter.of(tester.element(find.byType(AyahTile).first)).go('/');
+    await app.settle(tester);
+    GoRouter.of(
+      tester.element(find.byKey(const ValueKey('continue-reading'))),
+    ).push<void>('/surah/18').ignore();
+    await app.settle(tester);
+    expect(find.byKey(AyahTile.keyFor('18:1')), findsOneWidget);
+    expect(find.byKey(AyahTile.keyFor('18:50')), findsNothing);
+
+    // The saved place is untouched: Continue reading still resumes at 18:50.
+    GoRouter.of(tester.element(find.byType(AyahTile).first)).go('/');
+    await app.settle(tester);
+    expect(find.text('Al-Kahf · 18:50'), findsOneWidget);
+    await app.dispose(tester);
+  });
+
+  testWidgets('scrolling a surah opened at the top does save the place', (
+    tester,
+  ) async {
+    final app = await TestApp.pump(tester, location: '/surah/18');
+    // From mid-screen: the first verse sits below the surah's tall header.
+    await tester.dragFrom(const Offset(200, 450), const Offset(0, -2500));
+    await tester.pump(const Duration(seconds: 1));
+    await app.settle(tester);
+
+    GoRouter.of(tester.element(find.byType(AyahTile).first)).go('/');
+    await app.settle(tester);
+    expect(find.textContaining('Al-Kahf · 18:'), findsOneWidget);
+    expect(find.text('Al-Kahf · 18:1'), findsNothing);
+    await app.dispose(tester);
+  });
+
+  testWidgets('Back to start scrolls a reader to its first verse', (
+    tester,
+  ) async {
+    final app = await TestApp.pump(tester, location: '/surah/18?ayah=50');
+    expect(find.byKey(AyahTile.keyFor('18:1')), findsNothing);
+
+    await tester.tap(find.byType(PopupMenuButton<VoidCallback>));
+    await app.settle(tester);
+    await tester.tap(find.text('Back to start'));
+    await app.settle(tester);
+    expect(find.byKey(AyahTile.keyFor('18:1')), findsOneWidget);
+    await app.dispose(tester);
+  });
+
   testWidgets('Go to verse accepts names and rejects impossible verses', (
     tester,
   ) async {
     final app = await TestApp.pump(tester);
     final field = find.byKey(const ValueKey('go-to-verse'));
+    // Below the daily card on a phone-sized screen.
+    await tester.scrollUntilVisible(field, 200);
 
     await tester.enterText(field, '2:300');
     await tester.testTextInput.receiveAction(TextInputAction.go);
@@ -113,11 +169,15 @@ void continueReadingAndKeyboardTests() {
     tester,
   ) async {
     final app = await TestApp.pump(tester);
+    await tester.scrollUntilVisible(
+      find.byKey(const ValueKey('go-to-verse')),
+      200,
+    );
     await tester.tap(find.byKey(const ValueKey('go-to-verse')));
     await tester.pump();
     expect(tester.testTextInput.isVisible, isTrue);
 
-    await tester.tapAt(const Offset(200, 700)); // empty space on Home
+    await tester.tap(find.text('Quran Urdu')); // the app bar title
     await tester.pump();
     expect(tester.testTextInput.isVisible, isFalse);
     await app.dispose(tester);

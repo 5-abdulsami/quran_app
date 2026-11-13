@@ -23,8 +23,12 @@ class ReaderMenuAction {
 }
 
 /// Everything the surah and juz readers share: app-bar controls, loading,
-/// resuming the saved position, saving it as the reader scrolls, and keeping
-/// the screen awake.
+/// saving the position as the reader scrolls (for Continue reading), and
+/// keeping the screen awake.
+///
+/// A reader opens at the top unless it is given a verse: only Continue
+/// reading (and links to a verse) pass one, so opening a surah from the
+/// index, search or a shortcut always starts at its beginning.
 class ReaderScaffold extends ConsumerStatefulWidget {
   const ReaderScaffold({
     required this.title,
@@ -45,7 +49,7 @@ class ReaderScaffold extends ConsumerStatefulWidget {
   final ReadingMode mode;
   final int ref;
 
-  /// Open (and highlight) this verse; otherwise resume the saved position.
+  /// Open (and highlight) this verse; otherwise open at the top.
   final String? initialVerseKey;
 
   /// Screen-specific app-bar buttons, shown before the shared ones.
@@ -81,9 +85,6 @@ class _ReaderScaffoldState extends ConsumerState<ReaderScaffold>
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    final saved = widget.initialVerseKey == null
-        ? ref.watch(savedPositionProvider((widget.mode, widget.ref)))
-        : const AsyncData<ReadingPosition?>(null);
     final attribution =
         ref.watch(visibleAttributionsProvider).value ?? const [];
     return Scaffold(
@@ -109,6 +110,10 @@ class _ReaderScaffoldState extends ConsumerState<ReaderScaffold>
                   child: Text(action.label),
                 ),
               PopupMenuItem(
+                value: () => _readerKey.currentState?.scrollToStart(),
+                child: Text(l10n.backToStart),
+              ),
+              PopupMenuItem(
                 value: () => context.push(AppRoutes.settings),
                 child: Text(l10n.settings),
               ),
@@ -122,16 +127,13 @@ class _ReaderScaffoldState extends ConsumerState<ReaderScaffold>
           : const RecitationPlayerBar(safeBottom: true),
       body: AsyncValueView(
         value: widget.content,
-        data: (content) => AsyncValueView(
-          value: saved,
-          data: (position) => ReaderView(
-            key: _readerKey,
-            content: content,
-            initialVerseKey: widget.initialVerseKey ?? position?.verseKey,
-            highlightInitial: widget.initialVerseKey != null,
-            onVisibleAyah: _savePosition,
-            footer: widget.footerBuilder?.call(attribution),
-          ),
+        data: (content) => ReaderView(
+          key: _readerKey,
+          content: content,
+          initialVerseKey: widget.initialVerseKey,
+          highlightInitial: widget.initialVerseKey != null,
+          onVisibleAyah: _savePosition,
+          footer: widget.footerBuilder?.call(attribution),
         ),
       ),
     );

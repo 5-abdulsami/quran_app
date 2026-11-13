@@ -7,6 +7,7 @@
 
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,6 +15,7 @@ import 'core/db/content_db.dart';
 import 'core/db/user_db.dart';
 import 'core/quran/references.dart';
 import 'data/bookmark_repository.dart';
+import 'data/daily_content_repository.dart';
 import 'data/quran_repository.dart';
 import 'data/reading_position_repository.dart';
 import 'data/recitation_audio_store.dart';
@@ -46,6 +48,11 @@ final settingsRepositoryProvider = Provider<SettingsRepository>(
 
 final quranRepositoryProvider = Provider<QuranRepository>(
   (ref) => QuranRepository(ref.watch(contentDatabaseProvider)),
+);
+
+/// The bundled Ayah / Hadith of the Day catalogue.
+final dailyContentRepositoryProvider = Provider<DailyContentRepository>(
+  (ref) => DailyContentRepository(rootBundle),
 );
 
 final bookmarkRepositoryProvider = Provider<BookmarkRepository>(

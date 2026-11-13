@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/daily/daily_content.dart';
 import '../../domain/models/app_settings.dart';
 import '../../domain/models/reciter.dart';
 import '../../providers.dart';
@@ -10,8 +11,9 @@ class SettingsController extends Notifier<AppSettings> {
   AppSettings build() => ref.watch(settingsRepositoryProvider).load();
 
   Future<void> _update(AppSettings next) async {
+    final previous = state;
     state = next;
-    await ref.read(settingsRepositoryProvider).save(next);
+    await ref.read(settingsRepositoryProvider).save(next, previous: previous);
   }
 
   Future<void> setThemeMode(AppThemeMode mode) =>
@@ -57,6 +59,24 @@ class SettingsController extends Notifier<AppSettings> {
     reciter.language == 'ur'
         ? state.copyWith(urduReciterId: reciter.id)
         : state.copyWith(reciterId: reciter.id),
+  );
+
+  Future<void> setShowDailyCard({required bool show}) =>
+      _update(state.copyWith(showDailyCard: show));
+
+  Future<void> setDailyContentMode(DailyContentMode mode) =>
+      _update(state.copyWith(dailyContentMode: mode));
+
+  Future<void> setShowHadithArabic({required bool show}) =>
+      _update(state.copyWith(showHadithArabic: show));
+
+  Future<void> setHijriAdjustment(int days) => _update(
+    state.copyWith(
+      hijriAdjustment: days.clamp(
+        -AppSettings.maxHijriAdjustment,
+        AppSettings.maxHijriAdjustment,
+      ),
+    ),
   );
 
   /// Replaces the ordered list of selected translation editions.

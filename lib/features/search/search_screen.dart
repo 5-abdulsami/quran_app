@@ -13,6 +13,7 @@ import '../../providers.dart';
 import '../../router.dart';
 import '../../ui/app_shell.dart';
 import '../../ui/keyboard.dart';
+import '../../ui/widgets/app_loader.dart';
 import '../../ui/widgets/async_value_view.dart';
 import '../reader/verse_actions.dart';
 import '../surahs/surah_list_tile.dart';
@@ -236,7 +237,7 @@ class _Results extends ConsumerWidget {
                 padding: const EdgeInsets.all(16),
                 child: Center(
                   child: state.loadingMore
-                      ? const CircularProgressIndicator()
+                      ? const AppLoader(size: 28, delay: Duration.zero)
                       : OutlinedButton(
                           onPressed: ref
                               .read(searchControllerProvider.notifier)

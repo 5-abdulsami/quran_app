@@ -95,6 +95,27 @@ class QuranRepository {
     return rows.firstOrNull;
   }
 
+  /// Consecutive ayat [fromAyah]..[toAyah] of one surah, in order. Empty when
+  /// the range does not exist.
+  Future<List<Ayah>> passage(
+    int surah,
+    int fromAyah,
+    int toAyah, {
+    List<String> translationIds = const [],
+  }) {
+    if (fromAyah > toAyah ||
+        !isValidVerseKey(surah, fromAyah) ||
+        !isValidVerseKey(surah, toAyah)) {
+      return Future.value(const []);
+    }
+    return _ayahs(
+      (t) =>
+          t.surahNumber.equals(surah) &
+          t.ayahNumber.isBetweenValues(fromAyah, toAyah),
+      translationIds: translationIds,
+    );
+  }
+
   /// Mushaf-wide id of a verse key (1..6236), computed from AYAH_COUNTS.
   static int? ayahIdFor(String verseKey) {
     final parsed = parseVerseKey(verseKey);

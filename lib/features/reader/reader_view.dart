@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
@@ -57,6 +58,12 @@ class ReaderViewState extends ConsumerState<ReaderView> {
   Timer? _debounce;
   AyahItem? _current;
 
+  /// Whether scrolling here should move the saved reading position. A
+  /// reader opened at the top (from the surah list, search, a shortcut) only
+  /// starts once the reader actually scrolls, recites or jumps, so glancing
+  /// at a surah never overwrites the place Continue reading resumes.
+  late bool _tracking = widget.initialVerseKey != null;
+
   static const _highlightDuration = Duration(milliseconds: 2500);
   static const _saveDelay = Duration(milliseconds: 600);
 
@@ -85,10 +92,21 @@ class ReaderViewState extends ConsumerState<ReaderView> {
 
   /// Scrolls so [verseKey] is at the top, and highlights it.
   void jumpToVerse(String verseKey, {bool highlight = true}) {
+    _tracking = true;
     final index = _indexFor(verseKey);
     if (index == null || !_scroll.isAttached) return;
     _scroll.jumpTo(index: index);
     if (highlight) _highlight(verseKey);
+  }
+
+  /// Smoothly back to the top: the surah header (or the juz's first item).
+  void scrollToStart() {
+    if (!_scroll.isAttached) return;
+    _scroll.scrollTo(
+      index: 0,
+      duration: const Duration(milliseconds: 450),
+      curve: Curves.easeInOutCubic,
+    );
   }
 
   /// List index to open at for [verseKey]. The first verse of a surah opens at
@@ -109,11 +127,13 @@ class ReaderViewState extends ConsumerState<ReaderView> {
   }
 
   /// Recites from list index [index] to the end of this screen's content.
-  void _playFrom(int index) =>
-      ref.read(recitationControllerProvider.notifier).playVerses([
-        for (final item in widget.content.items.skip(index))
-          if (item is AyahItem) (item.surah, item.ayah.ayahNumber),
-      ]);
+  void _playFrom(int index) {
+    _tracking = true;
+    ref.read(recitationControllerProvider.notifier).playVerses([
+      for (final item in widget.content.items.skip(index))
+        if (item is AyahItem) (item.surah, item.ayah.ayahNumber),
+    ]);
+  }
 
   /// Keeps the verse being recited on screen.
   void _follow(String verseKey) {
@@ -156,13 +176,31 @@ class ReaderViewState extends ConsumerState<ReaderView> {
     final current = fullyVisible ?? partlyVisible;
     if (current == null || current.ayah.id == _current?.ayah.id) return;
     _current = current;
+    if (_tracking) _scheduleSave(current);
+  }
+
+  void _scheduleSave(AyahItem item) {
     _debounce?.cancel();
-    _debounce = Timer(_saveDelay, () => widget.onVisibleAyah(current));
+    _debounce = Timer(_saveDelay, () => widget.onVisibleAyah(item));
+  }
+
+  /// The reader's own drag or fling (not a programmatic scroll).
+  bool _onUserScroll(UserScrollNotification notification) {
+    if (!_tracking && notification.direction != ScrollDirection.idle) {
+      _tracking = true;
+      _onPositionsChanged();
+      if (_current case final current?) _scheduleSave(current);
+    }
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
-    final settings = ref.watch(settingsControllerProvider);
+    final (arabicFontSize, translationFontSize, showMarkers) = ref.watch(
+      settingsControllerProvider.select(
+        (s) => (s.arabicFontSize, s.translationFontSize, s.showMarkers),
+      ),
+    );
     final bookmarked = ref.watch(bookmarkedKeysProvider).value ?? const {};
     final editionNames = <String, String>{
       for (final e
@@ -183,60 +221,65 @@ class ReaderViewState extends ConsumerState<ReaderView> {
       },
     );
 
-    return ScrollablePositionedList.builder(
-      itemScrollController: _scroll,
-      itemPositionsListener: _positions,
-      initialScrollIndex: initial == null ? 0 : (_indexFor(initial) ?? 0),
-      itemCount: items.length + 1,
-      padding: const EdgeInsets.only(bottom: 24),
-      itemBuilder: (context, index) {
-        if (index == items.length) {
-          return widget.footer ?? const SizedBox(height: 24);
-        }
-        return switch (items[index]) {
-          SurahHeaderItem(:final surah) => SurahHeader(
-            surah: surah,
-            arabicFontSize: settings.arabicFontSize,
-          ),
-          ContinuingSurahItem(:final surah, :final fromAyah) =>
-            ContinuingSurahCard(surah: surah, fromAyah: fromAyah),
-          final AyahItem item => Column(
-            children: [
-              AyahTile(
-                key: AyahTile.keyFor(item.ayah.verseKey),
-                ayah: item.ayah,
-                surah: item.surah,
-                arabicFontSize: settings.arabicFontSize,
-                translationFontSize: settings.translationFontSize,
-                showJuz: settings.showMarkers && item.showJuz,
-                showHizb: settings.showMarkers && item.showHizb,
-                showPage: settings.showMarkers && item.showPage,
-                editionNames: editionNames,
-                highlighted: _highlighted == item.ayah.verseKey,
-                bookmarked: bookmarked.contains(item.ayah.verseKey),
-                recitation: recitingKey != item.ayah.verseKey
-                    ? AyahRecitation.idle
-                    : recitingNow
-                    ? AyahRecitation.playing
-                    : AyahRecitation.paused,
-                onPlay: recitingKey == item.ayah.verseKey
-                    ? ref.read(recitationControllerProvider.notifier).togglePlay
-                    : () => _playFrom(index),
-                onActions: () => showVerseActions(
-                  context,
+    return NotificationListener<UserScrollNotification>(
+      onNotification: _onUserScroll,
+      child: ScrollablePositionedList.builder(
+        itemScrollController: _scroll,
+        itemPositionsListener: _positions,
+        initialScrollIndex: initial == null ? 0 : (_indexFor(initial) ?? 0),
+        itemCount: items.length + 1,
+        padding: const EdgeInsets.only(bottom: 24),
+        itemBuilder: (context, index) {
+          if (index == items.length) {
+            return widget.footer ?? const SizedBox(height: 24);
+          }
+          return switch (items[index]) {
+            SurahHeaderItem(:final surah) => SurahHeader(
+              surah: surah,
+              arabicFontSize: arabicFontSize,
+            ),
+            ContinuingSurahItem(:final surah, :final fromAyah) =>
+              ContinuingSurahCard(surah: surah, fromAyah: fromAyah),
+            final AyahItem item => Column(
+              children: [
+                AyahTile(
+                  key: AyahTile.keyFor(item.ayah.verseKey),
                   ayah: item.ayah,
                   surah: item.surah,
-                  onPlay: () => _playFrom(index),
+                  arabicFontSize: arabicFontSize,
+                  translationFontSize: translationFontSize,
+                  showJuz: showMarkers && item.showJuz,
+                  showHizb: showMarkers && item.showHizb,
+                  showPage: showMarkers && item.showPage,
+                  editionNames: editionNames,
+                  highlighted: _highlighted == item.ayah.verseKey,
+                  bookmarked: bookmarked.contains(item.ayah.verseKey),
+                  recitation: recitingKey != item.ayah.verseKey
+                      ? AyahRecitation.idle
+                      : recitingNow
+                      ? AyahRecitation.playing
+                      : AyahRecitation.paused,
+                  onPlay: recitingKey == item.ayah.verseKey
+                      ? ref
+                            .read(recitationControllerProvider.notifier)
+                            .togglePlay
+                      : () => _playFrom(index),
+                  onActions: () => showVerseActions(
+                    context,
+                    ayah: item.ayah,
+                    surah: item.surah,
+                    onPlay: () => _playFrom(index),
+                  ),
+                  onOpenDetail: () => context.push(
+                    AppRoutes.ayah(item.ayah.surahNumber, item.ayah.ayahNumber),
+                  ),
                 ),
-                onOpenDetail: () => context.push(
-                  AppRoutes.ayah(item.ayah.surahNumber, item.ayah.ayahNumber),
-                ),
-              ),
-              const Divider(indent: 16, endIndent: 16),
-            ],
-          ),
-        };
-      },
+                const Divider(indent: 16, endIndent: 16),
+              ],
+            ),
+          };
+        },
+      ),
     );
   }
 }

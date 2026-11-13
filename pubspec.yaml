@@ -40,6 +40,7 @@ dependencies:
   http: ^1.6.0
   just_audio: ^0.10.6
   just_audio_background: ^0.0.1-beta.17
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +59,7 @@ flutter:
 
   assets:
     - assets/db/
+    - assets/daily/
     - assets/fonts/OFL-scheherazade-new.txt
     - assets/fonts/OFL-amiri-quran.txt
     - assets/fonts/OFL-amiri.txt
@@ -80,10 +82,10 @@ flutter:
         - asset: assets/fonts/Amiri-Regular.ttf
     - family: NotoNaskhArabic
       fonts:
-        - asset: assets/fonts/NotoNaskhArabic-Variable.ttf
+        - asset: assets/fonts/NotoNaskhArabic-Regular.ttf
     - family: NotoSansArabic
       fonts:
-        - asset: assets/fonts/NotoSansArabic-Variable.ttf
+        - asset: assets/fonts/NotoSansArabic-Regular.ttf
     - family: Lateef
       fonts:
         - asset: assets/fonts/Lateef-Regular.ttf
