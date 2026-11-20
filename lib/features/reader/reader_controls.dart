@@ -98,7 +98,9 @@ Future<void> showTextSizeSheet(BuildContext context) =>
       context: context,
       isScrollControlled: true,
       builder: (_) => const SafeArea(
-        child: Padding(
+        // Scrolls when it is taller than the screen (a small phone held
+        // sideways).
+        child: SingleChildScrollView(
           padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
           child: TextSizeControls(),
         ),

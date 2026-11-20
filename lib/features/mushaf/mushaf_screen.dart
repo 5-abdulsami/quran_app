@@ -43,8 +43,13 @@ class _MushafScreenState extends ConsumerState<MushafScreen>
   final _scroll = ItemScrollController();
   final _positions = ItemPositionsListener.create();
 
-  /// Captured once, so the final save can run while the screen is closing.
-  late final ReadingPositionRepository _saved = ref.read(
+  /// Captured once, so the final save can run while the screen is closing,
+  /// when `ref` can no longer be used.
+  late final ProviderContainer _container = ProviderScope.containerOf(
+    context,
+    listen: false,
+  );
+  late final ReadingPositionRepository _saved = _container.read(
     readingPositionRepositoryProvider,
   );
 
@@ -64,7 +69,8 @@ class _MushafScreenState extends ConsumerState<MushafScreen>
   @override
   void initState() {
     super.initState();
-    _saved; // Resolve before any dispose-time save needs it.
+    _container; // Resolve before any dispose-time save needs them.
+    _saved;
     _positions.itemPositions.addListener(_onPositionsChanged);
     if (_marked != null) {
       _unmark = Timer(_markDuration, () => setState(() => _marked = null));
@@ -113,7 +119,7 @@ class _MushafScreenState extends ConsumerState<MushafScreen>
 
   /// Saves [page] by its first verse, once that page has loaded.
   void _save(int page) {
-    final first = ref.read(mushafPageProvider(page)).value?.firstAyah;
+    final first = _container.read(mushafPageProvider(page)).value?.firstAyah;
     if (first != null) {
       _saved.save(ReadingMode.page, page, first.verseKey).ignore();
     }
