@@ -30,6 +30,8 @@ class Ayah {
     required this.ayahNumber,
     required this.textUthmani,
     required this.displayText,
+    required this.textIndopak,
+    required this.textQpcNastaleeq,
     required this.leadingBismillah,
     required this.bismillahPre,
     required this.juz,
@@ -55,6 +57,15 @@ class Ayah {
   /// surah whose header already shows the basmalah, where the duplicate prefix
   /// is separated out.
   final String displayText;
+
+  /// The same verse in the Indo-Pak text, ending with its own verse-end
+  /// glyph. Only ever rendered in an Indo-Pak font (see `QuranScript`); it
+  /// never carries a basmalah prefix, so it needs no separating.
+  final String textIndopak;
+
+  /// The same verse in the King Fahd Complex's QPC Nastaleeq text, ending
+  /// with its number. Only ever rendered in KFGQPC Nastaleeq.
+  final String textQpcNastaleeq;
 
   /// The separated basmalah, when one was split off. Usually null.
   final String? leadingBismillah;

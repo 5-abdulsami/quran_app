@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:quran_app/core/quran/indopak.dart';
+import 'package:quran_app/core/quran/qpc_nastaleeq.dart';
+import 'package:quran_app/core/quran/verse_end.dart';
+import 'package:quran_app/core/text/arabic_digits.dart';
 import 'package:quran_app/domain/models/app_settings.dart';
 import 'package:quran_app/features/reader/ayah_tile.dart';
 import 'package:quran_app/features/reader/bismillah_header.dart';
@@ -21,11 +25,45 @@ String arabicOf(WidgetTester tester, String verseKey) {
   return (text.textSpan! as TextSpan).children!.first.toPlainText();
 }
 
+/// The spans of a verse's Arabic block: the verse, then any ornament.
+List<InlineSpan> spansOf(WidgetTester tester, String verseKey) =>
+    (tester
+                .widget<Text>(
+                  find.descendant(
+                    of: find.byKey(AyahTile.keyFor(verseKey)),
+                    matching: find.byKey(QuranText.textKey),
+                  ),
+                )
+                .textSpan!
+            as TextSpan)
+        .children!;
+
+/// An Uthmani font, for the Uthmani-text checks.
+const uthmani = {'settings.quranFont': 'scheherazadeNew'};
+
+/// The IndoPak Nastaleeq font, for its own text.
+const indopak = {'settings.quranFont': 'indoPakNastaleeq'};
+
+/// The text of the basmalah under a surah header.
+String headerBasmalah(WidgetTester tester) => tester
+    .widget<Text>(
+      find.descendant(
+        of: find.byType(BismillahHeader),
+        matching: find.byKey(QuranText.textKey),
+      ),
+    )
+    .textSpan!
+    .toPlainText();
+
 void main() {
   testWidgets('surah 1: no header basmalah, ayah 1 shown in full', (
     tester,
   ) async {
-    final app = await TestApp.pump(tester, location: '/surah/1');
+    final app = await TestApp.pump(
+      tester,
+      location: '/surah/1',
+      prefs: uthmani,
+    );
     expect(find.byType(SurahHeader), findsOneWidget);
     expect(find.byType(BismillahHeader), findsNothing);
     final ayah1 = await tester.runAsync(
@@ -40,7 +78,11 @@ void main() {
   });
 
   testWidgets('surah 2: header basmalah once, ayah 1 is الٓمٓ', (tester) async {
-    final app = await TestApp.pump(tester, location: '/surah/2');
+    final app = await TestApp.pump(
+      tester,
+      location: '/surah/2',
+      prefs: uthmani,
+    );
     expect(find.byType(BismillahHeader), findsOneWidget);
     expect(arabicOf(tester, '2:1').runes.toList(), [
       0x0627,
@@ -52,6 +94,73 @@ void main() {
     await app.dispose(tester);
   });
 
+  testWidgets('KFGQPC (default): 1:1 is the basmalah, then the ornament', (
+    tester,
+  ) async {
+    final app = await TestApp.pump(tester, location: '/surah/1');
+    expect(find.byType(BismillahHeader), findsNothing);
+    expect(spansOf(tester, '1:1').map((s) => s.toPlainText()), [
+      qpcNastaleeqBasmalah,
+      '${String.fromCharCode(0xA0)}${endOfAyahMarker(1)}',
+    ]);
+    await app.dispose(tester);
+  });
+
+  testWidgets('KFGQPC (default): surah 2 shows its basmalah once', (
+    tester,
+  ) async {
+    final app = await TestApp.pump(tester, location: '/surah/2');
+    expect(headerBasmalah(tester), qpcNastaleeqBasmalah);
+    // الٓمّٓ, the ornament numbered 1, then the text's own sign above it.
+    expect(spansOf(tester, '2:1').map((s) => s.toPlainText()), [
+      startsWith(String.fromCharCodes([0x627, 0x644, 0x653])),
+      '${String.fromCharCode(0xA0)}${endOfAyahMarker(1)}',
+      String.fromCharCode(0xFD94),
+    ]);
+    await app.dispose(tester);
+  });
+
+  testWidgets('Indo-Pak: 1:1 is the basmalah with its circle numbered 1', (
+    tester,
+  ) async {
+    final app = await TestApp.pump(
+      tester,
+      location: '/surah/1',
+      prefs: indopak,
+    );
+    expect(find.byType(BismillahHeader), findsNothing);
+    final ayah1 = await tester.runAsync(
+      () => app.content
+          .customSelect(
+            "SELECT text_indopak t FROM ayah WHERE verse_key = '1:1'",
+          )
+          .getSingle(),
+    );
+    expect(
+      arabicOf(tester, '1:1'),
+      keepVerseEndOnLine(ayah1!.read<String>('t')),
+    );
+    expect(arabicOf(tester, '1:1'), startsWith(indopakBasmalah));
+    expect(arabicOf(tester, '1:1').runes.last, 0xF500);
+    await app.dispose(tester);
+  });
+
+  testWidgets('Indo-Pak: surah 2 shows the Indo-Pak basmalah once', (
+    tester,
+  ) async {
+    final app = await TestApp.pump(
+      tester,
+      location: '/surah/2',
+      prefs: indopak,
+    );
+    expect(find.byType(BismillahHeader), findsOneWidget);
+    expect(headerBasmalah(tester), indopakBasmalah);
+    // الٓمّٓ, then the circle numbered 1.
+    expect(arabicOf(tester, '2:1'), startsWith('\u0627\u0644\u0653'));
+    expect(arabicOf(tester, '2:1').runes.last, 0xF500);
+    await app.dispose(tester);
+  });
+
   testWidgets('surah 9: no basmalah anywhere', (tester) async {
     final app = await TestApp.pump(tester, location: '/surah/9');
     expect(find.byType(SurahHeader), findsOneWidget);
@@ -60,7 +169,7 @@ void main() {
   });
 
   testWidgets(
-    'ayah tile renders Quran text in Amiri Quran, RTL, Arabic locale',
+    'ayah tile renders Quran text in KFGQPC Nastaleeq, RTL, Arabic locale',
     (tester) async {
       final app = await TestApp.pump(tester, location: '/surah/1');
       final tile = find.byKey(AyahTile.keyFor('1:2'));
@@ -69,7 +178,7 @@ void main() {
       );
       expect(
         text.style?.fontFamily,
-        QuranFonts.of(QuranFont.scheherazadeNew).family,
+        QuranFonts.of(QuranFont.kfgqpcNastaleeq).family,
       );
       expect(text.style?.height, QuranTypography.lineHeight);
       expect(text.textDirection, TextDirection.rtl);

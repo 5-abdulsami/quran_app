@@ -30,7 +30,6 @@ SOURCE = ROOT / 'tool' / 'fonts' / 'source'
 OUTPUT = ROOT / 'assets' / 'fonts'
 
 FONTS = {
-    'NotoSansArabic-Variable.ttf': 'NotoSansArabic-Regular.ttf',
     'NotoNaskhArabic-Variable.ttf': 'NotoNaskhArabic-Regular.ttf',
 }
 

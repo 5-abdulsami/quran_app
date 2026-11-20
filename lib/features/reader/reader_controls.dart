@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
-import '../../core/quran/bismillah.dart';
 import '../../domain/models/app_settings.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../ui/keyboard.dart';
@@ -134,11 +133,7 @@ class TextSizeControls extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              QuranText(
-                basmalah,
-                fontSize: settings.arabicFontSize,
-                textAlign: TextAlign.center,
-              ),
+              QuranText.basmalah(fontSize: settings.arabicFontSize),
               const SizedBox(height: 4),
               Text(
                 l10n.fontSizeTranslation,

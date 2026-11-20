@@ -6,16 +6,17 @@ import 'reciter.dart';
 /// The reader's appearance choice.
 enum AppThemeMode { system, light, dark, sepia }
 
-/// The bundled fonts for Quranic text. Each one covers every code point the
-/// Uthmani text uses (checked by test/core/quran_fonts_test.dart).
+/// The bundled fonts for Quranic text. Each one draws every character of the
+/// text it is paired with (checked by test/core/quran_fonts_test.dart).
+///
+/// A saved name that is no longer listed (a font since removed) loads as the
+/// default.
 enum QuranFont {
+  kfgqpcNastaleeq,
+  indoPakNastaleeq,
   scheherazadeNew,
-  amiriQuran,
-  amiri,
   notoNaskhArabic,
-  notoSansArabic,
   lateef,
-  harmattan,
 }
 
 /// The UI languages the app ships. `null` in [AppSettings.languageCode] means
@@ -29,7 +30,7 @@ abstract final class AppLanguages {
 class AppSettings {
   const AppSettings({
     this.themeMode = AppThemeMode.system,
-    this.quranFont = QuranFont.scheherazadeNew,
+    this.quranFont = QuranFont.kfgqpcNastaleeq,
     this.languageCode,
     this.arabicFontSize = 30,
     this.translationFontSize = 18,

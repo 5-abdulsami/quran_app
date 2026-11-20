@@ -505,7 +505,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get fontCredit =>
-      'خطوط المصحف: Scheherazade New وLateef وHarmattan من SIL Global؛ وAmiri وAmiri Quran من The Amiri Project Authors؛ وNoto Naskh Arabic وNoto Sans Arabic من The Noto Project Authors. وكلها مرخّصة برخصة SIL Open Font License 1.1.';
+      'خطوط المصحف: KFGQPC Nastaleeq من مجمع الملك فهد لطباعة المصحف الشريف، مجاني الاستخدام والتوزيع؛ وIndoPak Nastaleeq من QuranWBW (أيمن صديقي)، مبني على Al Qalam Quran Majeed، وأرقام الآيات من KFGQPC؛ وScheherazade New وLateef من SIL Global؛ وNoto Naskh Arabic من The Noto Project Authors؛ وAmiri وAmiri Quran من The Amiri Project Authors. والباقي مرخّص برخصة SIL Open Font License 1.1.';
 
   @override
   String get quranFont => 'خط المصحف';

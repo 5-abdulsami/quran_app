@@ -295,13 +295,27 @@ The content schema mirrors the web app's:
 
 - Quranic text and translations: AlQuran.cloud terms
   (https://alquran.cloud/terms-and-conditions). Credits are shown in the app.
-- Quran fonts, all SIL Open Font License 1.1 (`assets/fonts/OFL-*.txt`, shown
-  on the licence page): Scheherazade New (default), Lateef and Harmattan by SIL
-  Global; Amiri and Amiri Quran by The Amiri Project Authors; Noto Naskh
-  Arabic and Noto Sans Arabic by The Noto Project Authors.
-- Noto Sans Arabic and Noto Naskh Arabic are shipped pinned to their regular
+- Indo-Pak text: Quran.com's `indopak_nastaleeq` text, the text QUL
+  (qul.tarteel.ai) pairs with the IndoPak Nastaleeq font. Built into the
+  database by `tool/build_quran_db.dart`, which checks every verse-end glyph.
+- QPC Nastaleeq text: the King Fahd Complex's Indo-Pak text from QUL
+  (qul.tarteel.ai), downloaded (sign-in required) as "QPC Nastaleeq script -
+  Word by Word" into `tool/sources/`; the build joins and checks it.
+- KFGQPC Nastaleeq (default Quran font) by the King Fahd Complex: free to
+  use, copy and distribute, never sold or modified
+  (`assets/fonts/LICENSE-kfgqpc-nastaleeq.txt`). Ship it unmodified: never
+  subset it.
+- IndoPak Nastaleeq by QuranWBW: NOT an open licence.
+  Its notice (`assets/fonts/LICENSE-indopak-nastaleeq.txt`) forbids
+  distribution without written notice from quranwbw.com, so keep that
+  written permission on file.
+- Other Quran fonts, SIL Open Font License 1.1 (`assets/fonts/OFL-*.txt`,
+  shown on the licence page): Scheherazade New and Lateef by SIL Global;
+  Noto Naskh Arabic by The Noto Project Authors; Amiri and Amiri Quran (the
+  Uthmani verse ornament) by The Amiri Project Authors.
+- Noto Naskh Arabic is shipped pinned to its regular
   weight and subset to the Arabic script (`tool/fonts/optimize_fonts.py`,
-  from the upstream variable fonts in `tool/fonts/source/`), which cuts them
+  from the upstream variable font in `tool/fonts/source/`), which cuts it
   by over 80%. All OpenType shaping features are kept. Only fonts whose
   licence reserves no font name are modified.
 - Every Quran font must cover every code point of the Uthmani text

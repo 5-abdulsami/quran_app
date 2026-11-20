@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:quran_app/core/quran/attribution.dart';
+import 'package:quran_app/core/quran/bismillah.dart';
+import 'package:quran_app/core/quran/qpc_nastaleeq.dart';
 import 'package:quran_app/domain/models/app_settings.dart';
 import 'package:quran_app/features/reader/ayah_tile.dart';
 import 'package:quran_app/ui/app_shell.dart';
@@ -75,12 +77,12 @@ void main() {
       find.textContaining('Fateh Muhammad Jalandhry, translated by'),
       findsOneWidget,
     );
-    expect(
-      find.textContaining(
-        'Scheherazade New, Lateef and Harmattan by SIL Global',
-      ),
-      findsOneWidget,
+    await tester.scrollUntilVisible(
+      find.textContaining('KFGQPC Nastaleeq by King Fahd'),
+      200,
+      scrollable: find.byType(Scrollable).first,
     );
+    expect(find.text(attributionIndopak), findsOneWidget);
     expect(find.textContaining('SIL Open Font License'), findsOneWidget);
     await tester.scrollUntilVisible(
       find.textContaining('EveryAyah.com'),
@@ -214,51 +216,76 @@ void quranFontTests() {
     return (text.textSpan! as TextSpan).children!.last.style!;
   }
 
+  /// The text of the verse span (the first child of the outer span).
+  String verseText(WidgetTester tester) {
+    final text = tester.widget<Text>(find.byKey(QuranText.textKey).first);
+    return (text.textSpan! as TextSpan).children!.first.toPlainText();
+  }
+
   testWidgets(
-    'Scheherazade New is the default; the ornament uses Amiri Quran',
+    'KFGQPC Nastaleeq is the default, with the QPC Nastaleeq text and the '
+    'verse ornament',
     (tester) async {
       final app = await TestApp.pump(tester, location: '/surah/1');
-      expect(
-        verseStyle(tester).fontFamily,
-        QuranFonts.of(QuranFont.scheherazadeNew).family,
-      );
-      expect(
-        ornamentStyle(tester).fontFamily,
-        QuranFonts.of(QuranFont.amiriQuran).family,
-      );
+      final kfgqpc = QuranFonts.of(QuranFont.kfgqpcNastaleeq);
+      expect(verseStyle(tester).fontFamily, kfgqpc.family);
+      // 1:1 in the QPC Nastaleeq text, its number drawn as the ornament.
+      expect(verseText(tester), qpcNastaleeqBasmalah);
+      expect(ornamentStyle(tester).fontFamily, QuranTypography.ornamentFamily);
       await app.dispose(tester);
     },
   );
 
-  testWidgets('choosing Amiri Quran in Settings changes the reader font', (
+  testWidgets('choosing Scheherazade New shows the Uthmani text', (
     tester,
   ) async {
     final app = await TestApp.pump(tester, location: '/settings');
     await tester.tap(find.text('Quran font'));
     await app.settle(tester);
 
-    // Each option previews the basmalah in its own font (the sheet builds
-    // the options on screen; the rest appear as it scrolls).
+    // Each option previews the basmalah in its own font and its own text.
     final previews = tester
         .widgetList<Text>(find.byKey(QuranText.textKey))
-        .map((t) => t.style!.fontFamily)
+        .map((t) => (t.style!.fontFamily, t.textSpan!.toPlainText()))
         .toList();
     expect(previews.length, greaterThan(3));
-    expect(QuranFonts.all.map((s) => s.family), containsAll(previews.skip(1)));
-    expect(previews.skip(1).toSet(), hasLength(previews.length - 1));
+    final options = previews.skip(1).toList();
+    expect(
+      QuranFonts.all.map((s) => s.family),
+      containsAll(options.map((p) => p.$1)),
+    );
+    for (final (family, text) in options) {
+      final spec = QuranFonts.all.firstWhere((s) => s.family == family);
+      expect(text, spec.script.basmalahText, reason: family);
+    }
 
-    await tester.tap(find.text('Amiri Quran'));
+    await tester.tap(find.text('Scheherazade New'));
     await app.settle(tester);
     // The sheet closes, the setting shows the choice, the preview follows it.
-    expect(find.text('Amiri Quran'), findsOneWidget);
+    expect(find.text('Scheherazade New'), findsOneWidget);
     expect(
       verseStyle(tester).fontFamily,
-      QuranFonts.of(QuranFont.amiriQuran).family,
+      QuranFonts.of(QuranFont.scheherazadeNew).family,
     );
+    expect(verseText(tester), basmalah);
     await app.dispose(tester);
   });
 
-  testWidgets('the font choice is remembered', (tester) async {
+  testWidgets('Uthmani fonts get the Amiri Quran ornament', (tester) async {
+    final app = await TestApp.pump(
+      tester,
+      location: '/surah/1',
+      prefs: {'settings.quranFont': 'lateef'},
+    );
+    expect(
+      verseStyle(tester).fontFamily,
+      QuranFonts.of(QuranFont.lateef).family,
+    );
+    expect(ornamentStyle(tester).fontFamily, QuranTypography.ornamentFamily);
+    await app.dispose(tester);
+  });
+
+  testWidgets('a removed font falls back to the default', (tester) async {
     final app = await TestApp.pump(
       tester,
       location: '/surah/2',
@@ -266,7 +293,7 @@ void quranFontTests() {
     );
     expect(
       verseStyle(tester).fontFamily,
-      QuranFonts.of(QuranFont.amiriQuran).family,
+      QuranFonts.of(QuranFont.kfgqpcNastaleeq).family,
     );
     await app.dispose(tester);
   });

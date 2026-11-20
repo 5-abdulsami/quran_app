@@ -235,6 +235,8 @@ class QuranRepository {
       ayahNumber: row.ayahNumber,
       textUthmani: row.textUthmani,
       displayText: presented.text,
+      textIndopak: row.textIndopak,
+      textQpcNastaleeq: row.textQpcNastaleeq,
       leadingBismillah: presented.bismillah,
       bismillahPre: bismillahPre,
       juz: row.juz,

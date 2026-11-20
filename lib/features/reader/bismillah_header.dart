@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../core/quran/bismillah.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../ui/theme/app_theme.dart';
 import '../../ui/widgets/quran_text.dart';
@@ -35,11 +34,7 @@ class BismillahHeader extends StatelessWidget {
             border: Border.all(color: colors.ornament.withValues(alpha: 0.35)),
             borderRadius: BorderRadius.circular(11),
           ),
-          child: QuranText(
-            basmalah,
-            fontSize: fontSize,
-            textAlign: TextAlign.center,
-          ),
+          child: QuranText.basmalah(fontSize: fontSize),
         ),
       ),
     );

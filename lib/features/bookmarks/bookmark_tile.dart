@@ -55,7 +55,12 @@ class BookmarkTile extends StatelessWidget {
                         color: theme.colorScheme.primary,
                       ),
                     ),
-                    QuranText(ayah.displayText, fontSize: 20, maxLines: 1),
+                    QuranText.ayah(
+                      ayah,
+                      fontSize: 20,
+                      showNumber: false,
+                      maxLines: 1,
+                    ),
                     if (note != null)
                       Text(
                         note,

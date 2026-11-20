@@ -125,10 +125,9 @@ class _AyahDetailBody extends ConsumerWidget {
             border: Border.all(color: colors.sourceBorder),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: QuranText(
-            ayah.displayText,
+          child: QuranText.ayah(
+            ayah,
             fontSize: fontSize * 1.15,
-            ayahNumber: ayah.ayahNumber,
             selectable: true,
           ),
         ),

@@ -496,7 +496,7 @@ class AppLocalizationsUr extends AppLocalizations {
 
   @override
   String get fontCredit =>
-      'قرآنی خطوط: Scheherazade New، Lateef اور Harmattan از SIL Global؛ Amiri اور Amiri Quran از The Amiri Project Authors؛ Noto Naskh Arabic اور Noto Sans Arabic از The Noto Project Authors۔ سب SIL Open Font License 1.1 کے تحت۔';
+      'قرآنی خطوط: KFGQPC Nastaleeq از شاہ فہد قرآن کریم پرنٹنگ کمپلیکس، استعمال اور تقسیم کے لیے مفت؛ IndoPak Nastaleeq از QuranWBW (ایمن صدیقی)، Al Qalam Quran Majeed پر مبنی، آیات کے نمبر KFGQPC سے؛ Scheherazade New اور Lateef از SIL Global؛ Noto Naskh Arabic از The Noto Project Authors؛ Amiri اور Amiri Quran از The Amiri Project Authors۔ باقی سب SIL Open Font License 1.1 کے تحت۔';
 
   @override
   String get quranFont => 'قرآنی خط';

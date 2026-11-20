@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../core/quran/bismillah.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../../ui/theme/quran_typography.dart';
 import '../../ui/widgets/quran_text.dart';
@@ -106,7 +105,7 @@ class _FontOption extends StatelessWidget {
                 // The preview is drawn in this option's own font.
                 QuranFontScope(
                   font: spec,
-                  child: QuranText(basmalah, fontSize: 24),
+                  child: const QuranText.basmalah(fontSize: 24),
                 ),
               ],
             ),

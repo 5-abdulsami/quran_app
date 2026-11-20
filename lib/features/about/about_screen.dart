@@ -46,6 +46,10 @@ class AboutScreen extends ConsumerWidget {
           _Card(
             title: l10n.arabicText,
             children: [
+              const Text(attributionQpcNastaleeq),
+              const SizedBox(height: 8),
+              const Text(attributionIndopak),
+              const SizedBox(height: 8),
               const Text(attributionArabic),
               const SizedBox(height: 4),
               Text(

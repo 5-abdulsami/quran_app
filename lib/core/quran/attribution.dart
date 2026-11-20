@@ -24,6 +24,17 @@ const String attributionArabic =
     'Quranic text via AlQuran.cloud. Text curation: Tanzil.net and Quran '
     'Academy. Uthmani orthography preserved.';
 
+/// Credit for the QPC Nastaleeq text (see core/quran/qpc_nastaleeq.dart).
+const String attributionQpcNastaleeq =
+    'Indo-Pak (Nastaleeq) Quranic text of the King Fahd Glorious Quran '
+    'Printing Complex, via the Quranic Universal Library (qul.tarteel.ai).';
+
+/// Credit for the Indo-Pak text (see core/quran/indopak.dart).
+const String attributionIndopak =
+    'Indo-Pak (Nastaleeq) Quranic text via Quran.com, as paired with the '
+    'IndoPak Nastaleeq font by QuranWBW in the Quranic Universal Library '
+    '(qul.tarteel.ai).';
+
 /// Required credit for a translation edition.
 ///
 /// AlQuran.cloud often reports the same string as both the English name and

@@ -177,8 +177,10 @@ class _MushafTextState extends State<_MushafText> {
   @override
   Widget build(BuildContext context) {
     final colors = context.quranColors;
+    final font = QuranTypography.fontOf(context);
+    final ownVerseEnds = font.script.hasOwnVerseEnds;
     final style = QuranTypography.style(
-      font: QuranTypography.fontOf(context),
+      font: font,
       fontSize: widget.fontSize,
       color: colors.quranText,
     );
@@ -194,17 +196,27 @@ class _MushafTextState extends State<_MushafText> {
           children: [
             for (final ayah in widget.section.ayahs) ...[
               TextSpan(
-                text: ayah.displayText,
+                // The IndoPak Nastaleeq text ends with its own verse numbers.
+                text: font.script.verseText(ayah),
                 recognizer: _tapFor(ayah),
                 style: ayah.verseKey == widget.markedVerseKey
                     ? TextStyle(backgroundColor: colors.highlight)
                     : null,
               ),
-              // A no-break space keeps the ornament on its verse's line.
-              TextSpan(
-                text: '\u00A0${endOfAyahMarker(ayah.ayahNumber)} ',
-                style: ornament,
-              ),
+              if (ownVerseEnds)
+                const TextSpan(text: ' ')
+              else
+                // A no-break space keeps the ornament on its verse's line.
+                TextSpan(
+                  children: [
+                    TextSpan(
+                      text: '\u00A0${endOfAyahMarker(ayah.ayahNumber)}',
+                      style: ornament,
+                    ),
+                    // The QPC Nastaleeq signs that sit on the circle.
+                    TextSpan(text: '${font.script.verseEndSigns(ayah)} '),
+                  ],
+                ),
             ],
           ],
         ),

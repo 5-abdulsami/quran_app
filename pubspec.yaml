@@ -60,17 +60,25 @@ flutter:
   assets:
     - assets/db/
     - assets/daily/
+    - assets/fonts/LICENSE-kfgqpc-nastaleeq.txt
+    - assets/fonts/LICENSE-indopak-nastaleeq.txt
     - assets/fonts/OFL-scheherazade-new.txt
     - assets/fonts/OFL-amiri-quran.txt
     - assets/fonts/OFL-amiri.txt
     - assets/fonts/OFL-noto-naskh-arabic.txt
-    - assets/fonts/OFL-noto-sans-arabic.txt
     - assets/fonts/OFL-lateef.txt
-    - assets/fonts/OFL-harmattan.txt
 
   fonts:
-    # Quran fonts (see lib/ui/theme/quran_typography.dart). All OFL, bundled,
-    # never fetched. Amiri Quran also draws every end-of-ayah ornament.
+    # Quran fonts (see lib/ui/theme/quran_typography.dart), bundled, never
+    # fetched. KFGQPC Nastaleeq and IndoPak Nastaleeq each draw their own
+    # Indo-Pak text (bundled unmodified); the others (OFL) the Uthmani text.
+    # Amiri Quran draws every Uthmani end-of-ayah ornament.
+    - family: KFGQPCNastaleeq
+      fonts:
+        - asset: assets/fonts/KFGQPCNastaleeq-Regular.ttf
+    - family: IndoPakNastaleeq
+      fonts:
+        - asset: assets/fonts/IndoPakNastaleeq-Regular.ttf
     - family: ScheherazadeNew
       fonts:
         - asset: assets/fonts/ScheherazadeNew-Regular.ttf
@@ -83,12 +91,6 @@ flutter:
     - family: NotoNaskhArabic
       fonts:
         - asset: assets/fonts/NotoNaskhArabic-Regular.ttf
-    - family: NotoSansArabic
-      fonts:
-        - asset: assets/fonts/NotoSansArabic-Regular.ttf
     - family: Lateef
       fonts:
         - asset: assets/fonts/Lateef-Regular.ttf
-    - family: Harmattan
-      fonts:
-        - asset: assets/fonts/Harmattan-Regular.ttf

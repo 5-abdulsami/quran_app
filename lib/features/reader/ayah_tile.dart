@@ -153,11 +153,7 @@ class AyahTile extends StatelessWidget {
               const SizedBox(height: 4),
               Padding(
                 padding: const EdgeInsetsDirectional.only(end: 12),
-                child: QuranText(
-                  ayah.displayText,
-                  fontSize: arabicFontSize,
-                  ayahNumber: ayah.ayahNumber,
-                ),
+                child: QuranText.ayah(ayah, fontSize: arabicFontSize),
               ),
               for (final translation in ayah.translations)
                 Padding(

@@ -8,6 +8,7 @@ import 'package:quran_app/features/mushaf/mushaf_page_view.dart';
 import 'package:quran_app/features/mushaf/mushaf_screen.dart';
 import 'package:quran_app/features/reader/ayah_tile.dart';
 import 'package:quran_app/features/surahs/surah_reader_screen.dart';
+import 'package:quran_app/ui/theme/quran_typography.dart';
 import 'package:quran_app/ui/widgets/not_found_screen.dart';
 
 import '../helpers/test_app.dart';
@@ -63,7 +64,8 @@ void main() {
         app.content,
       ).ayah('1:2', translationIds: const ['ur.jalandhry']),
     ))!;
-    tapVerse(tester, '1:2', fatiha2.displayText);
+    // The default font shows the QPC Nastaleeq text.
+    tapVerse(tester, '1:2', QuranScript.qpcNastaleeq.verseText(fatiha2));
     await app.settle(tester);
     expect(find.text('Al-Faatiha · 1:2'), findsOneWidget);
     expect(find.text(fatiha2.translations.single.text), findsOneWidget);

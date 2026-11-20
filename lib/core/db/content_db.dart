@@ -61,6 +61,16 @@ class AyahTable extends Table {
   /// Never modified and never normalised.
   TextColumn get textUthmani => text()();
 
+  /// The same verse in the Indo-Pak (Nastaleeq) text, ending with its own
+  /// verse-end glyph. Rendered only in the IndoPak Nastaleeq font (see
+  /// core/quran/indopak.dart).
+  TextColumn get textIndopak => text()();
+
+  /// The same verse in the King Fahd Complex's QPC Nastaleeq text, ending with
+  /// its number. Rendered only in the KFGQPC Nastaleeq font (see
+  /// core/quran/qpc_nastaleeq.dart).
+  TextColumn get textQpcNastaleeq => text()();
+
   /// normalizeForSearch(textUthmani); used only for matching, never rendered.
   TextColumn get textSearch => text()();
 
@@ -180,7 +190,7 @@ class ContentDatabase extends _$ContentDatabase {
   ContentDatabase(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

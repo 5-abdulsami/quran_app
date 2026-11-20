@@ -1,6 +1,72 @@
 import 'package:flutter/material.dart';
 
+import '../../core/quran/bismillah.dart';
+import '../../core/quran/indopak.dart';
+import '../../core/quran/qpc_nastaleeq.dart';
+import '../../core/quran/verse_end.dart';
+import '../../core/text/arabic_digits.dart';
 import '../../domain/models/app_settings.dart';
+import '../../domain/models/ayah.dart';
+
+/// The Quran texts the app carries. Each font is designed for one of them and
+/// must only ever be given that one: a font drawing another text's marks
+/// would put wrong signs on the page.
+enum QuranScript {
+  /// The King Fahd Complex's Indo-Pak (Nastaleeq) text.
+  qpcNastaleeq,
+
+  /// The Indo-Pak (Nastaleeq) text of QuranWBW / Quran.com.
+  indopak,
+
+  /// The Uthmani (Madinah) text.
+  uthmani,
+}
+
+/// The text each script shows. The single place a font is matched to its
+/// text: every screen goes through these.
+extension QuranScriptText on QuranScript {
+  /// Whether the text draws each verse's number itself. Only the IndoPak
+  /// Nastaleeq text does (its verse-end glyphs are single code points); the
+  /// others are followed by the Amiri Quran ornament.
+  ///
+  /// The QPC Nastaleeq text does end with its number, but KFGQPC Nastaleeq
+  /// circles the digits only under the Arabic script, and Flutter shapes
+  /// Arabic-Indic digits as script-neutral, so they would show as bare
+  /// digits. Its number is therefore drawn as the ornament, with the text's
+  /// own verse-end signs (waqf, ruku, sajdah) placed above it.
+  bool get hasOwnVerseEnds => this == QuranScript.indopak;
+
+  /// The basmalah shown above a surah.
+  String get basmalahText => switch (this) {
+    QuranScript.qpcNastaleeq => qpcNastaleeqBasmalah,
+    QuranScript.indopak => indopakBasmalah,
+    QuranScript.uthmani => basmalah,
+  };
+
+  /// [ayah] as shown, before any ornament: the IndoPak Nastaleeq text with
+  /// its verse-end glyph kept on the verse's last line, the QPC Nastaleeq text
+  /// without its closing number word, the Uthmani text without the basmalah
+  /// its surah header already shows.
+  String verseText(Ayah ayah) => switch (this) {
+    QuranScript.qpcNastaleeq => ayah.textQpcNastaleeq.substring(
+      0,
+      ayah.textQpcNastaleeq.lastIndexOf(' '),
+    ),
+    QuranScript.indopak => keepVerseEndOnLine(ayah.textIndopak),
+    QuranScript.uthmani => ayah.displayText,
+  };
+
+  /// The signs the text places on [ayah]'s verse-end circle (waqf, ruku,
+  /// sajdah), drawn after the ornament so they sit above it. Only the QPC
+  /// Nastaleeq text has them; usually empty.
+  String verseEndSigns(Ayah ayah) {
+    if (this != QuranScript.qpcNastaleeq) return '';
+    final text = ayah.textQpcNastaleeq;
+    return text
+        .substring(text.lastIndexOf(' ') + 1)
+        .substring(toArabicIndicDigits(ayah.ayahNumber).length);
+  }
+}
 
 /// One bundled Quran font: what the reader picks in Settings.
 @immutable
@@ -9,6 +75,7 @@ class QuranFontSpec {
     required this.font,
     required this.family,
     required this.label,
+    required this.script,
     required this.licenceAsset,
     this.scale = 1,
   });
@@ -21,7 +88,10 @@ class QuranFontSpec {
   /// The font's own name, shown as-is in every UI language.
   final String label;
 
-  /// Its OFL licence, shown on the licence page.
+  /// The text this font is drawn for.
+  final QuranScript script;
+
+  /// Its licence, shown on the licence page.
   final String licenceAsset;
 
   /// Brings fonts with a small design size up to the others, so a chosen
@@ -29,65 +99,62 @@ class QuranFontSpec {
   final double scale;
 }
 
-/// Every bundled Quran font. All are under the SIL Open Font License, never
-/// fetched at runtime, and cover every code point of the Uthmani text.
+/// Every Quran font the reader can pick, all bundled and never fetched.
 abstract final class QuranFonts {
   static const all = [
+    QuranFontSpec(
+      font: QuranFont.kfgqpcNastaleeq,
+      family: 'KFGQPCNastaleeq',
+      label: 'KFGQPC Nastaleeq',
+      script: QuranScript.qpcNastaleeq,
+      licenceAsset: 'assets/fonts/LICENSE-kfgqpc-nastaleeq.txt',
+    ),
+    QuranFontSpec(
+      font: QuranFont.indoPakNastaleeq,
+      family: 'IndoPakNastaleeq',
+      label: 'IndoPak Nastaleeq',
+      script: QuranScript.indopak,
+      licenceAsset: 'assets/fonts/LICENSE-indopak-nastaleeq.txt',
+    ),
     QuranFontSpec(
       font: QuranFont.scheherazadeNew,
       family: 'ScheherazadeNew',
       label: 'Scheherazade New',
+      script: QuranScript.uthmani,
       licenceAsset: 'assets/fonts/OFL-scheherazade-new.txt',
-    ),
-    QuranFontSpec(
-      font: QuranFont.amiriQuran,
-      family: 'AmiriQuran',
-      label: 'Amiri Quran',
-      licenceAsset: 'assets/fonts/OFL-amiri-quran.txt',
-    ),
-    QuranFontSpec(
-      font: QuranFont.amiri,
-      family: 'Amiri',
-      label: 'Amiri',
-      licenceAsset: 'assets/fonts/OFL-amiri.txt',
     ),
     QuranFontSpec(
       font: QuranFont.notoNaskhArabic,
       family: 'NotoNaskhArabic',
       label: 'Noto Naskh Arabic',
+      script: QuranScript.uthmani,
       licenceAsset: 'assets/fonts/OFL-noto-naskh-arabic.txt',
       scale: 0.92,
-    ),
-    QuranFontSpec(
-      font: QuranFont.notoSansArabic,
-      family: 'NotoSansArabic',
-      label: 'Noto Sans Arabic',
-      licenceAsset: 'assets/fonts/OFL-noto-sans-arabic.txt',
-      scale: 0.9,
     ),
     QuranFontSpec(
       font: QuranFont.lateef,
       family: 'Lateef',
       label: 'Lateef',
+      script: QuranScript.uthmani,
       licenceAsset: 'assets/fonts/OFL-lateef.txt',
       scale: 1.25,
-    ),
-    QuranFontSpec(
-      font: QuranFont.harmattan,
-      family: 'Harmattan',
-      label: 'Harmattan',
-      licenceAsset: 'assets/fonts/OFL-harmattan.txt',
-      scale: 1.1,
     ),
   ];
 
   static QuranFontSpec of(QuranFont font) =>
       all.firstWhere((spec) => spec.font == font);
 
-  /// The default (the first entry): SIL's Scheherazade New, very legible with
-  /// full Quranic mark support.
+  /// The default (the first entry): KFGQPC Nastaleeq, the King Fahd Complex's
+  /// Indo-Pak script, the one most of the app's readers learned from.
   static QuranFontSpec get standard => all.first;
 }
+
+/// Bundled fonts that are not Quran-font choices but still ship, with their
+/// licences: (name, licence asset).
+const supportFontLicences = [
+  ('Amiri Quran', 'assets/fonts/OFL-amiri-quran.txt'),
+  ('Amiri', 'assets/fonts/OFL-amiri.txt'),
+];
 
 /// Typography for Quranic text.
 ///
@@ -95,9 +162,10 @@ abstract final class QuranFonts {
 /// with the font from [QuranTypography.fontOf], so the family, size, locale
 /// and line height can never drift between screens.
 abstract final class QuranTypography {
-  /// The end-of-ayah ornament (U+06DD + digits) is always drawn with Amiri
-  /// Quran, which composes the number inside the ornament; most other fonts
-  /// leave the digits beside an empty ornament.
+  /// The Uthmani end-of-ayah ornament (U+06DD + digits) is always drawn with
+  /// Amiri Quran, which composes the number inside the ornament; most other
+  /// fonts leave the digits beside an empty ornament. (The Indo-Pak text
+  /// carries its own verse-end glyphs.)
   static const String ornamentFamily = 'AmiriQuran';
 
   /// Arabic locale, so the shaper picks Arabic forms and features.

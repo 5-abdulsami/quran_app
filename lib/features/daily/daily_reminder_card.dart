@@ -122,11 +122,7 @@ class _AyahCard extends ConsumerWidget {
           child: Column(
             children: [
               for (final ayah in ayahs)
-                QuranText(
-                  ayah.displayText,
-                  fontSize: arabicSize,
-                  ayahNumber: ayah.ayahNumber,
-                ),
+                QuranText.ayah(ayah, fontSize: arabicSize),
             ],
           ),
         ),

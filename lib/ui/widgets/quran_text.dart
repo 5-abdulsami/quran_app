@@ -2,44 +2,67 @@ import 'package:flutter/material.dart';
 
 import '../../core/text/arabic_digits.dart';
 import '../../core/text/highlight.dart';
+import '../../core/text/search_terms.dart';
+import '../../domain/models/ayah.dart';
 import '../theme/app_theme.dart';
 import '../theme/quran_typography.dart';
 
 /// The one way Quranic text is put on screen.
 ///
-/// Always right-to-left, always Amiri Quran with the Arabic locale, always
-/// start-aligned (ragged on the left, never justified: justification without
-/// kashida support pulls words apart), with leading generous enough that no
-/// mark is clipped. The text itself is rendered exactly as given; search
+/// Verses and the basmalah are given as [QuranText.ayah] and
+/// [QuranText.basmalah], which show the text the chosen font is drawn for
+/// (Indo-Pak or Uthmani; see [QuranScript]), so no screen can pair a font with
+/// the wrong text.
+///
+/// Always right-to-left, always the chosen Quran font with the Arabic locale,
+/// always start-aligned (ragged on the left, never justified: justification
+/// without kashida support pulls words apart), with leading generous enough
+/// that no mark is clipped. The text itself is rendered exactly as given; search
 /// highlights only change the background of whole original words.
 class QuranText extends StatelessWidget {
-  const QuranText(
-    this.text, {
+  /// A verse, with its end-of-verse number unless [showNumber] is false.
+  ///
+  /// [highlightTerms] highlights the words matching a search.
+  const QuranText.ayah(
+    Ayah this.ayah, {
     required this.fontSize,
-    this.ayahNumber,
+    this.showNumber = true,
     this.selectable = false,
     this.textAlign = TextAlign.start,
     this.semanticsLabel,
-    this.highlights = const [],
+    this.highlightTerms = const [],
     this.maxLines,
     super.key,
   });
 
-  /// The text to show, unmodified (an ayah's `displayText`, or the basmalah).
-  final String text;
+  /// The basmalah, as shown above a surah.
+  const QuranText.basmalah({
+    required this.fontSize,
+    this.textAlign = TextAlign.center,
+    this.semanticsLabel,
+    super.key,
+  }) : ayah = null,
+       showNumber = false,
+       selectable = false,
+       highlightTerms = const [],
+       maxLines = null;
+
+  /// The verse to show, or null for the basmalah.
+  final Ayah? ayah;
   final double fontSize;
 
-  /// When set, the end-of-ayah ornament (U+06DD + Arabic-Indic digits) is
-  /// appended after the verse.
-  final int? ayahNumber;
+  /// Whether the Uthmani verse is followed by its ornament (U+06DD +
+  /// Arabic-Indic digits). The Indo-Pak texts always keep their own verse
+  /// numbers: the waqf signs drawn above them are part of the verse.
+  final bool showNumber;
 
   /// Selectable text, for the ayah detail screen.
   final bool selectable;
   final TextAlign textAlign;
   final String? semanticsLabel;
 
-  /// Ranges of [text] to highlight (search matches).
-  final List<TextSlice> highlights;
+  /// Search terms whose matching words are highlighted.
+  final List<SearchTerm> highlightTerms;
 
   /// Truncates with an ellipsis, for search snippets.
   final int? maxLines;
@@ -50,11 +73,21 @@ class QuranText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.quranColors;
+    final font = QuranTypography.fontOf(context);
     final style = QuranTypography.style(
-      font: QuranTypography.fontOf(context),
+      font: font,
       fontSize: fontSize,
       color: colors.quranText,
     );
+    final ayah = this.ayah;
+    final text = ayah == null
+        ? font.script.basmalahText
+        : font.script.verseText(ayah);
+    final ayahNumber =
+        ayah != null && showNumber && !font.script.hasOwnVerseEnds
+        ? ayah.ayahNumber
+        : null;
+    final highlights = highlightRanges(text, highlightTerms);
     final span = TextSpan(
       children: [
         // The verse itself, as one span (split only for highlights).
@@ -72,7 +105,7 @@ class QuranText extends StatelessWidget {
               ),
           ],
         ),
-        if (ayahNumber case final number?)
+        if (ayahNumber case final number?) ...[
           TextSpan(
             // A no-break space keeps the ornament on the verse's last line.
             text: '\u{00A0}${endOfAyahMarker(number)}',
@@ -81,6 +114,11 @@ class QuranText extends StatelessWidget {
               fontFamily: QuranTypography.ornamentFamily,
             ),
           ),
+          // The QPC Nastaleeq signs that sit on the verse-end circle.
+          if (font.script.verseEndSigns(ayah!) case final signs
+              when signs.isNotEmpty)
+            TextSpan(text: signs),
+        ],
       ],
     );
 

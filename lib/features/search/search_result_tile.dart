@@ -52,11 +52,12 @@ class SearchResultTile extends StatelessWidget {
                   color: theme.colorScheme.primary,
                 ),
               ),
-              QuranText(
-                ayah.displayText,
+              QuranText.ayah(
+                ayah,
                 fontSize: 22,
+                showNumber: false,
                 maxLines: 2,
-                highlights: highlightRanges(ayah.displayText, terms),
+                highlightTerms: terms,
               ),
               if (translation != null)
                 HighlightedText(

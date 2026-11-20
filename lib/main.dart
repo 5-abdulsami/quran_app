@@ -37,13 +37,16 @@ Future<void> _initBackgroundAudio() async {
   }
 }
 
-/// Adds the bundled fonts' OFL licences to Flutter's licence page.
+/// Adds the bundled fonts' licences to Flutter's licence page.
 void registerLicenses() {
   LicenseRegistry.addLicense(() async* {
-    for (final font in QuranFonts.all) {
+    for (final (label, asset) in [
+      for (final font in QuranFonts.all) (font.label, font.licenceAsset),
+      ...supportFontLicences,
+    ]) {
       yield LicenseEntryWithLineBreaks([
-        '${font.label} (font)',
-      ], await rootBundle.loadString(font.licenceAsset));
+        '$label (font)',
+      ], await rootBundle.loadString(asset));
     }
   });
 }

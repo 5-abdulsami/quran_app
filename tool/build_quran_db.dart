@@ -1,4 +1,6 @@
-// Builds assets/db/quran.db from AlQuran.cloud.
+// Builds assets/db/quran.db from AlQuran.cloud (Uthmani text, translations,
+// structure), Quran.com (the IndoPak Nastaleeq text) and QUL (the QPC
+// Nastaleeq text, from tool/sources/).
 //
 // Usage (from the quran_app directory):
 //   dart run tool/build_quran_db.dart
@@ -22,17 +24,22 @@ import 'package:path/path.dart' as p;
 import 'package:quran_app/core/db/content_db.dart';
 import 'package:quran_app/core/quran/attribution.dart';
 import 'package:quran_app/core/quran/bismillah.dart';
+import 'package:quran_app/core/quran/indopak.dart';
+import 'package:quran_app/core/quran/qpc_nastaleeq.dart';
 import 'package:quran_app/core/quran/references.dart';
+import 'package:quran_app/core/text/arabic_digits.dart';
 import 'package:quran_app/core/text/normalize.dart';
 
 import 'src/alquran_cloud.dart';
 import 'src/expected_structure.dart';
+import 'src/qul_qpc_nastaleeq.dart';
+import 'src/quran_com.dart';
 
 /// Translations shipped inside the app, in default display order.
 const bundledTranslations = ['en.sahih', 'ur.jalandhry'];
 
 /// Bump when the content schema changes.
-const contentSchemaVersion = 1;
+const contentSchemaVersion = 3;
 
 Future<void> main() async {
   final root = Directory.current;
@@ -42,9 +49,9 @@ Future<void> main() async {
     return;
   }
 
-  final client = AlQuranCloudClient(
-    cacheDir: Directory(p.join(root.path, 'tool', 'cache')),
-  );
+  final cacheDir = Directory(p.join(root.path, 'tool', 'cache'));
+  final client = AlQuranCloudClient(cacheDir: cacheDir);
+  final quranCom = QuranComClient(cacheDir: cacheDir);
 
   try {
     stdout.writeln('Loading source data (cached in tool/cache/)…');
@@ -60,13 +67,26 @@ Future<void> main() async {
         ),
     ];
 
-    final corpus = Corpus.sanitised(surahs, arabic, translations);
+    final indopak = await quranCom.indopak();
+    final qpcNastaleeq = loadQpcNastaleeq(
+      File(p.join(root.path, qpcNastaleeqSourcePath)),
+    );
+
+    final corpus = Corpus.sanitised(
+      surahs,
+      arabic,
+      translations,
+      indopak,
+      qpcNastaleeq,
+    );
 
     final errors = <String>[
       ...corpus.validateStructure(),
       ...corpus.validateJuzAgainstMeta(meta),
       ...corpus.validateTranslations(),
       ...corpus.crossCheckBismillah(),
+      ...corpus.validateIndopak(),
+      ...corpus.validateQpcNastaleeq(),
     ];
     if (errors.isNotEmpty) {
       stderr.writeln('\nVALIDATION FAILED (${errors.length} errors):');
@@ -89,6 +109,7 @@ Future<void> main() async {
     corpus.printSummary(dbFile, dataVersion);
   } finally {
     client.close();
+    quranCom.close();
   }
 }
 
@@ -104,16 +125,47 @@ class SourceAyah {
 
 /// The full downloaded corpus, sanitised and ready to validate.
 class Corpus {
-  Corpus._(this.surahs, this.ayahs, this.translations);
+  Corpus._(
+    this.surahs,
+    this.ayahs,
+    this.translations,
+    this.indopakSource,
+    this.qpcNastaleeq,
+  );
 
   factory Corpus.sanitised(
     List<CloudSurah> surahs,
     CloudQuran arabic,
     List<CloudQuran> translations,
-  ) => Corpus._(surahs, arabic.ayahs.map(SourceAyah.new).toList(), {
-    for (final t in translations)
-      t.edition: t.ayahs.map(SourceAyah.new).toList(),
-  });
+    Map<String, String> indopak,
+    Map<String, String> qpcNastaleeq,
+  ) => Corpus._(
+    surahs,
+    arabic.ayahs.map(SourceAyah.new).toList(),
+    {
+      for (final t in translations)
+        t.edition: t.ayahs.map(SourceAyah.new).toList(),
+    },
+    {
+      for (final MapEntry(:key, :value) in indopak.entries)
+        key: sanitizeSourceText(value),
+    },
+    qpcNastaleeq,
+  );
+
+  /// The QPC Nastaleeq text by verse key, stored exactly as QUL supplied it
+  /// (words joined; see tool/src/qul_qpc_nastaleeq.dart).
+  final Map<String, String> qpcNastaleeq;
+
+  /// The Indo-Pak text by verse key, as Quran.com supplied it (sanitised).
+  final Map<String, String> indopakSource;
+
+  /// The Indo-Pak text as stored: the source, except al-Fatihah's verse-end
+  /// circles are renumbered (see [indopakFor]).
+  late final Map<String, String> indopak = {
+    for (final MapEntry(:key, :value) in indopakSource.entries)
+      key: indopakFor(key, value),
+  };
 
   final List<CloudSurah> surahs;
   final List<SourceAyah> ayahs;
@@ -309,6 +361,112 @@ class Corpus {
     return errors;
   }
 
+  /// The Indo-Pak text has exactly one verse per Uthmani verse, each ending
+  /// with the verse-end glyph for its own number, and no basmalah prefix.
+  List<String> validateIndopak() {
+    final errors = <String>[];
+    final keys = ayahs.map((a) => a.raw.verseKey).toList();
+    if (indopakSource.length != totalAyahCount ||
+        indopakSource.keys.join(',') != keys.join(',')) {
+      return ['indopak: verses differ from the Uthmani text'];
+    }
+    final foldedBasmalah = stripArabicDiacritics(indopakBasmalah);
+    for (final a in ayahs) {
+      final key = a.raw.verseKey;
+      final text = indopak[key]!;
+      if (stripArabicDiacritics(text).trim().length < 2) {
+        errors.add('$key: empty indopak text');
+      }
+      // Exactly one verse-end glyph, at the very end (22:77 alone places its
+      // rounded zero after it), showing this verse's own number.
+      final runes = text.runes.toList();
+      final ends = [
+        for (var i = 0; i < runes.length; i++)
+          if (indopakVerseEndNumber(runes[i]) != null) i,
+      ];
+      if (ends.length != 1) {
+        errors.add('$key: ${ends.length} indopak verse-end glyphs');
+        continue;
+      }
+      final code = runes[ends.single];
+      final after = runes.sublist(ends.single + 1);
+      if (!(after.isEmpty ||
+          (key == '22:77' && after.length == 1 && after.single == 0x06DF))) {
+        errors.add('$key: text after the indopak verse-end glyph');
+      }
+      if (indopakVerseEndNumber(code) != a.raw.numberInSurah) {
+        errors.add(
+          '$key: indopak verse end shows ${indopakVerseEndNumber(code)}',
+        );
+      }
+      if (indopakSajdahVerseEnds.contains(code) != (a.raw.sajdahType != null)) {
+        errors.add('$key: indopak sajdah sign disagrees with the data');
+      }
+      // The header shows the basmalah on its own; no verse may repeat it.
+      if (a.raw.numberInSurah == 1 &&
+          a.raw.surahNumber != 1 &&
+          stripArabicDiacritics(text).startsWith(foldedBasmalah)) {
+        errors.add('$key: indopak verse starts with the basmalah');
+      }
+    }
+    if (indopak['1:1'] != '$indopakBasmalah \u{06DF}${indopakVerseEnd(1)}') {
+      errors.add('1:1: indopak text is not the expected basmalah');
+    }
+    return errors;
+  }
+
+  /// The QPC Nastaleeq text has exactly one verse per Uthmani verse, each
+  /// ending with its own number (plus only the signs drawn above it), and no
+  /// basmalah prefix.
+  List<String> validateQpcNastaleeq() {
+    final keys = ayahs.map((a) => a.raw.verseKey).toList();
+    if (qpcNastaleeq.length != totalAyahCount ||
+        qpcNastaleeq.keys.join(',') != keys.join(',')) {
+      return ['qpc nastaleeq: verses differ from the Uthmani text'];
+    }
+    final errors = <String>[];
+    final foldedBasmalah = stripArabicDiacritics(qpcNastaleeqBasmalah);
+    for (final a in ayahs) {
+      final key = a.raw.verseKey;
+      final text = qpcNastaleeq[key]!;
+      if (text != sanitizeSourceText(text) || text.contains('\u00A0')) {
+        errors.add('$key: qpc nastaleeq text has invisible characters');
+      }
+      final space = text.lastIndexOf(' ');
+      if (space < 1) {
+        errors.add('$key: qpc nastaleeq verse has no number');
+        continue;
+      }
+      // The last word: this verse's number, then only verse-end signs.
+      final end = text.substring(space + 1);
+      final digits = toArabicIndicDigits(a.raw.numberInSurah);
+      final signs = end.substring(end.startsWith(digits) ? digits.length : 0);
+      if (!end.startsWith(digits) || !signs.runes.every(isQpcNastaleeqSign)) {
+        errors.add('$key: qpc nastaleeq verse ends with "$end"');
+      }
+      // Nor may a number or a verse-end sign appear anywhere else.
+      final body = text.substring(0, space);
+      if (RegExp('[\u0660-\u0669]').hasMatch(body)) {
+        errors.add('$key: digits inside the qpc nastaleeq verse');
+      }
+      // 22:77 is not a sajdah in the Hanafi Indo-Pak mushaf this text follows.
+      final sajdah = signs.runes.any(qpcNastaleeqSajdahSigns.contains);
+      if (sajdah != (a.raw.sajdahType != null && key != '22:77')) {
+        errors.add('$key: qpc nastaleeq sajdah sign disagrees with the data');
+      }
+      if (a.raw.numberInSurah == 1 &&
+          a.raw.surahNumber != 1 &&
+          stripArabicDiacritics(text).startsWith(foldedBasmalah)) {
+        errors.add('$key: qpc nastaleeq verse starts with the basmalah');
+      }
+    }
+    if (qpcNastaleeq['1:1'] !=
+        '$qpcNastaleeqBasmalah ${toArabicIndicDigits(1)}') {
+      errors.add('1:1: qpc nastaleeq text is not the expected basmalah');
+    }
+    return errors;
+  }
+
   // --------------------------------------------------------------------------
   // Derived data
   // --------------------------------------------------------------------------
@@ -325,7 +483,9 @@ class Corpus {
 
     for (final a in ayahs) {
       add(
-        '${a.raw.verseKey}|${a.text}|${a.raw.juz}|${a.raw.page}|'
+        '${a.raw.verseKey}|${a.text}|${indopak[a.raw.verseKey]}|'
+        '${qpcNastaleeq[a.raw.verseKey]}|'
+        '${a.raw.juz}|${a.raw.page}|'
         '${a.raw.hizbQuarter}|${a.raw.ruku}|${a.raw.manzil}|${a.raw.sajdahType}',
       );
     }
@@ -339,7 +499,7 @@ class Corpus {
       }
     }
     add('schema:$contentSchemaVersion');
-    return hash.toUnsigned(64).toRadixString(16).padLeft(16, '0');
+    return BigInt.from(hash).toUnsigned(64).toRadixString(16).padLeft(16, '0');
   }
 
   void printSummary(File dbFile, String dataVersion) {
@@ -353,11 +513,32 @@ class Corpus {
       )
       ..writeln('  juz / pages:   $juzCount / $expectedPageCount')
       ..writeln('  bismillah:     112 separated; 1:1, 9:1, 27:30 unchanged')
+      ..writeln('  indopak:       ${indopak.length} verses, verse ends checked')
+      ..writeln(
+        '  qpc nastaleeq: ${qpcNastaleeq.length} verses, verse ends checked',
+      )
       ..writeln('  data version:  $dataVersion')
       ..writeln(
         '  wrote:         ${dbFile.path} (${sizeMb.toStringAsFixed(1)} MB)',
       );
   }
+}
+
+/// The stored Indo-Pak verse for [key].
+///
+/// The source numbers al-Fatihah as some Indo-Pak mushafs do (the basmalah
+/// unnumbered, then 1..5, then 7), which would contradict the verse keys,
+/// recitation and bookmarks used everywhere else in the app. So al-Fatihah's
+/// seven verse-end circles are replaced with the plain circles for 1..7.
+/// Nothing else in any verse is changed.
+String indopakFor(String key, String source) {
+  if (!key.startsWith('1:')) return source;
+  final runes = source.runes.toList();
+  if (!(runes.last == 0xF61E || indopakVerseEndNumber(runes.last) != null)) {
+    throw SourceDataException('$key: unexpected indopak verse end');
+  }
+  return String.fromCharCodes(runes.take(runes.length - 1)) +
+      indopakVerseEnd(int.parse(key.substring(2)));
 }
 
 /// `bismillahPre: s.number !== 1 && s.number !== 9`, exactly as the web adapter.
@@ -400,6 +581,8 @@ Future<void> writeDatabase(Corpus corpus, File file, String dataVersion) async {
             verseKey: a.raw.verseKey,
             // Stored verbatim. Folding happens only in textSearch.
             textUthmani: a.text,
+            textIndopak: corpus.indopak[a.raw.verseKey]!,
+            textQpcNastaleeq: corpus.qpcNastaleeq[a.raw.verseKey]!,
             textSearch: normalizeForSearch(a.text),
             juz: a.raw.juz,
             hizb: a.raw.hizb,

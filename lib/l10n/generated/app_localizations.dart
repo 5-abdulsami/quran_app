@@ -973,7 +973,7 @@ abstract class AppLocalizations {
   /// No description provided for @fontCredit.
   ///
   /// In en, this message translates to:
-  /// **'Quran fonts: Scheherazade New, Lateef and Harmattan by SIL Global; Amiri and Amiri Quran by The Amiri Project Authors; Noto Naskh Arabic and Noto Sans Arabic by The Noto Project Authors. All under the SIL Open Font License 1.1.'**
+  /// **'Quran fonts: KFGQPC Nastaleeq by King Fahd Glorious Quran Printing Complex, free to use and distribute; IndoPak Nastaleeq by QuranWBW (Ayman Siddiqui), based on Al Qalam Quran Majeed, with verse numbers from KFGQPC; Scheherazade New and Lateef by SIL Global; Noto Naskh Arabic by The Noto Project Authors; Amiri and Amiri Quran by The Amiri Project Authors. The rest are under the SIL Open Font License 1.1.'**
   String get fontCredit;
 
   /// No description provided for @quranFont.

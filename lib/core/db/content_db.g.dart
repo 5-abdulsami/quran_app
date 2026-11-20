@@ -699,6 +699,28 @@ class $AyahTableTable extends AyahTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _textIndopakMeta = const VerificationMeta(
+    'textIndopak',
+  );
+  @override
+  late final GeneratedColumn<String> textIndopak = GeneratedColumn<String>(
+    'text_indopak',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _textQpcNastaleeqMeta = const VerificationMeta(
+    'textQpcNastaleeq',
+  );
+  @override
+  late final GeneratedColumn<String> textQpcNastaleeq = GeneratedColumn<String>(
+    'text_qpc_nastaleeq',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
   static const VerificationMeta _textSearchMeta = const VerificationMeta(
     'textSearch',
   );
@@ -784,6 +806,8 @@ class $AyahTableTable extends AyahTable
     ayahNumber,
     verseKey,
     textUthmani,
+    textIndopak,
+    textQpcNastaleeq,
     textSearch,
     juz,
     hizb,
@@ -845,6 +869,28 @@ class $AyahTableTable extends AyahTable
       );
     } else if (isInserting) {
       context.missing(_textUthmaniMeta);
+    }
+    if (data.containsKey('text_indopak')) {
+      context.handle(
+        _textIndopakMeta,
+        textIndopak.isAcceptableOrUnknown(
+          data['text_indopak']!,
+          _textIndopakMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_textIndopakMeta);
+    }
+    if (data.containsKey('text_qpc_nastaleeq')) {
+      context.handle(
+        _textQpcNastaleeqMeta,
+        textQpcNastaleeq.isAcceptableOrUnknown(
+          data['text_qpc_nastaleeq']!,
+          _textQpcNastaleeqMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_textQpcNastaleeqMeta);
     }
     if (data.containsKey('text_search')) {
       context.handle(
@@ -937,6 +983,14 @@ class $AyahTableTable extends AyahTable
         DriftSqlType.string,
         data['${effectivePrefix}text_uthmani'],
       )!,
+      textIndopak: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}text_indopak'],
+      )!,
+      textQpcNastaleeq: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}text_qpc_nastaleeq'],
+      )!,
       textSearch: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}text_search'],
@@ -991,6 +1045,16 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
   /// Never modified and never normalised.
   final String textUthmani;
 
+  /// The same verse in the Indo-Pak (Nastaleeq) text, ending with its own
+  /// verse-end glyph. Rendered only in the IndoPak Nastaleeq font (see
+  /// core/quran/indopak.dart).
+  final String textIndopak;
+
+  /// The same verse in the King Fahd Complex's QPC Nastaleeq text, ending with
+  /// its number. Rendered only in the KFGQPC Nastaleeq font (see
+  /// core/quran/qpc_nastaleeq.dart).
+  final String textQpcNastaleeq;
+
   /// normalizeForSearch(textUthmani); used only for matching, never rendered.
   final String textSearch;
   final int juz;
@@ -1008,6 +1072,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
     required this.ayahNumber,
     required this.verseKey,
     required this.textUthmani,
+    required this.textIndopak,
+    required this.textQpcNastaleeq,
     required this.textSearch,
     required this.juz,
     required this.hizb,
@@ -1025,6 +1091,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
     map['ayah_number'] = Variable<int>(ayahNumber);
     map['verse_key'] = Variable<String>(verseKey);
     map['text_uthmani'] = Variable<String>(textUthmani);
+    map['text_indopak'] = Variable<String>(textIndopak);
+    map['text_qpc_nastaleeq'] = Variable<String>(textQpcNastaleeq);
     map['text_search'] = Variable<String>(textSearch);
     map['juz'] = Variable<int>(juz);
     map['hizb'] = Variable<int>(hizb);
@@ -1045,6 +1113,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
       ayahNumber: Value(ayahNumber),
       verseKey: Value(verseKey),
       textUthmani: Value(textUthmani),
+      textIndopak: Value(textIndopak),
+      textQpcNastaleeq: Value(textQpcNastaleeq),
       textSearch: Value(textSearch),
       juz: Value(juz),
       hizb: Value(hizb),
@@ -1069,6 +1139,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
       ayahNumber: serializer.fromJson<int>(json['ayahNumber']),
       verseKey: serializer.fromJson<String>(json['verseKey']),
       textUthmani: serializer.fromJson<String>(json['textUthmani']),
+      textIndopak: serializer.fromJson<String>(json['textIndopak']),
+      textQpcNastaleeq: serializer.fromJson<String>(json['textQpcNastaleeq']),
       textSearch: serializer.fromJson<String>(json['textSearch']),
       juz: serializer.fromJson<int>(json['juz']),
       hizb: serializer.fromJson<int>(json['hizb']),
@@ -1088,6 +1160,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
       'ayahNumber': serializer.toJson<int>(ayahNumber),
       'verseKey': serializer.toJson<String>(verseKey),
       'textUthmani': serializer.toJson<String>(textUthmani),
+      'textIndopak': serializer.toJson<String>(textIndopak),
+      'textQpcNastaleeq': serializer.toJson<String>(textQpcNastaleeq),
       'textSearch': serializer.toJson<String>(textSearch),
       'juz': serializer.toJson<int>(juz),
       'hizb': serializer.toJson<int>(hizb),
@@ -1105,6 +1179,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
     int? ayahNumber,
     String? verseKey,
     String? textUthmani,
+    String? textIndopak,
+    String? textQpcNastaleeq,
     String? textSearch,
     int? juz,
     int? hizb,
@@ -1119,6 +1195,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
     ayahNumber: ayahNumber ?? this.ayahNumber,
     verseKey: verseKey ?? this.verseKey,
     textUthmani: textUthmani ?? this.textUthmani,
+    textIndopak: textIndopak ?? this.textIndopak,
+    textQpcNastaleeq: textQpcNastaleeq ?? this.textQpcNastaleeq,
     textSearch: textSearch ?? this.textSearch,
     juz: juz ?? this.juz,
     hizb: hizb ?? this.hizb,
@@ -1141,6 +1219,12 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
       textUthmani: data.textUthmani.present
           ? data.textUthmani.value
           : this.textUthmani,
+      textIndopak: data.textIndopak.present
+          ? data.textIndopak.value
+          : this.textIndopak,
+      textQpcNastaleeq: data.textQpcNastaleeq.present
+          ? data.textQpcNastaleeq.value
+          : this.textQpcNastaleeq,
       textSearch: data.textSearch.present
           ? data.textSearch.value
           : this.textSearch,
@@ -1164,6 +1248,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
           ..write('ayahNumber: $ayahNumber, ')
           ..write('verseKey: $verseKey, ')
           ..write('textUthmani: $textUthmani, ')
+          ..write('textIndopak: $textIndopak, ')
+          ..write('textQpcNastaleeq: $textQpcNastaleeq, ')
           ..write('textSearch: $textSearch, ')
           ..write('juz: $juz, ')
           ..write('hizb: $hizb, ')
@@ -1183,6 +1269,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
     ayahNumber,
     verseKey,
     textUthmani,
+    textIndopak,
+    textQpcNastaleeq,
     textSearch,
     juz,
     hizb,
@@ -1201,6 +1289,8 @@ class AyahRow extends DataClass implements Insertable<AyahRow> {
           other.ayahNumber == this.ayahNumber &&
           other.verseKey == this.verseKey &&
           other.textUthmani == this.textUthmani &&
+          other.textIndopak == this.textIndopak &&
+          other.textQpcNastaleeq == this.textQpcNastaleeq &&
           other.textSearch == this.textSearch &&
           other.juz == this.juz &&
           other.hizb == this.hizb &&
@@ -1217,6 +1307,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
   final Value<int> ayahNumber;
   final Value<String> verseKey;
   final Value<String> textUthmani;
+  final Value<String> textIndopak;
+  final Value<String> textQpcNastaleeq;
   final Value<String> textSearch;
   final Value<int> juz;
   final Value<int> hizb;
@@ -1231,6 +1323,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
     this.ayahNumber = const Value.absent(),
     this.verseKey = const Value.absent(),
     this.textUthmani = const Value.absent(),
+    this.textIndopak = const Value.absent(),
+    this.textQpcNastaleeq = const Value.absent(),
     this.textSearch = const Value.absent(),
     this.juz = const Value.absent(),
     this.hizb = const Value.absent(),
@@ -1246,6 +1340,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
     required int ayahNumber,
     required String verseKey,
     required String textUthmani,
+    required String textIndopak,
+    required String textQpcNastaleeq,
     required String textSearch,
     required int juz,
     required int hizb,
@@ -1258,6 +1354,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
        ayahNumber = Value(ayahNumber),
        verseKey = Value(verseKey),
        textUthmani = Value(textUthmani),
+       textIndopak = Value(textIndopak),
+       textQpcNastaleeq = Value(textQpcNastaleeq),
        textSearch = Value(textSearch),
        juz = Value(juz),
        hizb = Value(hizb),
@@ -1271,6 +1369,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
     Expression<int>? ayahNumber,
     Expression<String>? verseKey,
     Expression<String>? textUthmani,
+    Expression<String>? textIndopak,
+    Expression<String>? textQpcNastaleeq,
     Expression<String>? textSearch,
     Expression<int>? juz,
     Expression<int>? hizb,
@@ -1286,6 +1386,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
       if (ayahNumber != null) 'ayah_number': ayahNumber,
       if (verseKey != null) 'verse_key': verseKey,
       if (textUthmani != null) 'text_uthmani': textUthmani,
+      if (textIndopak != null) 'text_indopak': textIndopak,
+      if (textQpcNastaleeq != null) 'text_qpc_nastaleeq': textQpcNastaleeq,
       if (textSearch != null) 'text_search': textSearch,
       if (juz != null) 'juz': juz,
       if (hizb != null) 'hizb': hizb,
@@ -1303,6 +1405,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
     Value<int>? ayahNumber,
     Value<String>? verseKey,
     Value<String>? textUthmani,
+    Value<String>? textIndopak,
+    Value<String>? textQpcNastaleeq,
     Value<String>? textSearch,
     Value<int>? juz,
     Value<int>? hizb,
@@ -1318,6 +1422,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
       ayahNumber: ayahNumber ?? this.ayahNumber,
       verseKey: verseKey ?? this.verseKey,
       textUthmani: textUthmani ?? this.textUthmani,
+      textIndopak: textIndopak ?? this.textIndopak,
+      textQpcNastaleeq: textQpcNastaleeq ?? this.textQpcNastaleeq,
       textSearch: textSearch ?? this.textSearch,
       juz: juz ?? this.juz,
       hizb: hizb ?? this.hizb,
@@ -1346,6 +1452,12 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
     }
     if (textUthmani.present) {
       map['text_uthmani'] = Variable<String>(textUthmani.value);
+    }
+    if (textIndopak.present) {
+      map['text_indopak'] = Variable<String>(textIndopak.value);
+    }
+    if (textQpcNastaleeq.present) {
+      map['text_qpc_nastaleeq'] = Variable<String>(textQpcNastaleeq.value);
     }
     if (textSearch.present) {
       map['text_search'] = Variable<String>(textSearch.value);
@@ -1382,6 +1494,8 @@ class AyahTableCompanion extends UpdateCompanion<AyahRow> {
           ..write('ayahNumber: $ayahNumber, ')
           ..write('verseKey: $verseKey, ')
           ..write('textUthmani: $textUthmani, ')
+          ..write('textIndopak: $textIndopak, ')
+          ..write('textQpcNastaleeq: $textQpcNastaleeq, ')
           ..write('textSearch: $textSearch, ')
           ..write('juz: $juz, ')
           ..write('hizb: $hizb, ')
@@ -3245,6 +3359,8 @@ typedef $$AyahTableTableCreateCompanionBuilder =
       required int ayahNumber,
       required String verseKey,
       required String textUthmani,
+      required String textIndopak,
+      required String textQpcNastaleeq,
       required String textSearch,
       required int juz,
       required int hizb,
@@ -3261,6 +3377,8 @@ typedef $$AyahTableTableUpdateCompanionBuilder =
       Value<int> ayahNumber,
       Value<String> verseKey,
       Value<String> textUthmani,
+      Value<String> textIndopak,
+      Value<String> textQpcNastaleeq,
       Value<String> textSearch,
       Value<int> juz,
       Value<int> hizb,
@@ -3345,6 +3463,16 @@ class $$AyahTableTableFilterComposer
 
   ColumnFilters<String> get textUthmani => $composableBuilder(
     column: $table.textUthmani,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get textIndopak => $composableBuilder(
+    column: $table.textIndopak,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get textQpcNastaleeq => $composableBuilder(
+    column: $table.textQpcNastaleeq,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -3466,6 +3594,16 @@ class $$AyahTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get textIndopak => $composableBuilder(
+    column: $table.textIndopak,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get textQpcNastaleeq => $composableBuilder(
+    column: $table.textQpcNastaleeq,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get textSearch => $composableBuilder(
     column: $table.textSearch,
     builder: (column) => ColumnOrderings(column),
@@ -3552,6 +3690,16 @@ class $$AyahTableTableAnnotationComposer
 
   GeneratedColumn<String> get textUthmani => $composableBuilder(
     column: $table.textUthmani,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get textIndopak => $composableBuilder(
+    column: $table.textIndopak,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get textQpcNastaleeq => $composableBuilder(
+    column: $table.textQpcNastaleeq,
     builder: (column) => column,
   );
 
@@ -3665,6 +3813,8 @@ class $$AyahTableTableTableManager
                 Value<int> ayahNumber = const Value.absent(),
                 Value<String> verseKey = const Value.absent(),
                 Value<String> textUthmani = const Value.absent(),
+                Value<String> textIndopak = const Value.absent(),
+                Value<String> textQpcNastaleeq = const Value.absent(),
                 Value<String> textSearch = const Value.absent(),
                 Value<int> juz = const Value.absent(),
                 Value<int> hizb = const Value.absent(),
@@ -3679,6 +3829,8 @@ class $$AyahTableTableTableManager
                 ayahNumber: ayahNumber,
                 verseKey: verseKey,
                 textUthmani: textUthmani,
+                textIndopak: textIndopak,
+                textQpcNastaleeq: textQpcNastaleeq,
                 textSearch: textSearch,
                 juz: juz,
                 hizb: hizb,
@@ -3695,6 +3847,8 @@ class $$AyahTableTableTableManager
                 required int ayahNumber,
                 required String verseKey,
                 required String textUthmani,
+                required String textIndopak,
+                required String textQpcNastaleeq,
                 required String textSearch,
                 required int juz,
                 required int hizb,
@@ -3709,6 +3863,8 @@ class $$AyahTableTableTableManager
                 ayahNumber: ayahNumber,
                 verseKey: verseKey,
                 textUthmani: textUthmani,
+                textIndopak: textIndopak,
+                textQpcNastaleeq: textQpcNastaleeq,
                 textSearch: textSearch,
                 juz: juz,
                 hizb: hizb,
